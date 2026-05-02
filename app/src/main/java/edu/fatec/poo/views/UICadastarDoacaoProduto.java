@@ -8,6 +8,7 @@ import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -23,13 +24,14 @@ import java.util.UUID;
 public class UICadastarDoacaoProduto extends Application {
 
     // Size Variables
-    private static final double WHIDTH = 720;
-    private static final double HEIGHT = 480;
+    private static final double WHIDTH = 360;
+    private static final double HEIGHT = 360;
     private static final double SPACING = 10;
 
     private CCadastrarDoacaoProduto controller;
 
     private VBox paneMain;
+    private VBox paneProduto;
     private Scene scene;
 
     private HBox paneButtonsBottom;
@@ -51,7 +53,7 @@ public class UICadastarDoacaoProduto extends Application {
     private Button btnCadastrar;
 
     // TODO Use DTO
-    Produto produto = new Produto((long) ((Math.random() * (100 - 5)) + 5), 10L, 10L, 10L, UUID.randomUUID().toString());
+    Produto produtoNovo;
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -69,22 +71,27 @@ public class UICadastarDoacaoProduto extends Application {
         paneMain.setSpacing(SPACING);
 
         lblProduto = new Label("Produto");
-        VBox paneProduto = new VBox();
+
+        paneProduto = new VBox();
         paneProduto.setPadding(new Insets(SPACING));
         paneProduto.setSpacing(SPACING);
 
         lblCodigo = new Label("Codigo de Barras");
         txtCodigo = new TextField();
         txtCodigo.promptTextProperty().setValue("O codigo de barras é opicional");
+        txtCodigo.textProperty().bindBidirectional(controller.codigoProperty());
 
         lblTipo = new Label("Tipo");
         cbxTipo = new ComboBox<>();
+        cbxTipo.valueProperty().bindBidirectional(controller.tipoProperty());
 
         lblMarca = new Label("Marca");
         cbxMarca = new ComboBox<>();
+        cbxMarca.valueProperty().bindBidirectional(controller.marcaProperty());
 
         lblValidade = new Label("Validade");
         dpcValidade = new DatePicker(LocalDate.now());
+        dpcValidade.valueProperty().bindBidirectional(controller.validadeProperty());
 
         paneProduto.getChildren().addAll(
                 lblCodigo, txtCodigo,
@@ -97,16 +104,35 @@ public class UICadastarDoacaoProduto extends Application {
         paneButtonsBottom.setSpacing(SPACING);
 
         btnCancelar = new Button("Cancelar");
+        btnCancelar.setOnAction(p -> {
+            stage.getScene().getRoot().setDisable(true);
+            try {
+                stage.close();
+            } finally {
+                stage.getScene().getRoot().setDisable(false);
+            }
+        });
+
         btnCadastrar = new Button("Cadastrar");
+        btnCadastrar.setOnAction(p -> {
+            stage.getScene().getRoot().setDisable(true);
+            try {
+                produtoNovo = controller.cadastrar();
+                stage.close();
+            } finally {
+                stage.getScene().getRoot().setDisable(false);
+            }
+        });
+
         paneButtonsBottom.getChildren().addAll(btnCancelar, btnCadastrar);
 
         paneMain.getChildren().addAll(
                 lblProduto,
                 paneProduto,
                 paneButtonsBottom
-
         );
 
+        controller.start();
         stage.showAndWait();
     }
 }
