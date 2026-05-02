@@ -1,12 +1,17 @@
 package edu.fatec.poo.controllers;
 
 import edu.fatec.poo.entities.produto.Produto;
+import edu.fatec.poo.views.UICadastarDoacaoProduto;
+import edu.fatec.poo.views.UICadastrarDoacao;
+import javafx.application.Application;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -35,20 +40,26 @@ public class CCadastrarDoacao {
     public void adicionar() {
         //TODO
         System.out.println("ADICIONAR");
+        try {
+            UICadastarDoacaoProduto uiProduto = new UICadastarDoacaoProduto();
+            Stage newStage = new Stage();
+            uiProduto.start(newStage);
+            listaProdutos.add(uiProduto.getProduto());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void remover() {
         //TODO
         System.out.println("REMOVER");
+        // TODO Confirmar PopUp
+        listaProdutos.remove(produtoSelecionado.get());
     }
 
     public void cadastrar() {
         //TODO
         System.out.println("CADASTRAR");
-        System.out.println(getNomeDoador());
-        System.out.println(getDate());
-        System.out.println(getProdutoSelecionado());
-        listaProdutos.add(new Produto(10L, 10L, 10L, 10L, UUID.randomUUID().toString()));
     }
 
     public String getNomeDoador() {
