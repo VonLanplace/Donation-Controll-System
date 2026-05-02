@@ -17,6 +17,12 @@ repositories {
 }
 
 dependencies {
+    compileOnly("org.projectlombok:lombok:1.18.30")
+    annotationProcessor("org.projectlombok:lombok:1.18.30")
+
+    testCompileOnly("org.projectlombok:lombok:1.18.30")
+    testAnnotationProcessor("org.projectlombok:lombok:1.18.30")
+
     // Use JUnit Jupiter for testing.
     testImplementation(libs.junit.jupiter)
 
@@ -36,10 +42,10 @@ java {
 javafx {
     version = "21"
     modules(
-        "javafx.controls", 
-        "javafx.fxml", 
-        "javafx.graphics", 
-        "javafx.base", 
+        "javafx.controls",
+        "javafx.fxml",
+        "javafx.graphics",
+        "javafx.base",
         // "javafx.media", 
         // "javafx.web", 
         // "javafx.swing"
