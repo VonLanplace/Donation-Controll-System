@@ -2,8 +2,6 @@ package edu.fatec.poo.entities.produto;
 
 import lombok.*;
 
-import java.time.LocalDate;
-
 @Getter
 @Setter
 @AllArgsConstructor

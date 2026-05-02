@@ -2,23 +2,17 @@ package edu.fatec.poo.controllers;
 
 import edu.fatec.poo.entities.produto.Produto;
 import edu.fatec.poo.views.UICadastarDoacaoProduto;
-import edu.fatec.poo.views.UICadastrarDoacao;
-import javafx.application.Application;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.swing.text.TabableView;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.UUID;
 
 @Getter
 @Setter

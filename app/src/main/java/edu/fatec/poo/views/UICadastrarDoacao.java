@@ -64,7 +64,7 @@ public class UICadastrarDoacao extends Application {
     private Button btnCancelar;
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
         // General Items
         controll = new CCadastrarDoacao();
         this.stage = stage;

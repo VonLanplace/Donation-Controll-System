@@ -8,16 +8,13 @@ import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -56,7 +53,7 @@ public class UICadastarDoacaoProduto extends Application {
     Produto produtoNovo;
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
         controller = new CCadastrarDoacaoProduto();
         paneMain = new VBox();
         scene = new Scene(paneMain, WHIDTH, HEIGHT);

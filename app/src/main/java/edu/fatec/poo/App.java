@@ -7,10 +7,6 @@ import edu.fatec.poo.views.UICadastrarDoacao;
 import javafx.application.Application;
 
 public class App {
-    public String getGreeting() {
-        return "Hello World!";
-    }
-
     public static void main(String[] args) {
 
         Application.launch(UICadastrarDoacao.class, args);
