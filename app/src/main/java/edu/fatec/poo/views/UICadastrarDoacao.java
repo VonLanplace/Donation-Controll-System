@@ -3,10 +3,8 @@ package edu.fatec.poo.views;
 import edu.fatec.poo.controllers.CCadastrarDoacao;
 import edu.fatec.poo.entities.produto.Produto;
 import javafx.application.Application;
-import javafx.beans.property.Property;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -28,7 +26,7 @@ public class UICadastrarDoacao extends Application {
     private CCadastrarDoacao controll;
 
     // Componentes da interface
-    private VBox pane;
+    private VBox paneMain;
     private VBox paneDoacao;
     private VBox paneProdutos;
     private HBox paneBotoes;
@@ -70,8 +68,8 @@ public class UICadastrarDoacao extends Application {
         // General Items
         controll = new CCadastrarDoacao();
         this.stage = stage;
-        pane = new VBox();
-        scene = new Scene(pane, WHIDTH, HEIGHT);
+        paneMain = new VBox();
+        scene = new Scene(paneMain, WHIDTH, HEIGHT);
 
         // Stage Configs
         stage.setTitle("Cadastro de Doação");
@@ -79,8 +77,8 @@ public class UICadastrarDoacao extends Application {
         stage.setScene(scene);
 
         // Pane Configs
-        pane.setPadding(new Insets(SPACING));
-        pane.setSpacing(SPACING);
+        paneMain.setPadding(new Insets(SPACING));
+        paneMain.setSpacing(SPACING);
 
         // Itens
 
@@ -96,7 +94,7 @@ public class UICadastrarDoacao extends Application {
         configurarAreaBotoesBase();
 
         // Initiation
-        pane.getChildren().addAll(
+        paneMain.getChildren().addAll(
                 lblTituloDoacao,
                 paneDoacao,
                 lblTituloProdutos,
