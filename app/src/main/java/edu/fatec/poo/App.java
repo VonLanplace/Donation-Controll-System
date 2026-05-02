@@ -3,12 +3,16 @@
  */
 package edu.fatec.poo;
 
+import edu.fatec.poo.views.UICadastrarDoacao;
+import javafx.application.Application;
+
 public class App {
     public String getGreeting() {
         return "Hello World!";
     }
 
     public static void main(String[] args) {
-        System.out.println(new App().getGreeting());
+
+        Application.launch(UICadastrarDoacao.class, args);
     }
 }
