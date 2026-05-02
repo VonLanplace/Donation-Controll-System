@@ -103,11 +103,18 @@ public class UICadastarDoacaoProduto extends Application {
         btnCancelar = new Button("Cancelar");
         btnCancelar.setOnAction(p -> {
             stage.getScene().getRoot().setDisable(true);
-            try {
-                stage.close();
-            } finally {
-                stage.getScene().getRoot().setDisable(false);
-            }
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.initOwner(stage); // Keeps the window tied to the app
+            alert.setTitle("Confirmação");
+            alert.setHeaderText("Cancelar Ação");
+            alert.setContentText("Tem certeza que deseja sair? Dados não salvos serão perdidos.");
+
+            // Using ifPresent for cleaner syntax
+            alert.showAndWait().ifPresent(response -> {
+                if (response == ButtonType.OK) {
+                    stage.close();
+                }
+            });
         });
 
         btnCadastrar = new Button("Cadastrar");

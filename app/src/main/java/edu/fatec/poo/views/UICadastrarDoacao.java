@@ -14,6 +14,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 public class UICadastrarDoacao extends Application {
 
@@ -206,7 +207,18 @@ public class UICadastrarDoacao extends Application {
         btnCancelar.setOnAction(event -> {
             stage.getScene().getRoot().setDisable(true);
             try {
-                stage.close();
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.initOwner(stage); // Keeps the window tied to the app
+                alert.setTitle("Confirmação");
+                alert.setHeaderText("Cancelar Ação");
+                alert.setContentText("Tem certeza que deseja sair? Dados não salvos serão perdidos.");
+
+                // Using ifPresent for cleaner syntax
+                alert.showAndWait().ifPresent(response -> {
+                    if (response == ButtonType.OK) {
+                        stage.close();
+                    }
+                });
             } finally {
                 stage.getScene().getRoot().setDisable(false);
             }
