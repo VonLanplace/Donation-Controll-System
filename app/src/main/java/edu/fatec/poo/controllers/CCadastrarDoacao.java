@@ -44,7 +44,10 @@ public class CCadastrarDoacao {
             UICadastarDoacaoProduto uiProduto = new UICadastarDoacaoProduto();
             Stage newStage = new Stage();
             uiProduto.start(newStage);
-            listaProdutos.add(uiProduto.getProduto());
+            Produto produtoNovo = uiProduto.getProdutoNovo();
+            if (produtoNovo != null) {
+                listaProdutos.add(produtoNovo);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
