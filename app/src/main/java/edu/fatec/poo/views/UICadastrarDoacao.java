@@ -1,5 +1,7 @@
 package edu.fatec.poo.views;
 
+import atlantafx.base.theme.NordDark;
+
 import edu.fatec.poo.controllers.CCadastrarDoacao;
 import edu.fatec.poo.entities.produto.Produto;
 import javafx.application.Application;
@@ -14,7 +16,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.time.LocalDate;
-import java.util.Optional;
 
 public class UICadastrarDoacao extends Application {
 
@@ -28,7 +29,7 @@ public class UICadastrarDoacao extends Application {
 
     // Componentes da interface
     private VBox paneMain;
-    private VBox paneDoacao;
+    private HBox paneDoacao;
     private VBox paneProdutos;
     private HBox paneBotoes;
 
@@ -66,6 +67,8 @@ public class UICadastrarDoacao extends Application {
 
     @Override
     public void start(Stage stage) {
+        Application.setUserAgentStylesheet(new NordDark().getUserAgentStylesheet());
+
         // General Items
         controll = new CCadastrarDoacao();
         this.stage = stage;
@@ -108,21 +111,28 @@ public class UICadastrarDoacao extends Application {
     }
 
     private void configurarAreaDoacao() {
-        paneDoacao = new VBox();
+        paneDoacao = new HBox();
         paneDoacao.setPadding(new Insets(SPACING));
         paneDoacao.setSpacing(SPACING);
 
+        VBox paneDoacaoNome = new VBox();
         lblNome = new Label("Nome Doador");
         txtNome = new TextField();
         txtNome.promptTextProperty().setValue("Digite o Nome do Doador.");
         txtNome.textProperty().bindBidirectional(controll.nomeDoadorProperty());
+        paneDoacaoNome.setSpacing(SPACING);
+        paneDoacaoNome.getChildren().addAll(lblNome, txtNome);
+        paneDoacaoNome.setPrefWidth((WHIDTH / 3) * 2);
 
+        VBox paneDoacaoData = new VBox();
         lblData = new Label("Data Doação");
         dtpDataDoacao = new DatePicker();
         dtpDataDoacao.valueProperty().bindBidirectional(controll.dateProperty());
+        paneDoacaoData.setSpacing(SPACING);
+        paneDoacaoData.getChildren().addAll(lblData, dtpDataDoacao);
 
         paneDoacao.getChildren().addAll(
-                lblNome, txtNome, lblData, dtpDataDoacao
+                paneDoacaoNome, paneDoacaoData
         );
     }
 

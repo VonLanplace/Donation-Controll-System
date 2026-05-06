@@ -30,6 +30,8 @@ dependencies {
 
     // This dependency is used by the application.
     implementation(libs.guava)
+
+    implementation("io.github.mkpaz:atlantafx-base:2.1.0")
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
