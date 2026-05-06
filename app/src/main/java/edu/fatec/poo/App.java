@@ -4,10 +4,12 @@
 package edu.fatec.poo;
 
 import edu.fatec.poo.views.UICadastrarDoacao;
+import edu.fatec.poo.views.UICadastrarPessoa;
 import javafx.application.Application;
 
 public class App {
     public static void main(String[] args) {
-        Application.launch(UICadastrarDoacao.class, args);
+
+        Application.launch(UICadastrarPessoa.class, args);
     }
 }
