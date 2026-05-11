@@ -2,28 +2,18 @@ package edu.fatec.poo.views;
 
 import edu.fatec.poo.controllers.CCadastrarPessoa;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
+import static edu.fatec.poo.configs.WindowStandardFormatting.*;
+
 @NoArgsConstructor
 public class UICadastrarPessoa extends Application {
-
-    // Size Variables
-    private static final double WHIDTH = 720;
-    private static final double HEIGHT = 480;
-    private static final double SPACING = 10;
 
     // Controller
     CCadastrarPessoa controller;
@@ -37,6 +27,7 @@ public class UICadastrarPessoa extends Application {
         TabPane tabPane = new TabPane();
 
         Tab tabPessoal = new Tab("Dados Pessoais", buildPaneDadosPessoais());
+        tabPessoal.setClosable(false);
 
         for (Tab t : tabPane.getTabs()) {
             t.setClosable(false);
@@ -53,6 +44,8 @@ public class UICadastrarPessoa extends Application {
 
     private Node buildPaneDadosPessoais() {
         VBox paneDadosPessoais = new VBox();
+        paneDadosPessoais.setSpacing(SPACING);
+        paneDadosPessoais.setSpacing(SPACING);
 
         Label lblPessoal = new Label("Dados");
 
@@ -60,7 +53,6 @@ public class UICadastrarPessoa extends Application {
 
         panePessoal.setSpacing(SPACING);
         panePessoal.setPadding(new Insets(SPACING));
-
 
         TextField txtNome = new TextField();
         txtNome.setPromptText("Insira o Nome.");
@@ -86,9 +78,34 @@ public class UICadastrarPessoa extends Application {
 
         paneDadosPessoais.getChildren().addAll(lblPessoal, panePessoal);
 
+        VBox paneContato = new VBox();
 
-        Pane paneContato = new Pane();
+        paneContato.setPadding(PADDING);
+        paneContato.setSpacing(SPACING);
+
         Label lblContato = new Label("Contato");
+
+        TextField txtTelefone = new TextField();
+        txtTelefone.setPromptText("Insira o Telefone");
+
+        TextField txtTelefoneContato = new TextField();
+        txtTelefoneContato.setPromptText("Insira o Telefone para Contato");
+
+        TextField txtEmail = new TextField();
+        txtEmail.setPromptText("Insira o Email caso tenha");
+
+        CheckBox ckbJuridico = new CheckBox("Necessita de Júridico");
+
+        CheckBox ckbPsico = new CheckBox("Necessita de Psicológa");
+
+        paneContato.getChildren().addAll(
+                txtTelefone,
+                txtTelefoneContato,
+                txtEmail,
+                ckbJuridico,
+                ckbPsico
+        );
+
         paneDadosPessoais.getChildren().addAll(lblContato, paneContato);
         return paneDadosPessoais;
     }

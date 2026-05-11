@@ -1,9 +1,9 @@
 package edu.fatec.poo.views;
 
 import edu.fatec.poo.controllers.CCadastrarDoacaoProduto;
-import edu.fatec.poo.entities.produto.MarcaProduto;
-import edu.fatec.poo.entities.produto.Produto;
-import edu.fatec.poo.entities.produto.TipoProduto;
+import edu.fatec.poo.model.produto.MarcaProduto;
+import edu.fatec.poo.model.produto.Produto;
+import edu.fatec.poo.model.produto.TipoProduto;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;

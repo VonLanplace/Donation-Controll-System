@@ -1,4 +1,4 @@
-package edu.fatec.poo.entities;
+package edu.fatec.poo.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

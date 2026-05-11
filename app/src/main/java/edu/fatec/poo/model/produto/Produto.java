@@ -1,4 +1,4 @@
-package edu.fatec.poo.entities.produto;
+package edu.fatec.poo.model.produto;
 
 import lombok.*;
 

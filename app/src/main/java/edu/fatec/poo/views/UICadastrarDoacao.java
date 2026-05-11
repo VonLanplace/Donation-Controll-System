@@ -3,7 +3,7 @@ package edu.fatec.poo.views;
 import atlantafx.base.theme.NordDark;
 
 import edu.fatec.poo.controllers.CCadastrarDoacao;
-import edu.fatec.poo.entities.produto.Produto;
+import edu.fatec.poo.model.produto.Produto;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

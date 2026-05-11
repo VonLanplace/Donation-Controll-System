@@ -1,4 +1,4 @@
-package edu.fatec.poo.entities.produto;
+package edu.fatec.poo.model.produto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class MarcaProduto {
+public class TipoProduto {
     private Long id;
     private String nome;
 }

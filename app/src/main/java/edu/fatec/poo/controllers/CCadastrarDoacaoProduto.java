@@ -1,8 +1,8 @@
 package edu.fatec.poo.controllers;
 
-import edu.fatec.poo.entities.produto.MarcaProduto;
-import edu.fatec.poo.entities.produto.Produto;
-import edu.fatec.poo.entities.produto.TipoProduto;
+import edu.fatec.poo.model.produto.MarcaProduto;
+import edu.fatec.poo.model.produto.Produto;
+import edu.fatec.poo.model.produto.TipoProduto;
 import javafx.beans.property.*;
 import lombok.Getter;
 import lombok.Setter;
