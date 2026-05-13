@@ -1,25 +1,21 @@
 package edu.fatec.poo.views.user;
 
 import edu.fatec.poo.controllers.user.CAdmin;
-import edu.fatec.poo.controllers.user.CUserLogin;
 import edu.fatec.poo.model.Usuario;
 import edu.fatec.poo.util.Acesso;
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.*;
-import javafx.stage.Stage;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Stack;
-
 import static edu.fatec.poo.configs.WindowStandardFormatting.HEIGHT;
-import static edu.fatec.poo.configs.WindowStandardFormatting.WHIDTH;
 
 @Getter
 @Setter
@@ -63,15 +59,35 @@ public class UIAdmin extends BorderPane {
         tbvUsuario.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         TableColumn<Usuario, String> colNome = new TableColumn<>("Nome");
-        colNome.setCellValueFactory(item -> new ReadOnlyObjectWrapper<>(item.getValue().getNome()));
+        colNome.setCellValueFactory(
+                item -> new ReadOnlyObjectWrapper<>(item.getValue().getNome())
+        );
+
+        TableColumn<Usuario, String> colCpf = new TableColumn<>("Cpf");
+        colCpf.setCellValueFactory(
+                item -> new ReadOnlyObjectWrapper<>(item.getValue().getCpf())
+        );
 
         TableColumn<Usuario, Integer> colTelefone = new TableColumn<>("Telefone");
-        colTelefone.setCellValueFactory(item -> new ReadOnlyObjectWrapper<>(item.getValue().getTelefone()));
+        colTelefone.setCellValueFactory(
+                item -> new ReadOnlyObjectWrapper<>(item.getValue().getTelefone())
+        );
 
         TableColumn<Usuario, String> colEmail = new TableColumn<>("Email");
-        colEmail.setCellValueFactory(item -> new ReadOnlyObjectWrapper<>(item.getValue().getEmail()));
+        colEmail.setCellValueFactory(
+                item -> new ReadOnlyObjectWrapper<>(item.getValue().getEmail())
+        );
 
-        tbvUsuario.getColumns().addAll(colNome, colTelefone, colEmail);
+        tbvUsuario.getColumns().add(colCpf);
+        tbvUsuario.getColumns().add(colNome);
+        tbvUsuario.getColumns().add(colTelefone);
+        tbvUsuario.getColumns().add(colEmail);
+
+        tbvUsuario.getSelectionModel().selectedItemProperty().addListener(
+                (observable, oldValue, newValue) -> {
+                    controller.select(newValue);
+                }
+        );
         return tbvUsuario;
     }
 
@@ -85,9 +101,6 @@ public class UIAdmin extends BorderPane {
         txtCpf = new TextField();
         txtTelefone = new TextField();
         txtEmail = new TextField();
-        cbxAcesso = new ComboBox<>();
-        cbxAcesso.getItems().addAll(Acesso.values());
-        cbxAcesso.setMaxWidth(Double.MAX_VALUE);
         cbxAcesso = new ComboBox<>();
         cbxAcesso.getItems().addAll(Acesso.values());
         cbxAcesso.setMaxWidth(Double.MAX_VALUE);

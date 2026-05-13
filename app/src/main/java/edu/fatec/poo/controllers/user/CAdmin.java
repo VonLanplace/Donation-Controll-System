@@ -13,11 +13,13 @@ import javafx.stage.Stage;
 import lombok.Data;
 
 import java.sql.SQLException;
+import java.util.List;
 
 @Data
 public class CAdmin {
 
     private Usuario usuario;
+    private Usuario usuarioLogado;
     private UICoodenator coodenator;
 
     private UserService userService;
@@ -37,6 +39,7 @@ public class CAdmin {
         try {
             this.userService = new UserService();
             this.coodenator = coodenator;
+            this.usuarioLogado = usuario;
 
             nome = new SimpleStringProperty("");
             cpf = new SimpleStringProperty("");
@@ -47,31 +50,44 @@ public class CAdmin {
 
             usuariosCadastrados = FXCollections.observableArrayList(userService.searchAll());
             stage = new SimpleObjectProperty<>();
-        } catch (SQLException | ClassNotFoundException e) {
-            Alert alert = new Alert(Alert.AlertType.WARNING, "Falha de Conecção: " + e.getMessage(), ButtonType.CLOSE);
-            alert.setTitle("Erro de Acesso");
-            alert.showAndWait();
+        } catch (Exception e) {
+            mostrarErro(e);
             voltar();
         }
     }
 
     public void updateUsuarios() {
         try {
-            usuariosCadastrados = FXCollections.observableArrayList(userService.searchAll());
-        } catch (SQLException e) {
-            Alert alert = new Alert(Alert.AlertType.WARNING, "Falha de Conecção: " + e.getMessage(), ButtonType.CLOSE);
-            alert.setTitle("Erro de Acesso");
-            alert.showAndWait();
-            voltar();
+            List<Usuario> lista = userService.searchAll();
+            if (lista != null) {
+                usuariosCadastrados.setAll(lista);
+            }
+        } catch (Exception e) {
+            mostrarErro(e);
         }
     }
 
     public Usuario toEntity() {
+        if (this.usuario == null) this.usuario = new Usuario();
+
         usuario.setNome(this.nome.get());
         usuario.setCpf(this.cpf.get());
-        usuario.setTelefone(Integer.parseInt(this.telefone.get()));
+
+        String telString = this.telefone.get();
+        try {
+            usuario.setTelefone(telString == null || telString.isEmpty() ? 0 : Integer.parseInt(telString.replaceAll("[^0-9]", "")));
+        } catch (NumberFormatException e) {
+            usuario.setTelefone(0);
+        }
+
         usuario.setEmail(this.email.get());
         usuario.setAcesso(this.acesso.get());
+
+        String senhaPadrao = "12345678";
+
+        if (resetarSenha.get() || usuario.getSenha() == null || usuario.getSenha().isBlank()) {
+            usuario.setSenha(senhaPadrao);
+        }
         return usuario;
     }
 
@@ -80,34 +96,77 @@ public class CAdmin {
             this.nome.set(usuario.getNome() == null ? "" : usuario.getNome());
 
             // Aplica a máscara no CPF ao carregar do banco para a tela
-            this.cpf.set(usuario.getCpf() == null ? "" : usuario.getNome());
+            this.cpf.set(usuario.getCpf() == null ? "" : usuario.getCpf());
             this.telefone.set(String.valueOf(usuario.getTelefone() == 0 ? "" : usuario.getTelefone()));
             this.email.set(usuario.getEmail() == null ? "" : usuario.getEmail());
             this.acesso.set(usuario.getAcesso() == null ? null : usuario.getAcesso());
+            this.resetarSenha.set(false);
         }
     }
 
     public void salvar() {
-        userService.salvar(toEntity());
-        updateUsuarios();
+        if (this.usuario == null) {
+            this.usuario = new Usuario();
+        }
+        try {
+            userService.salvar(toEntity());
+            updateUsuarios();
+        } catch (Exception e) {
+            mostrarErro(e);
+        }
     }
 
 
     public void deletar() {
-        userService.deletar(toEntity());
-        updateUsuarios();
-    }
-
-    public void voltar() {
         try {
-            coodenator.returnToPreviosScreen();
+            if (usuario == null || usuario.getId() == 0) return;
+            System.out.println("ASD");
+
+            userService.deletar(usuario);
+            updateUsuarios();
+            limpar();
         } catch (Exception e) {
-            e.printStackTrace();
+            mostrarErro(e);
         }
     }
 
+    public void voltar() {
+        coodenator.returnToPreviosScreen();
+    }
+
     public void limpar() {
-        usuario = new Usuario();
+        usuario = null;
+        nome.setValue("");
+        cpf.setValue("");
+        telefone.setValue("");
+        email.setValue("");
+        acesso.setValue(Acesso.PUBLIC);
+        resetarSenha.setValue(false);
+    }
+
+    public void select(Usuario usuario) {
+        this.usuario = usuario;
         fromEntity(usuario);
+    }
+
+    public void mostrarErro(Exception e) {
+        Alert alert;
+        e.printStackTrace();
+        switch (e) {
+            case SQLException sqlEx -> {
+                alert = new Alert(Alert.AlertType.WARNING, "Falha na conexão: " + sqlEx.getMessage(), ButtonType.CLOSE);
+                alert.setTitle("Erro de Banco");
+            }
+            case ClassNotFoundException cnfEx -> {
+                alert = new Alert(Alert.AlertType.WARNING, "Driver do banco não encontrado: " + cnfEx.getMessage(), ButtonType.CLOSE);
+                alert.setTitle("Erro de Sistema");
+            }
+            default -> {
+                alert = new Alert(Alert.AlertType.WARNING, "Erro Desconhecido" + e.getMessage(), ButtonType.CLOSE);
+                alert.setTitle("Erro");
+            }
+        }
+
+        alert.showAndWait();
     }
 }
