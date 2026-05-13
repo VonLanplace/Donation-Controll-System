@@ -10,6 +10,7 @@ public class Usuario implements IEntity {
     private String nome;
     private String email;
     private String senha;
+    private String cpf;
     private int telefone;
 
     @Override

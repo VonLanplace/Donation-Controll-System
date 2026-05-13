@@ -7,5 +7,5 @@ public interface ICreateTable {
 
     public void createTableAll() throws SQLException;
 
-    public void createTabelCliente() throws SQLException;
+    public void createTabelUsuario() throws SQLException;
 }

@@ -17,7 +17,7 @@ public class mySqlCreateDB implements ICreateDB {
 
     @Override
     public void createDatabase() throws SQLException {
-        String sql = "CREATE DATABASE IF NOT EXISTS store_cakes " +
+        String sql = "CREATE DATABASE IF NOT EXISTS Doacao " +
                 "CHARACTER SET utf8mb4 " +
                 "COLLATE utf8mb4_unicode_ci";
 

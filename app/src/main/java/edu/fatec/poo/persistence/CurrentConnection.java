@@ -25,14 +25,12 @@ public class CurrentConnection {
 
             connection = new mysqlIDaoConnection(
                     "localhost",
-                    "store_cakes",
+                    "Doacao",
                     "root",
                     "qwer@1234"
             );
             createTable = new mySqlCreateTable(connection);
             createTable.createTableAll();
-
-            connection.closeConnection();
 
         } catch (Exception e) {
             e.printStackTrace();

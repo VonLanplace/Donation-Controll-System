@@ -23,12 +23,12 @@ public class mySqlCreateTable implements ICreateTable {
 
     @Override
     public void createTableAll() throws SQLException {
-        createTabelCliente();
+        createTabelUsuario();
         //TODO
     }
 
     @Override
-    public void createTabelCliente() throws SQLException {
+    public void createTabelUsuario() throws SQLException {
         String sql = """
                 CREATE TABLE IF NOT EXISTS usuario (
                     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -36,13 +36,15 @@ public class mySqlCreateTable implements ICreateTable {
                     nome VARCHAR(100) NOT NULL,
                     email VARCHAR(100) UNIQUE NOT NULL,
                     senha VARCHAR(100) NOT NULL,
+                    cpf VARCHAR(100) NOT NULL,
+                    telefone INT NOT NULL
                 );
                 """;
         try (PreparedStatement ps = c.prepareStatement(sql)) {
             ps.execute();
-            System.out.println("[MySQL] Tabela Cliente criada com sucesso ou já existente.");
+            System.out.println("[MySQL] Tabela Usuario criada com sucesso ou já existente.");
         } catch (SQLException e) {
-            System.err.println("[MySQL] Erro ao criar tabela Cliente no: " + e.getMessage());
+            System.err.println("[MySQL] Erro ao criar tabela Usuario no: " + e.getMessage());
             throw e;
         }
     }

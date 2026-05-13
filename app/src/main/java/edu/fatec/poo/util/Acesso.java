@@ -22,4 +22,5 @@ public enum Acesso {
             default -> throw new IllegalStateException("Unexpected value: " + indice);
         };
     }
+
 }
