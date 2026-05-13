@@ -1,5 +1,7 @@
 package edu.fatec.poo.service;
 
+import edu.fatec.poo.adapter.AdapterIn;
+import edu.fatec.poo.adapter.user.in.UserIn;
 import edu.fatec.poo.exceptions.LoginInvalidoException;
 import edu.fatec.poo.model.Usuario;
 import edu.fatec.poo.persistence.CurrentConnection;
@@ -40,6 +42,12 @@ public class UserService {
         } else {
             return atualizar(usuario, usuarioSalvo);
         }
+    }
+
+    public <S extends UserIn> Usuario salvar(S dtoIn, AdapterIn<S, Usuario> adapterIn) throws SQLException {
+        Usuario usuario = adapterIn.toIn(dtoIn);
+        salvar(usuario);
+        return usuario;
     }
 
     public boolean deletar(Usuario usuario) throws SQLException {

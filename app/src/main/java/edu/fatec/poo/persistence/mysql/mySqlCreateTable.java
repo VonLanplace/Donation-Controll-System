@@ -37,7 +37,7 @@ public class mySqlCreateTable implements ICreateTable {
                     email VARCHAR(100) UNIQUE NOT NULL,
                     senha VARCHAR(100) NOT NULL,
                     cpf VARCHAR(100) UNIQUE,
-                    telefone INT
+                    telefone VARCHAR(15)
                 );
                 """;
         try (PreparedStatement ps = c.prepareStatement(sql)) {

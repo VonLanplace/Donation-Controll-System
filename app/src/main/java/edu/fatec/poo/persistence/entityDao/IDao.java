@@ -1,5 +1,7 @@
 package edu.fatec.poo.persistence.entityDao;
 
+import edu.fatec.poo.model.Usuario;
+
 import java.sql.SQLException;
 import java.util.List;
 
@@ -17,9 +19,10 @@ public interface IDao<T> {
      * Persiste um novo objeto no banco de dados.
      *
      * @param object O objeto contendo os dados a serem inseridos.
+     * @return
      * @throws SQLException Se ocorrer um erro durante a execução da query SQL.
      */
-    public void add(T object) throws SQLException;
+    public Usuario add(T object) throws SQLException;
 
     /**
      * Realiza a busca de um objeto específico com base em atributos preenchidos.

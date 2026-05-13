@@ -17,7 +17,7 @@ public class UsuarioDao extends GenericDao<Usuario> implements IDao<Usuario> {
     }
 
     @Override
-    public void add(Usuario usuario) throws SQLException {
+    public Usuario add(Usuario usuario) throws SQLException {
         //TODO
         String sql = """
                 INSERT INTO usuario
@@ -26,15 +26,16 @@ public class UsuarioDao extends GenericDao<Usuario> implements IDao<Usuario> {
                 (?,?,?,?,?,?);
                 """;
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setInt(1, usuario.getAcesso().getIndice());
+            ps.setLong(1, usuario.getAcesso().getIndice());
             ps.setString(2, usuario.getNome());
             ps.setString(3, usuario.getEmail());
             ps.setString(4, usuario.getSenha());
             ps.setString(5, usuario.getCpf());
-            ps.setInt(6, usuario.getTelefone());
+            ps.setString(6, String.valueOf(usuario.getTelefone()));
 
             ps.execute();
         }
+        return usuario;
     }
 
     public Usuario searchByEmail(String email) throws SQLException {
@@ -102,7 +103,7 @@ public class UsuarioDao extends GenericDao<Usuario> implements IDao<Usuario> {
         usuario.setEmail(resultSet.getString("email"));
         usuario.setSenha(resultSet.getString("senha"));
         usuario.setCpf(resultSet.getString("cpf"));
-        usuario.setTelefone(resultSet.getInt("telefone"));
+        usuario.setTelefone(Long.parseLong(resultSet.getString("telefone")));
         return usuario;
     }
 

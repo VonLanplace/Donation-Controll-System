@@ -1,5 +1,7 @@
 package edu.fatec.poo.controllers.user;
 
+import edu.fatec.poo.adapter.user.AdapterUserAdmin;
+import edu.fatec.poo.adapter.user.in.dto.DTOUserAdmin;
 import edu.fatec.poo.model.Usuario;
 import edu.fatec.poo.service.UserService;
 import edu.fatec.poo.util.Acesso;
@@ -109,7 +111,14 @@ public class CAdmin {
             this.usuario = new Usuario();
         }
         try {
-            userService.salvar(toEntity());
+            userService.salvar(new DTOUserAdmin(
+                    nome.get(),
+                    cpf.get(),
+                    telefone.get(),
+                    email.get(),
+                    acesso.get(),
+                    resetarSenha.get()
+            ), new AdapterUserAdmin());
             updateUsuarios();
         } catch (Exception e) {
             mostrarErro(e);

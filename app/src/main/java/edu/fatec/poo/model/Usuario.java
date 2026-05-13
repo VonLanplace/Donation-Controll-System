@@ -11,7 +11,7 @@ public class Usuario implements IEntity {
     private String email;
     private String senha;
     private String cpf;
-    private int telefone;
+    private long telefone;
 
     @Override
     public long getId() {

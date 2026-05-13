@@ -68,7 +68,7 @@ public class UIAdmin extends BorderPane {
                 item -> new ReadOnlyObjectWrapper<>(item.getValue().getCpf())
         );
 
-        TableColumn<Usuario, Integer> colTelefone = new TableColumn<>("Telefone");
+        TableColumn<Usuario, Long> colTelefone = new TableColumn<>("Telefone");
         colTelefone.setCellValueFactory(
                 item -> new ReadOnlyObjectWrapper<>(item.getValue().getTelefone())
         );

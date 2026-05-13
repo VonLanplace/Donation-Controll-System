@@ -3,7 +3,10 @@ package edu.fatec.poo.controllers.donation;
 import edu.fatec.poo.model.produto.MarcaProduto;
 import edu.fatec.poo.model.produto.Produto;
 import edu.fatec.poo.model.produto.TipoProduto;
-import javafx.beans.property.*;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -28,7 +31,7 @@ public class CCadastrarDoacaoProduto {
     public Produto cadastrar() {
         // TODO
         System.out.println("CADASTRAR");
-        return new Produto((long) ((Math.random() * (100 - 0)) + 0), 10L, 10L, 10L, UUID.randomUUID().toString());
+        return new Produto((long) ((Math.random() * (100)) + 0), 10L, 10L, 10L, UUID.randomUUID().toString());
     }
 
     public String getCodigo() {
