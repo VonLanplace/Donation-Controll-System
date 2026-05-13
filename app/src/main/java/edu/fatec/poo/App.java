@@ -3,12 +3,14 @@
  */
 package edu.fatec.poo;
 
+import edu.fatec.poo.persistence.CurrentConnection;
 import edu.fatec.poo.views.person.UICadastrarPessoa;
+import edu.fatec.poo.views.user.UIUserLogin;
 import javafx.application.Application;
 
 public class App {
     public static void main(String[] args) {
-
-        Application.launch(UICadastrarPessoa.class, args);
+        CurrentConnection currentConnection = new CurrentConnection();
+        Application.launch(UIUserLogin.class, args);
     }
 }
