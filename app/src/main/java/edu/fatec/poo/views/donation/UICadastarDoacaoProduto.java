@@ -1,6 +1,6 @@
-package edu.fatec.poo.views;
+package edu.fatec.poo.views.donation;
 
-import edu.fatec.poo.controllers.CCadastrarDoacaoProduto;
+import edu.fatec.poo.controllers.donation.CCadastrarDoacaoProduto;
 import edu.fatec.poo.model.produto.MarcaProduto;
 import edu.fatec.poo.model.produto.Produto;
 import edu.fatec.poo.model.produto.TipoProduto;

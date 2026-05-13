@@ -3,8 +3,7 @@
  */
 package edu.fatec.poo;
 
-import edu.fatec.poo.views.UICadastrarDoacao;
-import edu.fatec.poo.views.UICadastrarPessoa;
+import edu.fatec.poo.views.person.UICadastrarPessoa;
 import javafx.application.Application;
 
 public class App {

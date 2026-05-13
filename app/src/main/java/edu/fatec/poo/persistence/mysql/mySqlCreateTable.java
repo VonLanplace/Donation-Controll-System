@@ -30,15 +30,12 @@ public class mySqlCreateTable implements ICreateTable {
     @Override
     public void createTabelCliente() throws SQLException {
         String sql = """
-                CREATE TABLE IF NOT EXISTS cliente (
+                CREATE TABLE IF NOT EXISTS usuario (
                     id INT AUTO_INCREMENT PRIMARY KEY,
+                    acesso INT NOT NULL,
                     nome VARCHAR(100) NOT NULL,
                     email VARCHAR(100) UNIQUE NOT NULL,
-                    telefone INT,
-                    endereco_logradouro VARCHAR(150),
-                    endereco_cep VARCHAR(9),
-                    endereco_num INT,
-                    endereco_complemento VARCHAR(50)
+                    senha VARCHAR(100) NOT NULL,
                 );
                 """;
         try (PreparedStatement ps = c.prepareStatement(sql)) {

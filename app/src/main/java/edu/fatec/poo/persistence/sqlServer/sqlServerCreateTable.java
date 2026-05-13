@@ -30,17 +30,15 @@ public class sqlServerCreateTable implements ICreateTable {
     @Override
     public void createTabelCliente() throws SQLException {
         String sql = """
-                IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[cliente]') AND type in (N'U'))
+                IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[usuario]') AND type in (N'U'))
                 BEGIN
-                    CREATE TABLE cliente (
+                    CREATE TABLE usuario (
                         id INT IDENTITY(1,1) PRIMARY KEY,
+                        acesso INT NOT NULL,
                         nome VARCHAR(100) NOT NULL,
+                        senha VARCHAR(100) NOT NULL,
                         email VARCHAR(100) UNIQUE NOT NULL,
                         telefone VARCHAR(20),
-                        endereco_logradouro VARCHAR(150),
-                        endereco_cep VARCHAR(9),
-                        endereco_num INT,
-                        endereco_complemento VARCHAR(50)
                     );
                 END
                 """;

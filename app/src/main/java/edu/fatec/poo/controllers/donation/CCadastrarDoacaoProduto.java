@@ -1,4 +1,4 @@
-package edu.fatec.poo.controllers;
+package edu.fatec.poo.controllers.donation;
 
 import edu.fatec.poo.model.produto.MarcaProduto;
 import edu.fatec.poo.model.produto.Produto;

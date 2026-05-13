@@ -1,7 +1,7 @@
-package edu.fatec.poo.controllers;
+package edu.fatec.poo.controllers.donation;
 
 import edu.fatec.poo.model.produto.Produto;
-import edu.fatec.poo.views.UICadastarDoacaoProduto;
+import edu.fatec.poo.views.donation.UICadastarDoacaoProduto;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;

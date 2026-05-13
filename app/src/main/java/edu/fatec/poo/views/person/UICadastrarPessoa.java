@@ -1,10 +1,8 @@
-package edu.fatec.poo.views;
+package edu.fatec.poo.views.person;
 
-import edu.fatec.poo.controllers.CCadastrarPessoa;
+import edu.fatec.poo.controllers.person.CCadastrarPessoa;
 import javafx.application.Application;
-import javafx.geometry.HPos;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;

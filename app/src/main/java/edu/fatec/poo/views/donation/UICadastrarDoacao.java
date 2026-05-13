@@ -1,8 +1,8 @@
-package edu.fatec.poo.views;
+package edu.fatec.poo.views.donation;
 
 import atlantafx.base.theme.NordDark;
 
-import edu.fatec.poo.controllers.CCadastrarDoacao;
+import edu.fatec.poo.controllers.donation.CCadastrarDoacao;
 import edu.fatec.poo.model.produto.Produto;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
