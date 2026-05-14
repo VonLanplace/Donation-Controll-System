@@ -105,7 +105,7 @@ public class UICadastarDoacaoProduto extends Application {
         });
 
         btnCadastrar = new Button("Confirmar");
-        btnCadastrar.getStyleClass().add(Styles.ACCENT); // Azul Nord
+        btnCadastrar.getStyleClass().add(Styles.ACCENT);
         btnCadastrar.setPrefWidth(100);
         btnCadastrar.setDefaultButton(true);
         btnCadastrar.setOnAction(p -> {

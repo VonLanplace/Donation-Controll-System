@@ -41,11 +41,18 @@ public class mariadbCreateTable implements ICreateTable {
                 );
                 """;
         runStatementData(sql, "Usuario");
+        sql = """
+                INSERT INTO usuario (acesso, nome, email, senha, cpf, telefone)
+                SELECT 1, 'user', 'user', 'user', '098765432101', '40028922'
+                WHERE NOT EXISTS (
+                    SELECT 1 FROM usuario WHERE acesso = 1
+                );
+                """;
+        runStatementData(sql, "Usuario");
     }
 
     private void runStatementTabela(String sql, String nomeTabela) throws SQLException {
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            System.out.println(ps.executeUpdate());
             System.out.println("[Mariadb] Tabela " + nomeTabela + " criada com sucesso ou já existente.");
         } catch (SQLException e) {
             System.err.println("[Mariadb] Erro ao criar tabela " + nomeTabela + " no: " + e.getMessage());

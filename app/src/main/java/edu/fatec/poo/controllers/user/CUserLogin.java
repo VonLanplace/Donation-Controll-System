@@ -53,7 +53,10 @@ public class CUserLogin extends AController {
 
             clearFields();
             switch (usuarioLogado.getAcesso()) {
-                case USER -> System.out.println("TODO");
+                case USER -> {
+                    getCoodenator().stashScreen(getCoodenator().getScene().getRoot());
+                    getCoodenator().showCadastroDoacaoScreen(usuarioLogado);
+                }
                 case ADMIN -> {
                     getCoodenator().stashScreen(getCoodenator().getScene().getRoot());
                     getCoodenator().showAdminScreen(usuarioLogado);

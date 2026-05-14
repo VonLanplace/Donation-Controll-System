@@ -23,7 +23,7 @@ public class App extends Application {
             CurrentConnection connection = new CurrentConnection();
             connection.buildMariaDb();
         }
-        coodenator.showCadastroDoacaoScreen(new Usuario());
-        //coodenator.showLoginScreen();
+        //coodenator.showCadastroDoacaoScreen(new Usuario());
+        coodenator.showLoginScreen();
     }
 }
