@@ -38,11 +38,6 @@ public class UserService {
         return usuarioDao.searchById(id);
     }
 
-    public Usuario findByName(String nome) throws SQLException {
-        if (nome.length() > 255) return null;
-        return usuarioDao.searchByNome(nome);
-    }
-
     public Usuario findByEmail(String email) throws SQLException {
         if (email.length() > 255) return null;
         return usuarioDao.searchByEmail(email);
@@ -51,6 +46,11 @@ public class UserService {
     public void salvar(Usuario usuario) throws SQLException {
         if (usuario == null) return;
         Usuario usuarioSalvo = usuarioDao.searchByEmail(usuario.getEmail());
+
+        if (usuarioSalvo == null) {
+            usuarioSalvo = usuarioDao.searchByCpf(usuario.getCpf());
+        }
+
         if (usuarioSalvo == null) {
             if (usuario.getSenha() == null) usuario.resetarSenha();
             usuarioDao.add(usuario);
