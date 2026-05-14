@@ -1,6 +1,6 @@
 package edu.fatec.poo.controllers.user;
 
-import edu.fatec.poo.adapter.user.AdapterUserAdmin;
+import edu.fatec.poo.adapter.user.AdapterCAdmin;
 import edu.fatec.poo.adapter.user.in.dto.DTOUserAdmin;
 import edu.fatec.poo.model.Usuario;
 import edu.fatec.poo.service.UserService;
@@ -77,7 +77,7 @@ public class CAdmin {
 
         String telString = this.telefone.get();
         try {
-            usuario.setTelefone(telString == null || telString.isEmpty() ? 0 : Integer.parseInt(telString.replaceAll("[^0-9]", "")));
+            usuario.setTelefone(telString == null || telString.isEmpty() ? 0 : Long.parseLong(telString.replaceAll("[^0-9]", "")));
         } catch (NumberFormatException e) {
             usuario.setTelefone(0);
         }
@@ -96,13 +96,13 @@ public class CAdmin {
     public void fromEntity(Usuario usuario) {
         if (usuario != null) {
             this.nome.set(usuario.getNome() == null ? "" : usuario.getNome());
-
-            // Aplica a máscara no CPF ao carregar do banco para a tela
             this.cpf.set(usuario.getCpf() == null ? "" : usuario.getCpf());
             this.telefone.set(String.valueOf(usuario.getTelefone() == 0 ? "" : usuario.getTelefone()));
             this.email.set(usuario.getEmail() == null ? "" : usuario.getEmail());
             this.acesso.set(usuario.getAcesso() == null ? null : usuario.getAcesso());
             this.resetarSenha.set(false);
+        } else {
+            limpar();
         }
     }
 
@@ -118,7 +118,9 @@ public class CAdmin {
                     email.get(),
                     acesso.get(),
                     resetarSenha.get()
-            ), new AdapterUserAdmin());
+            ), new AdapterCAdmin());
+            usuario = userService.findByEmail(nome.get());
+            fromEntity(usuario);
             updateUsuarios();
         } catch (Exception e) {
             mostrarErro(e);
@@ -129,6 +131,8 @@ public class CAdmin {
     public void deletar() {
         try {
             if (usuario == null || usuario.getId() == 0) return;
+            if (usuario.getId() == usuarioLogado.getId())
+                throw new IllegalArgumentException("Usuário não pode se Deletar do sistema.");
             System.out.println("ASD");
 
             userService.deletar(usuario);
@@ -159,23 +163,23 @@ public class CAdmin {
     }
 
     public void mostrarErro(Exception e) {
-        Alert alert;
+        Alert alert = new Alert(Alert.AlertType.ERROR);
         e.printStackTrace();
-        switch (e) {
-            case SQLException sqlEx -> {
-                alert = new Alert(Alert.AlertType.WARNING, "Falha na conexão: " + sqlEx.getMessage(), ButtonType.CLOSE);
-                alert.setTitle("Erro de Banco");
-            }
-            case ClassNotFoundException cnfEx -> {
-                alert = new Alert(Alert.AlertType.WARNING, "Driver do banco não encontrado: " + cnfEx.getMessage(), ButtonType.CLOSE);
-                alert.setTitle("Erro de Sistema");
-            }
-            default -> {
-                alert = new Alert(Alert.AlertType.WARNING, "Erro Desconhecido" + e.getMessage(), ButtonType.CLOSE);
-                alert.setTitle("Erro");
-            }
-        }
 
+        if (e instanceof SQLException sqlEx) {
+            alert.setTitle("Erro de Banco de Dados");
+            if (sqlEx.getErrorCode() == 1062) {
+                alert.setContentText("Erro: Este CPF ou E-mail já está cadastrado.");
+            } else {
+                alert.setContentText("Falha na conexão: " + sqlEx.getMessage());
+            }
+        } else if (e instanceof IllegalArgumentException) {
+            alert.setTitle("Dados Inválidos");
+            alert.setContentText(e.getMessage());
+        } else {
+            alert.setTitle("Erro");
+            alert.setContentText("Um erro inesperado ocorreu: " + e.getMessage());
+        }
         alert.showAndWait();
     }
 }
