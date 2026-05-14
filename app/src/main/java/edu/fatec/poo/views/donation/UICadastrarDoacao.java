@@ -1,191 +1,166 @@
 package edu.fatec.poo.views.donation;
 
+import atlantafx.base.theme.Styles;
 import edu.fatec.poo.controllers.donation.CCadastrarDoacao;
 import edu.fatec.poo.model.produto.Produto;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 
 import java.time.LocalDate;
 
 public class UICadastrarDoacao extends GridPane {
 
-    // Size Variables
-    private static final double WHIDTH = 720;
-    private static final double HEIGHT = 480;
-    private static final double SPACING = 10;
-
-    // Controller
+    private static final double SPACING = 15;
     private CCadastrarDoacao controller;
 
-    // Componentes da interface
-    private HBox paneDoacao;
+    // Componentes de Layout
+    private VBox paneDoacao;
     private VBox paneProdutos;
     private HBox paneBotoes;
 
-    // Labels
-    private Label lblNome;
-    private Label lblData;
-    private Label lblTituloDoacao;
-    private Label lblTituloProdutos;
-
-    // TextFields
-    private TextField txtNome;
-
-    // DatePicker
-    private DatePicker dtpDataDoacao;
-
     // Tabelas
-    // TODO Use the DTOProdutoLer
     private TableView<Produto> tabelaProdutos;
-    private TableColumn<Produto, Long> colId;
-    private TableColumn<Produto, String> colNome;
-    private TableColumn<Produto, String> colMarca;
-    private TableColumn<Produto, String> colTipo;
-    private TableColumn<Produto, LocalDate> colValidade;
-
-    private ObservableList<Produto> listaProdutos = FXCollections.observableArrayList();
-
-    // Buttons
-    private Button btnAdicionar;
-    private Button btnRemover;
-    private Button btnCadastrar;
-    private Button btnCancelar;
 
     public UICadastrarDoacao(CCadastrarDoacao controller) {
         super();
-
-        // General Items
         this.controller = controller;
 
-        // Pane Configs
-        this.setPadding(new Insets(SPACING));
+        // Configuração do Grid Principal
+        this.setPadding(new Insets(20));
+        this.setHgap(SPACING);
+        this.setVgap(SPACING);
+        this.setAlignment(Pos.TOP_CENTER);
 
-        // Itens
-
-        // Area Doação
-        lblTituloDoacao = new Label("Doação");
+        // Criar as seções
         configurarAreaDoacao();
-
-        // Area Produtos
-        lblTituloProdutos = new Label("Produtos");
         configurarAreaProdutos();
-
-        // Botoes finais
         configurarAreaBotoesBase();
 
-        // Initiation
-        this.getChildren().addAll(
-                lblTituloDoacao,
-                paneDoacao,
-                lblTituloProdutos,
-                paneProdutos,
-                paneBotoes
-        );
+        // Posicionamento no Grid (coluna, linha)
+        Label lblTitulo = new Label("Nova Doação");
+        lblTitulo.getStyleClass().add(Styles.TITLE_3);
+
+        this.add(lblTitulo, 0, 0);
+        this.add(paneDoacao, 0, 1);
+        this.add(paneProdutos, 0, 2);
+        this.add(paneBotoes, 0, 3);
+
+        // Ajuste para que a interface cresça horizontalmente
+        ColumnConstraints constraints = new ColumnConstraints();
+        constraints.setHgrow(Priority.ALWAYS);
+        this.getColumnConstraints().add(constraints);
 
         this.controller.start();
     }
 
+
     private void configurarAreaDoacao() {
-        paneDoacao = new HBox();
-        paneDoacao.setPadding(new Insets(SPACING));
-        paneDoacao.setSpacing(SPACING);
+        paneDoacao = new VBox(10);
 
-        VBox paneDoacaoNome = new VBox();
-        lblNome = new Label("Nome Doador");
-        txtNome = new TextField();
-        txtNome.promptTextProperty().setValue("Digite o Nome do Doador.");
+        Label lblTituloDoacao = new Label("Informações do Doador");
+        lblTituloDoacao.getStyleClass().add(Styles.TITLE_4);
+
+        HBox campos = new HBox(SPACING);
+
+        // Campo Nome
+        VBox boxNome = new VBox(5);
+        Label lblNome = new Label("Nome Doador");
+        TextField txtNome = new TextField();
+        txtNome.setPromptText("Digite o nome completo");
         txtNome.textProperty().bindBidirectional(controller.getNomeDoador());
-        paneDoacaoNome.setSpacing(SPACING);
-        paneDoacaoNome.getChildren().addAll(lblNome, txtNome);
-        paneDoacaoNome.setPrefWidth((WHIDTH / 3) * 2);
+        HBox.setHgrow(boxNome, Priority.ALWAYS);
+        boxNome.getChildren().addAll(lblNome, txtNome);
 
-        VBox paneDoacaoData = new VBox();
-        lblData = new Label("Data Doação");
-        dtpDataDoacao = new DatePicker();
+        // Campo Data
+        VBox boxData = new VBox(5);
+        Label lblData = new Label("Data");
+        DatePicker dtpDataDoacao = new DatePicker(LocalDate.now());
         dtpDataDoacao.valueProperty().bindBidirectional(controller.getDate());
-        paneDoacaoData.setSpacing(SPACING);
-        paneDoacaoData.getChildren().addAll(lblData, dtpDataDoacao);
+        boxData.getChildren().addAll(lblData, dtpDataDoacao);
 
-        paneDoacao.getChildren().addAll(
-                paneDoacaoNome, paneDoacaoData
-        );
+        campos.getChildren().addAll(boxNome, boxData);
+        paneDoacao.getChildren().addAll(lblTituloDoacao, campos);
     }
 
     private void configurarAreaProdutos() {
-        paneProdutos = new VBox();
-        paneProdutos.setPadding(new Insets(SPACING));
-        paneProdutos.setSpacing(SPACING);
+        paneProdutos = new VBox(10);
+        VBox.setVgrow(paneProdutos, Priority.ALWAYS);
 
-        HBox paneProdutosBotoes = new HBox();
-        paneProdutosBotoes.setSpacing(SPACING);
+        HBox headerProdutos = new HBox();
+        Label lblTituloProdutos = new Label("Itens da Doação");
+        lblTituloProdutos.getStyleClass().add(Styles.TITLE_4);
 
-        btnAdicionar = new Button("+");
-        btnAdicionar.setOnAction(event -> {
-            controller.adicionar();
-        });
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        btnRemover = new Button("-");
-        btnRemover.setOnAction(event -> {
-            controller.remover();
-        });
+        HBox paneProdutosBotoes = new HBox(8);
+        Button btnAdicionar = new Button("Adicionar Produto");
+        btnAdicionar.getStyleClass().addAll(Styles.BUTTON_OUTLINED, Styles.ACCENT);
+        btnAdicionar.setOnAction(event -> controller.adicionar());
+
+        Button btnRemover = new Button("Remover");
+        btnRemover.getStyleClass().addAll(Styles.BUTTON_OUTLINED, Styles.DANGER);
+        btnRemover.setOnAction(event -> controller.remover());
 
         paneProdutosBotoes.getChildren().addAll(btnRemover, btnAdicionar);
+        headerProdutos.getChildren().addAll(lblTituloProdutos, spacer, paneProdutosBotoes);
 
-        // Configurar Tabela
         configurarAreaProdutoTabela();
-
-        paneProdutos.getChildren().addAll(paneProdutosBotoes, tabelaProdutos);
+        paneProdutos.getChildren().addAll(headerProdutos, tabelaProdutos);
     }
 
     private void configurarAreaProdutoTabela() {
         tabelaProdutos = new TableView<>();
-        tabelaProdutos.setPlaceholder(new Label("Nenhum Produto adicionado."));
+        tabelaProdutos.setPlaceholder(new Label("Nenhum produto na lista."));
         tabelaProdutos.setItems(controller.getListaProdutos());
+        tabelaProdutos.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
 
-        colId = new TableColumn<>("ID");
-        colId.setCellValueFactory(new PropertyValueFactory<>("id"));
+        controller.getProdutoSelecionado().bind(
+                tabelaProdutos.getSelectionModel().selectedItemProperty()
+        );
 
-        colNome = new TableColumn<>("Nome");
-        colNome.setCellValueFactory(new PropertyValueFactory<>("nome"));
+        TableColumn<Produto, String> colCodigo = new TableColumn<>("Codigo de Barras");
+        colCodigo.setCellValueFactory(produto -> new ReadOnlyObjectWrapper<>(produto.getValue().getCodigoBarras()));
+        colCodigo.setMinWidth(140);
+        colCodigo.setPrefWidth(160);
+        colCodigo.setMaxWidth(200);
 
-        colTipo = new TableColumn<>("Tipo");
-        colTipo.setCellValueFactory(new PropertyValueFactory<>("tipo"));
+        TableColumn<Produto, Long> colTipo = new TableColumn<>("Tipo");
+        colTipo.setCellValueFactory(produto ->
+                new ReadOnlyObjectWrapper<>(produto.getValue().getIdTipoProduto()));
 
-        colMarca = new TableColumn<>("Marca");
-        colMarca.setCellValueFactory(new PropertyValueFactory<>("marca"));
+        TableColumn<Produto, Long> colMarca = new TableColumn<>("Marca");
+        colMarca.setCellValueFactory(produto ->
+                new ReadOnlyObjectWrapper<>(produto.getValue().getIdMarcaProduto()));
 
-        colValidade = new TableColumn<>("Validade");
-        colValidade.setCellValueFactory(new PropertyValueFactory<>("validade"));
+        TableColumn<Produto, LocalDate> colValidade = new TableColumn<>("Validade");
+        colValidade.setCellValueFactory(produto ->
+                new ReadOnlyObjectWrapper<>(produto.getValue().getDataValidade()));
 
-        tabelaProdutos.getColumns().add(colId);
-        tabelaProdutos.getColumns().add(colNome);
+        tabelaProdutos.getColumns().add(colCodigo);
         tabelaProdutos.getColumns().add(colTipo);
         tabelaProdutos.getColumns().add(colMarca);
         tabelaProdutos.getColumns().add(colValidade);
     }
 
     private void configurarAreaBotoesBase() {
-        paneBotoes = new HBox();
-        paneBotoes.setSpacing(SPACING);
+        paneBotoes = new HBox(15);
+        paneBotoes.setAlignment(Pos.CENTER_RIGHT);
+        paneBotoes.setPadding(new Insets(10, 0, 0, 0));
 
-        btnCadastrar = new Button("Cadastrar");
-        btnCadastrar.setOnAction(event -> {
-            controller.cadastrar();
-        });
+        Button btnCancelar = new Button("Cancelar");
+        btnCancelar.setPrefWidth(120);
+        btnCancelar.setOnAction(event -> controller.cancelar());
 
-        btnCancelar = new Button("Cancelar");
-        //TODO remove exit
-        btnCancelar.setOnAction(event -> {
-            controller.cancelar();
-        });
+        Button btnCadastrar = new Button("Finalizar Cadastro");
+        btnCadastrar.getStyleClass().addAll(Styles.SUCCESS, Styles.SUCCESS);
+        btnCadastrar.setPrefWidth(160);
+        btnCadastrar.setOnAction(event -> controller.cadastrar());
 
         paneBotoes.getChildren().addAll(btnCancelar, btnCadastrar);
     }
-
 }
