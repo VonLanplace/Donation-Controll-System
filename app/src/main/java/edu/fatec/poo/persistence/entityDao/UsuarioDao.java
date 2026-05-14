@@ -1,7 +1,7 @@
 package edu.fatec.poo.persistence.entityDao;
 
 import edu.fatec.poo.model.Usuario;
-import edu.fatec.poo.persistence.ADaoConnection;
+import edu.fatec.poo.persistence.connection.ADaoConnection;
 import edu.fatec.poo.util.Acesso;
 
 import java.sql.PreparedStatement;

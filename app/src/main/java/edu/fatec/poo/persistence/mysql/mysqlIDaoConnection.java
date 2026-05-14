@@ -1,6 +1,6 @@
 package edu.fatec.poo.persistence.mysql;
 
-import edu.fatec.poo.persistence.ADaoConnection;
+import edu.fatec.poo.persistence.connection.ADaoConnection;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

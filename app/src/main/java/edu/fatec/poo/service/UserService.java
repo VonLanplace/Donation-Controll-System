@@ -4,7 +4,7 @@ import edu.fatec.poo.adapter.AdapterIn;
 import edu.fatec.poo.adapter.user.in.UserIn;
 import edu.fatec.poo.exceptions.LoginInvalidoException;
 import edu.fatec.poo.model.Usuario;
-import edu.fatec.poo.persistence.CurrentConnection;
+import edu.fatec.poo.persistence.connection.CurrentConnection;
 import edu.fatec.poo.persistence.entityDao.UsuarioDao;
 
 import java.sql.SQLException;

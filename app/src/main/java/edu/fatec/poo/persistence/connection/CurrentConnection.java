@@ -1,4 +1,4 @@
-package edu.fatec.poo.persistence;
+package edu.fatec.poo.persistence.connection;
 
 import edu.fatec.poo.persistence.mysql.mySqlCreateDB;
 import edu.fatec.poo.persistence.mysql.mySqlCreateTable;
@@ -15,9 +15,9 @@ public class CurrentConnection {
         try {
             connection = new mysqlIDaoConnection(
                     "localhost",
-                    "master",
+                    "sys",
                     "root",
-                    "qwer@1234"
+                    "12345678"
             );
             mySqlCreateDB createDB = new mySqlCreateDB(connection);
             createDB.createDatabase();
@@ -27,7 +27,7 @@ public class CurrentConnection {
                     "localhost",
                     "Doacao",
                     "root",
-                    "qwer@1234"
+                    "12345678"
             );
             createTable = new mySqlCreateTable(connection);
             createTable.createTableAll();

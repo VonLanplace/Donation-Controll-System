@@ -1,4 +1,4 @@
-package edu.fatec.poo.persistence;
+package edu.fatec.poo.persistence.connection;
 
 import java.sql.Connection;
 import java.sql.SQLException;

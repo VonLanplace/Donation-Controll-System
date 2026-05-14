@@ -3,23 +3,10 @@
  */
 package edu.fatec.poo;
 
-import edu.fatec.poo.controllers.user.CUserLogin;
-import edu.fatec.poo.persistence.CurrentConnection;
+import edu.fatec.poo.persistence.connection.CurrentConnection;
 import edu.fatec.poo.views.UICoodenator;
-import edu.fatec.poo.views.person.UICadastrarPessoa;
-import edu.fatec.poo.views.user.UIAdmin;
-import edu.fatec.poo.views.user.UIUserLogin;
 import javafx.application.Application;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.layout.Pane;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
-
-import java.util.Stack;
-
-import static edu.fatec.poo.configs.WindowStandardFormatting.HEIGHT;
-import static edu.fatec.poo.configs.WindowStandardFormatting.WHIDTH;
 
 public class App extends Application {
     public static void main(String[] args) {
