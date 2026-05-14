@@ -4,7 +4,7 @@ import edu.fatec.poo.controllers.AController;
 import edu.fatec.poo.exceptions.UsuarioNaoCadastradoException;
 import edu.fatec.poo.model.Usuario;
 import edu.fatec.poo.service.UserService;
-import edu.fatec.poo.views.UICoodenator;
+import edu.fatec.poo.views.UICoordenador;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -22,8 +22,8 @@ public class CUserLogin extends AController {
     private SimpleStringProperty senha;
     private SimpleStringProperty mensagem;
 
-    public CUserLogin(UICoodenator coodenator) {
-        super(coodenator);
+    public CUserLogin(UICoordenador coordenador) {
+        super(coordenador);
         try {
             userService = new UserService();
 
@@ -31,10 +31,7 @@ public class CUserLogin extends AController {
             senha = new SimpleStringProperty();
             mensagem = new SimpleStringProperty();
         } catch (Exception e) {
-            Alert alert = new Alert(Alert.AlertType.WARNING, "Falha de Conecção: " + e.getMessage(), ButtonType.CLOSE);
-            alert.setTitle("Erro de Acesso");
-            e.printStackTrace();
-            alert.showAndWait();
+            coordenador.showError(e);
         }
     }
 
