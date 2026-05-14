@@ -1,8 +1,10 @@
 package edu.fatec.poo.views;
 
+import edu.fatec.poo.controllers.donation.CCadastrarDoacao;
 import edu.fatec.poo.controllers.user.CAdmin;
 import edu.fatec.poo.controllers.user.CUserLogin;
 import edu.fatec.poo.model.Usuario;
+import edu.fatec.poo.views.donation.UICadastrarDoacao;
 import edu.fatec.poo.views.user.UIAdmin;
 import edu.fatec.poo.views.user.UIUserLogin;
 import javafx.scene.Parent;
@@ -44,6 +46,10 @@ public class UICoordenador {
 
     public void showAdminScreen(Usuario usuarioLogado) {
         showScreen(new UIAdmin(new CAdmin(usuarioLogado, this)));
+    }
+
+    public void showCadastroDoacaoScreen(Usuario usuarioLogado) {
+        showScreen(new UICadastrarDoacao(new CCadastrarDoacao(usuarioLogado, this)));
     }
 
     public void returnToPreviosScreen() {

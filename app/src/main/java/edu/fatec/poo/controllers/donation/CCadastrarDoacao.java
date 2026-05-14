@@ -1,6 +1,8 @@
 package edu.fatec.poo.controllers.donation;
 
+import edu.fatec.poo.model.Usuario;
 import edu.fatec.poo.model.produto.Produto;
+import edu.fatec.poo.views.UICoordenador;
 import edu.fatec.poo.views.donation.UICadastarDoacaoProduto;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -17,11 +19,19 @@ import java.time.LocalDate;
 @Getter
 @Setter
 public class CCadastrarDoacao {
+    private final UICoordenador coordenador;
+    private final Usuario usuarioLogado;
+
     private StringProperty nomeDoador = new SimpleStringProperty();
     private ObjectProperty<LocalDate> date = new SimpleObjectProperty<>();
     // TODO Use the DTO
     private ObjectProperty<Produto> produtoSelecionado = new SimpleObjectProperty<>();
     private ObservableList<Produto> listaProdutos = FXCollections.observableArrayList();
+
+    public CCadastrarDoacao(Usuario usuarioLogado, UICoordenador coordenador) {
+        this.coordenador = coordenador;
+        this.usuarioLogado = usuarioLogado;
+    }
 
     public void hello() {
         System.out.println("Hello");
@@ -58,29 +68,7 @@ public class CCadastrarDoacao {
         //TODO
         System.out.println("CADASTRAR");
     }
-
-    public String getNomeDoador() {
-        return nomeDoador.get();
+    
+    public void cancelar() {
     }
-
-    public StringProperty nomeDoadorProperty() {
-        return nomeDoador;
-    }
-
-    public LocalDate getDate() {
-        return date.get();
-    }
-
-    public ObjectProperty<LocalDate> dateProperty() {
-        return date;
-    }
-
-    public Produto getProdutoSelecionado() {
-        return produtoSelecionado.get();
-    }
-
-    public ObjectProperty<Produto> produtoSelecionadoProperty() {
-        return produtoSelecionado;
-    }
-
 }

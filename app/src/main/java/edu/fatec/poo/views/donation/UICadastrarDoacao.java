@@ -1,23 +1,19 @@
 package edu.fatec.poo.views.donation;
 
-import atlantafx.base.theme.NordDark;
-
 import edu.fatec.poo.controllers.donation.CCadastrarDoacao;
 import edu.fatec.poo.model.produto.Produto;
-import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 
 import java.time.LocalDate;
 
-public class UICadastrarDoacao extends Application {
+public class UICadastrarDoacao extends GridPane {
 
     // Size Variables
     private static final double WHIDTH = 720;
@@ -25,16 +21,12 @@ public class UICadastrarDoacao extends Application {
     private static final double SPACING = 10;
 
     // Controller
-    private CCadastrarDoacao controll;
+    private CCadastrarDoacao controller;
 
     // Componentes da interface
-    private VBox paneMain;
     private HBox paneDoacao;
     private VBox paneProdutos;
     private HBox paneBotoes;
-
-    private Scene scene;
-    private Stage stage;
 
     // Labels
     private Label lblNome;
@@ -65,24 +57,14 @@ public class UICadastrarDoacao extends Application {
     private Button btnCadastrar;
     private Button btnCancelar;
 
-    @Override
-    public void start(Stage stage) {
-        Application.setUserAgentStylesheet(new NordDark().getUserAgentStylesheet());
+    public UICadastrarDoacao(CCadastrarDoacao controller) {
+        super();
 
         // General Items
-        controll = new CCadastrarDoacao();
-        this.stage = stage;
-        paneMain = new VBox();
-        scene = new Scene(paneMain, WHIDTH, HEIGHT);
-
-        // Stage Configs
-        stage.setTitle("Cadastro de Doação");
-        stage.setResizable(false);
-        stage.setScene(scene);
+        this.controller = controller;
 
         // Pane Configs
-        paneMain.setPadding(new Insets(SPACING));
-        paneMain.setSpacing(SPACING);
+        this.setPadding(new Insets(SPACING));
 
         // Itens
 
@@ -98,7 +80,7 @@ public class UICadastrarDoacao extends Application {
         configurarAreaBotoesBase();
 
         // Initiation
-        paneMain.getChildren().addAll(
+        this.getChildren().addAll(
                 lblTituloDoacao,
                 paneDoacao,
                 lblTituloProdutos,
@@ -106,8 +88,7 @@ public class UICadastrarDoacao extends Application {
                 paneBotoes
         );
 
-        controll.start();
-        stage.show();
+        this.controller.start();
     }
 
     private void configurarAreaDoacao() {
@@ -119,7 +100,7 @@ public class UICadastrarDoacao extends Application {
         lblNome = new Label("Nome Doador");
         txtNome = new TextField();
         txtNome.promptTextProperty().setValue("Digite o Nome do Doador.");
-        txtNome.textProperty().bindBidirectional(controll.nomeDoadorProperty());
+        txtNome.textProperty().bindBidirectional(controller.getNomeDoador());
         paneDoacaoNome.setSpacing(SPACING);
         paneDoacaoNome.getChildren().addAll(lblNome, txtNome);
         paneDoacaoNome.setPrefWidth((WHIDTH / 3) * 2);
@@ -127,7 +108,7 @@ public class UICadastrarDoacao extends Application {
         VBox paneDoacaoData = new VBox();
         lblData = new Label("Data Doação");
         dtpDataDoacao = new DatePicker();
-        dtpDataDoacao.valueProperty().bindBidirectional(controll.dateProperty());
+        dtpDataDoacao.valueProperty().bindBidirectional(controller.getDate());
         paneDoacaoData.setSpacing(SPACING);
         paneDoacaoData.getChildren().addAll(lblData, dtpDataDoacao);
 
@@ -146,22 +127,12 @@ public class UICadastrarDoacao extends Application {
 
         btnAdicionar = new Button("+");
         btnAdicionar.setOnAction(event -> {
-            stage.getScene().getRoot().setDisable(true);
-            try {
-                controll.adicionar();
-            } finally {
-                stage.getScene().getRoot().setDisable(false);
-            }
+            controller.adicionar();
         });
 
         btnRemover = new Button("-");
         btnRemover.setOnAction(event -> {
-            stage.getScene().getRoot().setDisable(true);
-            try {
-                controll.remover();
-            } finally {
-                stage.getScene().getRoot().setDisable(false);
-            }
+            controller.remover();
         });
 
         paneProdutosBotoes.getChildren().addAll(btnRemover, btnAdicionar);
@@ -175,10 +146,7 @@ public class UICadastrarDoacao extends Application {
     private void configurarAreaProdutoTabela() {
         tabelaProdutos = new TableView<>();
         tabelaProdutos.setPlaceholder(new Label("Nenhum Produto adicionado."));
-        tabelaProdutos.setItems(controll.getListaProdutos());
-        controll.produtoSelecionadoProperty().bind(
-                tabelaProdutos.getSelectionModel().selectedItemProperty()
-        );
+        tabelaProdutos.setItems(controller.getListaProdutos());
 
         colId = new TableColumn<>("ID");
         colId.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -195,7 +163,11 @@ public class UICadastrarDoacao extends Application {
         colValidade = new TableColumn<>("Validade");
         colValidade.setCellValueFactory(new PropertyValueFactory<>("validade"));
 
-        tabelaProdutos.getColumns().addAll(colId, colNome, colTipo, colMarca, colValidade);
+        tabelaProdutos.getColumns().add(colId);
+        tabelaProdutos.getColumns().add(colNome);
+        tabelaProdutos.getColumns().add(colTipo);
+        tabelaProdutos.getColumns().add(colMarca);
+        tabelaProdutos.getColumns().add(colValidade);
     }
 
     private void configurarAreaBotoesBase() {
@@ -204,34 +176,13 @@ public class UICadastrarDoacao extends Application {
 
         btnCadastrar = new Button("Cadastrar");
         btnCadastrar.setOnAction(event -> {
-            stage.getScene().getRoot().setDisable(true);
-            try {
-                controll.cadastrar();
-            } finally {
-                stage.getScene().getRoot().setDisable(false);
-            }
+            controller.cadastrar();
         });
 
         btnCancelar = new Button("Cancelar");
         //TODO remove exit
         btnCancelar.setOnAction(event -> {
-            stage.getScene().getRoot().setDisable(true);
-            try {
-                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                alert.initOwner(stage); // Keeps the window tied to the app
-                alert.setTitle("Confirmação");
-                alert.setHeaderText("Cancelar Ação");
-                alert.setContentText("Tem certeza que deseja sair? Dados não salvos serão perdidos.");
-
-                // Using ifPresent for cleaner syntax
-                alert.showAndWait().ifPresent(response -> {
-                    if (response == ButtonType.OK) {
-                        stage.close();
-                    }
-                });
-            } finally {
-                stage.getScene().getRoot().setDisable(false);
-            }
+            controller.cancelar();
         });
 
         paneBotoes.getChildren().addAll(btnCancelar, btnCadastrar);

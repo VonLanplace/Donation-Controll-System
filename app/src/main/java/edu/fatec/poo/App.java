@@ -3,6 +3,8 @@
  */
 package edu.fatec.poo;
 
+import atlantafx.base.theme.NordDark;
+import edu.fatec.poo.model.Usuario;
 import edu.fatec.poo.persistence.connection.CurrentConnection;
 import edu.fatec.poo.views.UICoordenador;
 import javafx.application.Application;
@@ -11,12 +13,13 @@ import javafx.stage.Stage;
 public class App extends Application {
     public static void main(String[] args) {
         CurrentConnection currentConnection = new CurrentConnection();
+        Application.setUserAgentStylesheet(new NordDark().getUserAgentStylesheet());
         Application.launch(App.class, args);
     }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
         UICoordenador coodenator = new UICoordenador(primaryStage);
-        coodenator.showLoginScreen();
+        coodenator.showCadastroDoacaoScreen(new Usuario());
     }
 }
