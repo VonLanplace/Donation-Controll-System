@@ -43,7 +43,11 @@ public class mySqlCreateTable implements ICreateTable {
         runStatementTabela(sql, "Usuario");
         sql = """
                 INSERT INTO usuario (acesso, nome, email, senha, cpf, telefone)
-                VALUES (0, 'admin', 'admin', 'admin', '12148628704', '40028922');
+                SELECT 0, 'admin', 'admin', 'admin', '12148628704', '40028922'
+                FROM DUAL
+                WHERE NOT EXISTS (
+                    SELECT 1 FROM usuario WHERE acesso = 0
+                );
                 """;
         runStatementData(sql, "Usuario");
     }
