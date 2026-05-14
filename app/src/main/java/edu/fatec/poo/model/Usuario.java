@@ -22,4 +22,9 @@ public class Usuario implements IEntity {
     public void setId(long id) {
         Id = id;
     }
+
+    public String resetarSenha() {
+        this.setSenha("1234");
+        return getSenha();
+    }
 }
