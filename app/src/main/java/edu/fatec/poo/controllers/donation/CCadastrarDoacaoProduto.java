@@ -31,7 +31,7 @@ public class CCadastrarDoacaoProduto {
     public Produto cadastrar() {
         // TODO
         System.out.println("CADASTRAR");
-        return new Produto((long) ((Math.random() * (100)) + 0), 10L, 10L, 10L, UUID.randomUUID().toString());
+        return new Produto((long) ((Math.random() * (100)) + 0), 10L, 10L, 10L, UUID.randomUUID().toString(), LocalDate.now());
     }
 
     public String getCodigo() {

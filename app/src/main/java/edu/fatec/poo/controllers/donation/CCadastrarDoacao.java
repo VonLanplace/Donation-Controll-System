@@ -24,7 +24,7 @@ public class CCadastrarDoacao {
 
     private StringProperty nomeDoador = new SimpleStringProperty();
     private ObjectProperty<LocalDate> date = new SimpleObjectProperty<>();
-    // TODO Use the DTO
+
     private ObjectProperty<Produto> produtoSelecionado = new SimpleObjectProperty<>();
     private ObservableList<Produto> listaProdutos = FXCollections.observableArrayList();
 
@@ -45,6 +45,7 @@ public class CCadastrarDoacao {
         //TODO
         System.out.println("ADICIONAR");
         try {
+            coordenador.getScene().getRoot().setDisable(true);
             UICadastarDoacaoProduto uiProduto = new UICadastarDoacaoProduto();
             Stage newStage = new Stage();
             uiProduto.start(newStage);
@@ -54,6 +55,8 @@ public class CCadastrarDoacao {
             }
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            coordenador.getScene().getRoot().setDisable(false);
         }
     }
 
@@ -68,7 +71,9 @@ public class CCadastrarDoacao {
         //TODO
         System.out.println("CADASTRAR");
     }
-    
+
     public void cancelar() {
+        System.out.println("CANCELAR");
+        coordenador.returnToPreviosScreen();
     }
 }

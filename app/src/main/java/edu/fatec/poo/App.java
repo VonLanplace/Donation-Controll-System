@@ -21,5 +21,6 @@ public class App extends Application {
     public void start(Stage primaryStage) throws Exception {
         UICoordenador coodenator = new UICoordenador(primaryStage);
         coodenator.showCadastroDoacaoScreen(new Usuario());
+        //coodenator.showLoginScreen();
     }
 }
