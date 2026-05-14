@@ -49,6 +49,7 @@ public class UIUserLogin extends BorderPane {
         btnLogin = new Button("Entrar");
         btnLogin.setPrefWidth(120);
         btnLogin.setStyle("-fx-font-size: 16px; -fx-base: #2196F3; -fx-text-fill: white;");
+        btnLogin.setDefaultButton(true);
 
         btnLogin.setOnAction(e -> {
             Usuario usuario = controller.login();
