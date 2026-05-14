@@ -9,11 +9,13 @@ import edu.fatec.poo.views.user.UIAdmin;
 import edu.fatec.poo.views.user.UIUserLogin;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.sql.SQLException;
 import java.util.Stack;
 
 import static edu.fatec.poo.configs.WindowStandardFormatting.HEIGHT;
@@ -54,5 +56,26 @@ public class UICoodenator {
     public void stashScreen(Parent currentView) {
         if (currentView != null)
             paneStack.push(currentView);
+    }
+
+    public void mostrarErro(Exception e) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        e.printStackTrace();
+
+        if (e instanceof SQLException sqlEx) {
+            alert.setTitle("Erro de Banco de Dados");
+            if (sqlEx.getErrorCode() == 1062) {
+                alert.setContentText("Erro: Este CPF ou E-mail já está cadastrado.");
+            } else {
+                alert.setContentText("Falha na conexão: " + sqlEx.getMessage());
+            }
+        } else if (e instanceof IllegalArgumentException) {
+            alert.setTitle("Dados Inválidos");
+            alert.setContentText(e.getMessage());
+        } else {
+            alert.setTitle("Erro");
+            alert.setContentText("Um erro inesperado ocorreu: " + e.getMessage());
+        }
+        alert.showAndWait();
     }
 }

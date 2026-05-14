@@ -53,7 +53,7 @@ public class CAdmin {
             usuariosCadastrados = FXCollections.observableArrayList(userService.searchAll());
             stage = new SimpleObjectProperty<>();
         } catch (Exception e) {
-            mostrarErro(e);
+            coodenator.mostrarErro(e);
             voltar();
         }
     }
@@ -65,7 +65,7 @@ public class CAdmin {
                 usuariosCadastrados.setAll(lista);
             }
         } catch (Exception e) {
-            mostrarErro(e);
+            coodenator.mostrarErro(e);
         }
     }
 
@@ -123,7 +123,7 @@ public class CAdmin {
             fromEntity(usuario);
             updateUsuarios();
         } catch (Exception e) {
-            mostrarErro(e);
+            coodenator.mostrarErro(e);
         }
     }
 
@@ -139,7 +139,7 @@ public class CAdmin {
             updateUsuarios();
             limpar();
         } catch (Exception e) {
-            mostrarErro(e);
+            coodenator.mostrarErro(e);
         }
     }
 
@@ -160,26 +160,5 @@ public class CAdmin {
     public void select(Usuario usuario) {
         this.usuario = usuario;
         fromEntity(usuario);
-    }
-
-    public void mostrarErro(Exception e) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        e.printStackTrace();
-
-        if (e instanceof SQLException sqlEx) {
-            alert.setTitle("Erro de Banco de Dados");
-            if (sqlEx.getErrorCode() == 1062) {
-                alert.setContentText("Erro: Este CPF ou E-mail já está cadastrado.");
-            } else {
-                alert.setContentText("Falha na conexão: " + sqlEx.getMessage());
-            }
-        } else if (e instanceof IllegalArgumentException) {
-            alert.setTitle("Dados Inválidos");
-            alert.setContentText(e.getMessage());
-        } else {
-            alert.setTitle("Erro");
-            alert.setContentText("Um erro inesperado ocorreu: " + e.getMessage());
-        }
-        alert.showAndWait();
     }
 }
