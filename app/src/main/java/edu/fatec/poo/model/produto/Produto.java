@@ -10,13 +10,13 @@ import lombok.*;
 @ToString
 public class Produto {
     private Long id;
-    private Long id_MarcaProduto;
-    private Long id_TipoProduto;
-    private Long id_Cesta;
-    private String codigo_barras;
+    private Long idMarcaProduto;
+    private Long idTipoProduto;
+    private Long idCesta;
+    private String codigoBarras;
 
     public boolean isInCesta() {
-        return id_Cesta != null;
+        return idCesta != null;
     }
 
 }
