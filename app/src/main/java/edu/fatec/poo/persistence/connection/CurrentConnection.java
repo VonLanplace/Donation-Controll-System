@@ -1,37 +1,53 @@
 package edu.fatec.poo.persistence.connection;
 
-import edu.fatec.poo.persistence.mysql.mySqlCreateDB;
-import edu.fatec.poo.persistence.mysql.mySqlCreateTable;
-import edu.fatec.poo.persistence.mysql.mysqlIDaoConnection;
+import edu.fatec.poo.persistence.mariaDb.mariadbDaoConnector;
+import edu.fatec.poo.persistence.mariaDb.mariadbCreateDB;
+import edu.fatec.poo.persistence.mariaDb.mariadbCreateTable;
 import lombok.Data;
+
+import java.sql.Connection;
+import java.sql.SQLException;
 
 @Data
 public class CurrentConnection {
-    public static ADaoConnection connection;
-    private static ICreateDB createDB;
-    private static ICreateTable createTable;
+
+    private ADaoConnector conector;
 
     public CurrentConnection() {
+        conector = new mariadbDaoConnector(
+                "localhost",
+                "3306",
+                "Doacao",
+                "root",
+                "12345678"
+        );
+    }
+
+    private Connection connect() throws SQLException, ClassNotFoundException {
+        return conector.getConnection();
+    }
+
+    public void buildMariaDb(ADaoConnector connection) {
         try {
-            connection = new mysqlIDaoConnection(
+            connection = new mariadbDaoConnector(
                     "localhost",
+                    "3306",
                     "sys",
                     "root",
                     "12345678"
             );
-            mySqlCreateDB createDB = new mySqlCreateDB(connection);
+            ICreateDB createDB = new mariadbCreateDB(connection);
             createDB.createDatabase();
-            connection.closeConnection();
 
-            connection = new mysqlIDaoConnection(
+            connection = new mariadbDaoConnector(
                     "localhost",
+                    "3306",
                     "Doacao",
                     "root",
                     "12345678"
             );
-            createTable = new mySqlCreateTable(connection);
+            ICreateTable createTable = new mariadbCreateTable(connection);
             createTable.createTableAll();
-
         } catch (Exception e) {
             e.printStackTrace();
         }

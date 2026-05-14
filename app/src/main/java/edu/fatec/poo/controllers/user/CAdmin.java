@@ -3,6 +3,7 @@ package edu.fatec.poo.controllers.user;
 import edu.fatec.poo.adapter.user.AdapterCAdmin;
 import edu.fatec.poo.adapter.user.in.dto.DTOUserAdmin;
 import edu.fatec.poo.model.Usuario;
+import edu.fatec.poo.persistence.connection.CurrentConnection;
 import edu.fatec.poo.service.UserService;
 import edu.fatec.poo.util.Acesso;
 import edu.fatec.poo.views.UICoordenador;
@@ -36,7 +37,8 @@ public class CAdmin {
 
     public CAdmin(Usuario usuario, UICoordenador coodenator) {
         try {
-            this.userService = new UserService();
+            CurrentConnection connection = new CurrentConnection();
+            this.userService = new UserService(connection.getConector());
             this.coodenator = coodenator;
             this.usuarioLogado = usuario;
 

@@ -4,9 +4,8 @@ import edu.fatec.poo.adapter.AdapterIn;
 import edu.fatec.poo.adapter.user.in.UserIn;
 import edu.fatec.poo.exceptions.LoginInvalidoException;
 import edu.fatec.poo.model.Usuario;
-import edu.fatec.poo.persistence.connection.CurrentConnection;
+import edu.fatec.poo.persistence.connection.ADaoConnector;
 import edu.fatec.poo.persistence.entityDao.UsuarioDao;
-import edu.fatec.poo.util.Acesso;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -15,11 +14,11 @@ public class UserService {
 
     private final UsuarioDao usuarioDao;
 
-    public UserService() throws SQLException, ClassNotFoundException {
-        usuarioDao = new UsuarioDao(CurrentConnection.connection);
+    public UserService(ADaoConnector connection) throws SQLException, ClassNotFoundException {
+        usuarioDao = new UsuarioDao(connection);
     }
 
-    public Usuario login(Usuario usuario) throws SQLException, LoginInvalidoException {
+    public Usuario login(Usuario usuario) throws SQLException, LoginInvalidoException, ClassNotFoundException {
         if (usuario == null) return null;
 
         Usuario usuarioBD = usuarioDao.searchByEmail(usuario.getEmail());
@@ -30,20 +29,20 @@ public class UserService {
         }
     }
 
-    public List<Usuario> searchAll() throws SQLException {
+    public List<Usuario> searchAll() throws SQLException, ClassNotFoundException {
         return usuarioDao.searchAll();
     }
 
-    public Usuario findById(long id) throws SQLException {
+    public Usuario findById(long id) throws SQLException, ClassNotFoundException {
         return usuarioDao.searchById(id);
     }
 
-    public Usuario findByEmail(String email) throws SQLException {
+    public Usuario findByEmail(String email) throws SQLException, ClassNotFoundException {
         if (email.length() > 255) return null;
         return usuarioDao.searchByEmail(email);
     }
 
-    public void salvar(Usuario usuario) throws SQLException {
+    public void salvar(Usuario usuario) throws SQLException, ClassNotFoundException {
         if (usuario == null) return;
         Usuario usuarioSalvo = usuarioDao.searchByEmail(usuario.getEmail());
 
@@ -59,19 +58,19 @@ public class UserService {
         }
     }
 
-    public <S extends UserIn> void salvar(S dtoIn, AdapterIn<S, Usuario> adapterIn) throws SQLException {
+    public <S extends UserIn> void salvar(S dtoIn, AdapterIn<S, Usuario> adapterIn) throws SQLException, ClassNotFoundException {
         Usuario usuario = adapterIn.toIn(dtoIn);
         salvar(usuario);
     }
 
-    public void deletar(Usuario usuario) throws SQLException {
+    public void deletar(Usuario usuario) throws SQLException, ClassNotFoundException {
         if (usuario == null) return;
         if (usuario.getId() != 0) {
             usuarioDao.delete(usuario);
         }
     }
 
-    public boolean atualizarPorEmail(Usuario atualizado) throws SQLException {
+    public boolean atualizarPorEmail(Usuario atualizado) throws SQLException, ClassNotFoundException {
         if (atualizado == null) return false;
         Usuario salvo = usuarioDao.searchByEmail(atualizado.getEmail());
         if (salvo != null) {
@@ -81,7 +80,7 @@ public class UserService {
         }
     }
 
-    public boolean atualizar(Usuario atualizado, Usuario salvo) throws SQLException {
+    public boolean atualizar(Usuario atualizado, Usuario salvo) throws SQLException, ClassNotFoundException {
         if (atualizado == null || salvo == null) return false;
 
         atualizado.setId(salvo.getId());

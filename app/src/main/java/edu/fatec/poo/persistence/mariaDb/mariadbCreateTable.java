@@ -1,25 +1,18 @@
-package edu.fatec.poo.persistence.mysql;
+package edu.fatec.poo.persistence.mariaDb;
 
-import edu.fatec.poo.persistence.connection.ADaoConnection;
+import edu.fatec.poo.persistence.connection.ADaoConnector;
 import edu.fatec.poo.persistence.connection.ICreateTable;
 
 import java.sql.*;
 
-public class mySqlCreateTable implements ICreateTable {
+public class mariadbCreateTable implements ICreateTable {
 
     private final Connection c;
 
-    public mySqlCreateTable(ADaoConnection aDaoConnection) throws SQLException, ClassNotFoundException {
-        c = aDaoConnection.getSafeConnection();
+    public mariadbCreateTable(ADaoConnector aDaoConnector) throws SQLException, ClassNotFoundException {
+        c = aDaoConnector.getConnection();
     }
 
-    @Override
-    public boolean tableExists(String nomeTabela) throws SQLException {
-        DatabaseMetaData meta = c.getMetaData();
-        try (ResultSet rs = meta.getTables(null, null, nomeTabela, new String[]{"TABLE"})) {
-            return rs.next();
-        }
-    }
 
     @Override
     public void createTableAll() throws SQLException {
@@ -44,7 +37,6 @@ public class mySqlCreateTable implements ICreateTable {
         sql = """
                 INSERT INTO usuario (acesso, nome, email, senha, cpf, telefone)
                 SELECT 0, 'admin', 'admin', 'admin', '12148628704', '40028922'
-                FROM DUAL
                 WHERE NOT EXISTS (
                     SELECT 1 FROM usuario WHERE acesso = 0
                 );
@@ -54,20 +46,20 @@ public class mySqlCreateTable implements ICreateTable {
 
     private void runStatementTabela(String sql, String nomeTabela) throws SQLException {
         try (PreparedStatement ps = c.prepareStatement(sql)) {
-            ps.execute();
-            System.out.println("[MySQL] Tabela " + nomeTabela + " criada com sucesso ou já existente.");
+            System.out.println(ps.executeUpdate());
+            System.out.println("[Mariadb] Tabela " + nomeTabela + " criada com sucesso ou já existente.");
         } catch (SQLException e) {
-            System.err.println("[MySQL] Erro ao criar tabela " + nomeTabela + " no: " + e.getMessage());
+            System.err.println("[Mariadb] Erro ao criar tabela " + nomeTabela + " no: " + e.getMessage());
             throw e;
         }
     }
 
     private void runStatementData(String sql, String nomeTabela) throws SQLException {
         try (PreparedStatement ps = c.prepareStatement(sql)) {
-            ps.execute();
-            System.out.println("[MySQL] Dado inserido na Tabela " + nomeTabela + " com sucesso.");
+            System.out.println(ps.executeUpdate());
+            System.out.println("[Mariadb] Dado inserido na Tabela " + nomeTabela + " com sucesso.");
         } catch (SQLException e) {
-            System.err.println("[MySQL] Erro ao inserir na tabela " + nomeTabela + " no: " + e.getMessage());
+            System.err.println("[Mariadb] Erro ao inserir na tabela " + nomeTabela + " no: " + e.getMessage());
             throw e;
         }
     }

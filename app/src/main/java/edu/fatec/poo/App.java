@@ -12,7 +12,6 @@ import javafx.stage.Stage;
 
 public class App extends Application {
     public static void main(String[] args) {
-        CurrentConnection currentConnection = new CurrentConnection();
         Application.setUserAgentStylesheet(new NordDark().getUserAgentStylesheet());
         Application.launch(App.class, args);
     }

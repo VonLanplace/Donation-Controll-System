@@ -43,8 +43,8 @@ public class UICadastarDoacaoProduto extends Application {
 
     private TextField txtCodigo;
 
-    private ComboBox<TipoProduto> cbxTipo;
-    private ComboBox<MarcaProduto> cbxMarca;
+    private ComboBox<TipoProduto> cbbTipo;
+    private ComboBox<MarcaProduto> cbbMarca;
 
     private DatePicker dpcValidade;
 
@@ -73,19 +73,21 @@ public class UICadastarDoacaoProduto extends Application {
 
         VBox boxCodigo = new VBox(5, new Label("Código de Barras"), txtCodigo = new TextField());
         txtCodigo.setPromptText("Opcional");
-        txtCodigo.textProperty().bindBidirectional(controller.codigoProperty());
+        txtCodigo.textProperty().bindBidirectional(controller.getCodigo());
 
-        VBox boxTipo = new VBox(5, new Label("Tipo"), cbxTipo = new ComboBox<>());
-        cbxTipo.setMaxWidth(Double.MAX_VALUE);
-        cbxTipo.valueProperty().bindBidirectional(controller.tipoProperty());
+        VBox boxTipo = new VBox(5, new Label("Tipo"), cbbTipo = new ComboBox<>());
+        cbbTipo.setMaxWidth(Double.MAX_VALUE);
+        cbbTipo.setItems(controller.getProdutosCadastrados());
+        cbbTipo.valueProperty().bindBidirectional(controller.getTipoSelecionado());
 
-        VBox boxMarca = new VBox(5, new Label("Marca"), cbxMarca = new ComboBox<>());
-        cbxMarca.setMaxWidth(Double.MAX_VALUE);
-        cbxMarca.valueProperty().bindBidirectional(controller.marcaProperty());
+        VBox boxMarca = new VBox(5, new Label("Marca"), cbbMarca = new ComboBox<>());
+        cbbMarca.setMaxWidth(Double.MAX_VALUE);
+        cbbMarca.setItems(controller.getMarcasCadastradas());
+        cbbMarca.valueProperty().bindBidirectional(controller.getMarcaSelecionada());
 
         VBox boxValidade = new VBox(5, new Label("Validade"), dpcValidade = new DatePicker(LocalDate.now()));
         dpcValidade.setMaxWidth(Double.MAX_VALUE);
-        dpcValidade.valueProperty().bindBidirectional(controller.validadeProperty());
+        dpcValidade.valueProperty().bindBidirectional(controller.getValidade());
 
         paneProduto.getChildren().addAll(boxCodigo, boxTipo, boxMarca, boxValidade);
 
@@ -108,7 +110,9 @@ public class UICadastarDoacaoProduto extends Application {
         btnCadastrar.setDefaultButton(true);
         btnCadastrar.setOnAction(p -> {
             produtoNovo = controller.cadastrar();
-            stage.close();
+            if (produtoNovo != null) {
+                stage.close();
+            }
         });
 
         paneButtonsBottom.getChildren().addAll(btnCancelar, btnCadastrar);
@@ -120,7 +124,6 @@ public class UICadastarDoacaoProduto extends Application {
         stage.setResizable(false);
         stage.setScene(scene);
 
-        controller.start();
         stage.showAndWait();
     }
 }

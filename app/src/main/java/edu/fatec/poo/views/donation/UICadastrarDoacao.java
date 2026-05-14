@@ -11,6 +11,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.*;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class UICadastrarDoacao extends GridPane {
 
@@ -137,9 +138,9 @@ public class UICadastrarDoacao extends GridPane {
         colMarca.setCellValueFactory(produto ->
                 new ReadOnlyObjectWrapper<>(produto.getValue().getIdMarcaProduto()));
 
-        TableColumn<Produto, LocalDate> colValidade = new TableColumn<>("Validade");
+        TableColumn<Produto, String> colValidade = new TableColumn<>("Validade");
         colValidade.setCellValueFactory(produto ->
-                new ReadOnlyObjectWrapper<>(produto.getValue().getDataValidade()));
+                new ReadOnlyObjectWrapper<>());
 
         tabelaProdutos.getColumns().add(colCodigo);
         tabelaProdutos.getColumns().add(colTipo);

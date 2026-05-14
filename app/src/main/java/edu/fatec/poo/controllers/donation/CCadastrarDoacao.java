@@ -54,7 +54,7 @@ public class CCadastrarDoacao {
                 listaProdutos.add(produtoNovo);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            coordenador.showError(e);
         } finally {
             coordenador.getScene().getRoot().setDisable(false);
         }

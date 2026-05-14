@@ -3,6 +3,7 @@ package edu.fatec.poo.controllers.user;
 import edu.fatec.poo.controllers.AController;
 import edu.fatec.poo.exceptions.UsuarioNaoCadastradoException;
 import edu.fatec.poo.model.Usuario;
+import edu.fatec.poo.persistence.connection.CurrentConnection;
 import edu.fatec.poo.service.UserService;
 import edu.fatec.poo.views.UICoordenador;
 import javafx.beans.property.SimpleStringProperty;
@@ -25,7 +26,8 @@ public class CUserLogin extends AController {
     public CUserLogin(UICoordenador coordenador) {
         super(coordenador);
         try {
-            userService = new UserService();
+            CurrentConnection connection = new CurrentConnection();
+            userService = new UserService(connection.getConector());
 
             email = new SimpleStringProperty();
             senha = new SimpleStringProperty();

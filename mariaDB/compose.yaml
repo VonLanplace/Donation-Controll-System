@@ -1,0 +1,19 @@
+services:
+  mariadb:
+    image: mariadb:latest
+    container_name: mariadb
+    restart: no
+    environment:
+      MARIADB_ROOT_PASSWORD: 12345678
+      MARIADB_USER: teste
+      MARIADB_PASSWORD: teste
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./db_data:/var/lib/mysql
+    networks:
+      - rede-banco
+
+networks:
+  rede-banco:
+    driver: bridge

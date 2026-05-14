@@ -1,9 +1,10 @@
 package edu.fatec.poo.persistence.entityDao;
 
 import edu.fatec.poo.model.Usuario;
-import edu.fatec.poo.persistence.connection.ADaoConnection;
+import edu.fatec.poo.persistence.connection.ADaoConnector;
 import edu.fatec.poo.util.Acesso;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,12 +13,12 @@ import java.util.List;
 
 public class UsuarioDao extends GenericDao<Usuario> implements IDao<Usuario> {
 
-    public UsuarioDao(ADaoConnection aDaoConnection) throws SQLException, ClassNotFoundException {
-        super(aDaoConnection, "usuario");
+    public UsuarioDao(ADaoConnector aDaoConnector) throws SQLException, ClassNotFoundException {
+        super(aDaoConnector, "usuario");
     }
 
     @Override
-    public Usuario add(Usuario usuario) throws SQLException {
+    public Usuario add(Usuario usuario) throws SQLException, ClassNotFoundException {
         //TODO
         String sql = """
                 INSERT INTO usuario
@@ -25,34 +26,38 @@ public class UsuarioDao extends GenericDao<Usuario> implements IDao<Usuario> {
                 VALUES
                 (?,?,?,?,?,?);
                 """;
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setLong(1, usuario.getAcesso().getIndice());
-            ps.setString(2, usuario.getNome());
-            ps.setString(3, usuario.getEmail());
-            ps.setString(4, usuario.getSenha());
-            ps.setString(5, usuario.getCpf());
-            ps.setString(6, String.valueOf(usuario.getTelefone()));
+        try (Connection connection = conector.getConnection()) {
+            try (PreparedStatement ps = connection.prepareStatement(sql)) {
+                ps.setLong(1, usuario.getAcesso().getIndice());
+                ps.setString(2, usuario.getNome());
+                ps.setString(3, usuario.getEmail());
+                ps.setString(4, usuario.getSenha());
+                ps.setString(5, usuario.getCpf());
+                ps.setString(6, String.valueOf(usuario.getTelefone()));
 
-            ps.execute();
+                ps.execute();
+            }
         }
         return usuario;
     }
 
-    public Usuario searchByEmail(String email) throws SQLException {
+    public Usuario searchByEmail(String email) throws SQLException, ClassNotFoundException {
         return searchByField("email", email);
     }
 
-    public Usuario searchByCpf(String cpf) throws SQLException {
+    public Usuario searchByCpf(String cpf) throws SQLException, ClassNotFoundException {
         return searchByField("cpf", cpf);
     }
 
-    private Usuario searchByField(String fieldName, Object valor) throws SQLException {
+    private Usuario searchByField(String fieldName, Object valor) throws SQLException, ClassNotFoundException {
         String sql = "SELECT * FROM usuario WHERE " + fieldName + " = ?;";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setObject(1, valor);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    return map(rs);
+        try (Connection connection = conector.getConnection()) {
+            try (PreparedStatement ps = connection.prepareStatement(sql)) {
+                ps.setObject(1, valor);
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        return map(rs);
+                    }
                 }
             }
         }
@@ -60,7 +65,7 @@ public class UsuarioDao extends GenericDao<Usuario> implements IDao<Usuario> {
     }
 
     @Override
-    public void update(Usuario usuario) throws SQLException {
+    public void update(Usuario usuario) throws SQLException, ClassNotFoundException {
         String sql = """
                 UPDATE usuario SET
                 acesso = ?, 
@@ -71,25 +76,28 @@ public class UsuarioDao extends GenericDao<Usuario> implements IDao<Usuario> {
                 telefone = ?
                 WHERE id = ?;
                 """;
+        try (Connection connection = conector.getConnection()) {
+            try (PreparedStatement ps = connection.prepareStatement(sql)) {
+                List<Object> parametros = getParameters(usuario);
+                parametros.add(usuario.getId());
+                for (int i = 0; i < parametros.size(); i++) {
+                    ps.setObject(i + 1, parametros.get(i));
+                }
 
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            List<Object> parametros = getParameters(usuario);
-            parametros.add(usuario.getId());
-            for (int i = 0; i < parametros.size(); i++) {
-                ps.setObject(i + 1, parametros.get(i));
+                ps.execute();
             }
-
-            ps.execute();
         }
     }
 
-    private List<Usuario> searchAllSortedByName() throws SQLException {
+    private List<Usuario> searchAllSortedByName() throws SQLException, ClassNotFoundException {
         String sql = "SELECT * FROM usuario ORDER BY nome ASC;";
         List<Usuario> usuarios = new ArrayList<>();
-        try (PreparedStatement ps = connection.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
-            while (rs.next()) {
-                usuarios.add(map(rs));
+        try (Connection connection = conector.getConnection()) {
+            try (PreparedStatement ps = connection.prepareStatement(sql);
+                 ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    usuarios.add(map(rs));
+                }
             }
         }
         return usuarios;

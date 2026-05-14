@@ -566,3 +566,4 @@ obj/
 !/gradle/wrapper/gradle-wrapper.jar
 
 # End of https://www.toptal.com/developers/gitignore/api/python,visualstudiocode,jupyternotebooks,intellij+all,java,kotlin,androidstudio,android,c++,pycharm+all
+/mariaDB/db_data/
