@@ -4,7 +4,7 @@
 package edu.fatec.poo;
 
 import edu.fatec.poo.persistence.connection.CurrentConnection;
-import edu.fatec.poo.views.UICoodenator;
+import edu.fatec.poo.views.UICoordenador;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -16,7 +16,7 @@ public class App extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        UICoodenator coodenator = new UICoodenator(primaryStage);
+        UICoordenador coodenator = new UICoordenador(primaryStage);
         coodenator.showLoginScreen();
     }
 }

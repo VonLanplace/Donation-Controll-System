@@ -5,16 +5,13 @@ import edu.fatec.poo.adapter.user.in.dto.DTOUserAdmin;
 import edu.fatec.poo.model.Usuario;
 import edu.fatec.poo.service.UserService;
 import edu.fatec.poo.util.Acesso;
-import edu.fatec.poo.views.UICoodenator;
+import edu.fatec.poo.views.UICoordenador;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
 import lombok.Data;
 
-import java.sql.SQLException;
 import java.util.List;
 
 @Data
@@ -22,7 +19,7 @@ public class CAdmin {
 
     private Usuario usuario;
     private Usuario usuarioLogado;
-    private UICoodenator coodenator;
+    private UICoordenador coodenator;
 
     private UserService userService;
 
@@ -37,7 +34,7 @@ public class CAdmin {
     private ObservableList<Usuario> usuariosCadastrados;
     private SimpleObjectProperty<Stage> stage;
 
-    public CAdmin(Usuario usuario, UICoodenator coodenator) {
+    public CAdmin(Usuario usuario, UICoordenador coodenator) {
         try {
             this.userService = new UserService();
             this.coodenator = coodenator;
@@ -53,7 +50,7 @@ public class CAdmin {
             usuariosCadastrados = FXCollections.observableArrayList(userService.searchAll());
             stage = new SimpleObjectProperty<>();
         } catch (Exception e) {
-            coodenator.mostrarErro(e);
+            coodenator.showError(e);
             voltar();
         }
     }
@@ -65,7 +62,7 @@ public class CAdmin {
                 usuariosCadastrados.setAll(lista);
             }
         } catch (Exception e) {
-            coodenator.mostrarErro(e);
+            coodenator.showError(e);
         }
     }
 
@@ -123,7 +120,7 @@ public class CAdmin {
             fromEntity(usuario);
             updateUsuarios();
         } catch (Exception e) {
-            coodenator.mostrarErro(e);
+            coodenator.showError(e);
         }
     }
 
@@ -139,7 +136,7 @@ public class CAdmin {
             updateUsuarios();
             limpar();
         } catch (Exception e) {
-            coodenator.mostrarErro(e);
+            coodenator.showError(e);
         }
     }
 

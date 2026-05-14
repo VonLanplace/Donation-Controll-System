@@ -1,10 +1,8 @@
 package edu.fatec.poo.views;
 
-import edu.fatec.poo.controllers.AController;
 import edu.fatec.poo.controllers.user.CAdmin;
 import edu.fatec.poo.controllers.user.CUserLogin;
 import edu.fatec.poo.model.Usuario;
-import edu.fatec.poo.views.donation.UICadastrarDoacao;
 import edu.fatec.poo.views.user.UIAdmin;
 import edu.fatec.poo.views.user.UIUserLogin;
 import javafx.scene.Parent;
@@ -23,12 +21,12 @@ import static edu.fatec.poo.configs.WindowStandardFormatting.WHIDTH;
 
 @Getter
 @Setter
-public class UICoodenator {
+public class UICoordenador {
     private Stage stage;
     private Scene scene;
     Stack<Parent> paneStack = new Stack<>();
 
-    public UICoodenator(Stage stage) {
+    public UICoordenador(Stage stage) {
         this.stage = stage;
         scene = new Scene(new Pane(), WHIDTH, HEIGHT);
         paneStack = new Stack<>();
@@ -58,7 +56,7 @@ public class UICoodenator {
             paneStack.push(currentView);
     }
 
-    public void mostrarErro(Exception e) {
+    public void showError(Exception e) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         e.printStackTrace();
 

@@ -16,7 +16,6 @@ import javafx.stage.Stage;
 public class UIUserLogin extends BorderPane {
 
     private CUserLogin controller;
-    private Scene scene;
     private VBox centralPane;
     private Label lblTelaLogin;
     private TextField txtEmail;

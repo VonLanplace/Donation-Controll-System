@@ -1,13 +1,13 @@
 package edu.fatec.poo.controllers;
 
-import edu.fatec.poo.views.UICoodenator;
+import edu.fatec.poo.views.UICoordenador;
 import lombok.Data;
 
 @Data
 public abstract class AController {
-    private UICoodenator coodenator;
+    private UICoordenador coodenator;
 
-    public AController(UICoodenator coodenator) {
+    public AController(UICoordenador coodenator) {
         this.coodenator = coodenator;
     }
 
