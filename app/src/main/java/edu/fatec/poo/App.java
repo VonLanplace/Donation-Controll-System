@@ -19,6 +19,10 @@ public class App extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         UICoordenador coodenator = new UICoordenador(primaryStage);
+        {
+            CurrentConnection connection = new CurrentConnection();
+            connection.buildMariaDb();
+        }
         coodenator.showCadastroDoacaoScreen(new Usuario());
         //coodenator.showLoginScreen();
     }

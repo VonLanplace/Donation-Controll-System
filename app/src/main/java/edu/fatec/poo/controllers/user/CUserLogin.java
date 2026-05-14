@@ -74,13 +74,6 @@ public class CUserLogin extends AController {
         return null;
     }
 
-    private void redirecionarParaTela(Usuario usuario) throws Exception {
-        Pane proximaTela = null;
-        System.out.println(usuario);
-
-
-    }
-
     private void clearFields() {
         email.setValue("");
         senha.setValue("");

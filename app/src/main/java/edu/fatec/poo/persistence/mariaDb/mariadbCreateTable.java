@@ -7,12 +7,11 @@ import java.sql.*;
 
 public class mariadbCreateTable implements ICreateTable {
 
-    private final Connection c;
+    private final Connection connection;
 
-    public mariadbCreateTable(ADaoConnector aDaoConnector) throws SQLException, ClassNotFoundException {
-        c = aDaoConnector.getConnection();
+    public mariadbCreateTable(Connection connection) throws SQLException, ClassNotFoundException {
+        this.connection = connection;
     }
-
 
     @Override
     public void createTableAll() throws SQLException {
@@ -45,7 +44,7 @@ public class mariadbCreateTable implements ICreateTable {
     }
 
     private void runStatementTabela(String sql, String nomeTabela) throws SQLException {
-        try (PreparedStatement ps = c.prepareStatement(sql)) {
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
             System.out.println(ps.executeUpdate());
             System.out.println("[Mariadb] Tabela " + nomeTabela + " criada com sucesso ou já existente.");
         } catch (SQLException e) {
@@ -55,7 +54,7 @@ public class mariadbCreateTable implements ICreateTable {
     }
 
     private void runStatementData(String sql, String nomeTabela) throws SQLException {
-        try (PreparedStatement ps = c.prepareStatement(sql)) {
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
             System.out.println(ps.executeUpdate());
             System.out.println("[Mariadb] Dado inserido na Tabela " + nomeTabela + " com sucesso.");
         } catch (SQLException e) {

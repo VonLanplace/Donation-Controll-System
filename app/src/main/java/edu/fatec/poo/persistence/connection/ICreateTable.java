@@ -4,7 +4,7 @@ import java.sql.SQLException;
 
 public interface ICreateTable {
 
-    public void createTableAll() throws SQLException;
+    void createTableAll() throws SQLException;
 
-    public void createTabelUsuario() throws SQLException;
+    void createTabelUsuario() throws SQLException;
 }

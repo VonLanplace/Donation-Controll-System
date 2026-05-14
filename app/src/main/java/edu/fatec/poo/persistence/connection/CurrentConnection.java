@@ -27,27 +27,32 @@ public class CurrentConnection {
         return conector.getConnection();
     }
 
-    public void buildMariaDb(ADaoConnector connection) {
+    public void buildMariaDb() {
+        ADaoConnector connector;
         try {
-            connection = new mariadbDaoConnector(
+            connector = new mariadbDaoConnector(
                     "localhost",
                     "3306",
                     "sys",
                     "root",
                     "12345678"
             );
-            ICreateDB createDB = new mariadbCreateDB(connection);
-            createDB.createDatabase();
+            try (Connection connection = connector.getConnection()) {
+                ICreateDB createDB = new mariadbCreateDB(connection);
+                createDB.createDatabase();
+            }
 
-            connection = new mariadbDaoConnector(
+            connector = new mariadbDaoConnector(
                     "localhost",
                     "3306",
                     "Doacao",
                     "root",
                     "12345678"
             );
-            ICreateTable createTable = new mariadbCreateTable(connection);
-            createTable.createTableAll();
+            try (Connection connection = connector.getConnection()) {
+                ICreateTable createTable = new mariadbCreateTable(connection);
+                createTable.createTableAll();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

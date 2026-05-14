@@ -9,18 +9,18 @@ import java.sql.SQLException;
 
 public class mariadbCreateDB implements ICreateDB {
 
-    private final Connection c;
+    private final Connection connection;
 
-    public mariadbCreateDB(ADaoConnector aDaoConnector) throws SQLException, ClassNotFoundException {
-        c = aDaoConnector.getConnection();
+    public mariadbCreateDB(Connection connection) throws SQLException, ClassNotFoundException {
+        this.connection = connection;
     }
 
     @Override
     public void createDatabase() throws SQLException {
         String sql = "CREATE DATABASE IF NOT EXISTS Doacao";
-        try (PreparedStatement ps = c.prepareStatement(sql)) {
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.executeUpdate();
-            c.close();
+            connection.close();
             System.out.println("[Mariadb] Banco criado com sucesso ou já existente.");
         } catch (SQLException e) {
             System.err.println("[Mariadb] Erro ao criar banco no: " + e.getMessage());
