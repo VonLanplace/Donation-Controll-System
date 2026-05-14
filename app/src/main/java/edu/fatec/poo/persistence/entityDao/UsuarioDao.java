@@ -42,8 +42,8 @@ public class UsuarioDao extends GenericDao<Usuario> implements IDao<Usuario> {
         return searchByField("email", email);
     }
 
-    public Usuario searchByNome(String nome) throws SQLException {
-        return searchByField("nome", nome);
+    public Usuario searchByCpf(String cpf) throws SQLException {
+        return searchByField("cpf", cpf);
     }
 
     private Usuario searchByField(String fieldName, Object valor) throws SQLException {
@@ -118,4 +118,5 @@ public class UsuarioDao extends GenericDao<Usuario> implements IDao<Usuario> {
         parametros.add(usuario.getTelefone());
         return parametros;
     }
+
 }
