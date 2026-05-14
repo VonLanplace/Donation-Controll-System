@@ -6,6 +6,7 @@ import edu.fatec.poo.exceptions.LoginInvalidoException;
 import edu.fatec.poo.model.Usuario;
 import edu.fatec.poo.persistence.connection.CurrentConnection;
 import edu.fatec.poo.persistence.entityDao.UsuarioDao;
+import edu.fatec.poo.util.Acesso;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -33,30 +34,40 @@ public class UserService {
         return usuarioDao.searchAll();
     }
 
-    public boolean salvar(Usuario usuario) throws SQLException {
-        if (usuario == null) return false;
+    public Usuario findById(long id) throws SQLException {
+        return usuarioDao.searchById(id);
+    }
+
+    public Usuario findByName(String nome) throws SQLException {
+        if (nome.length() > 255) return null;
+        return usuarioDao.searchByNome(nome);
+    }
+
+    public Usuario findByEmail(String email) throws SQLException {
+        if (email.length() > 255) return null;
+        return usuarioDao.searchByEmail(email);
+    }
+
+    public void salvar(Usuario usuario) throws SQLException {
+        if (usuario == null) return;
         Usuario usuarioSalvo = usuarioDao.searchByEmail(usuario.getEmail());
         if (usuarioSalvo == null) {
+            if (usuario.getSenha() == null) usuario.resetarSenha();
             usuarioDao.add(usuario);
-            return true;
         } else {
-            return atualizar(usuario, usuarioSalvo);
+            atualizar(usuario, usuarioSalvo);
         }
     }
 
-    public <S extends UserIn> Usuario salvar(S dtoIn, AdapterIn<S, Usuario> adapterIn) throws SQLException {
+    public <S extends UserIn> void salvar(S dtoIn, AdapterIn<S, Usuario> adapterIn) throws SQLException {
         Usuario usuario = adapterIn.toIn(dtoIn);
         salvar(usuario);
-        return usuario;
     }
 
-    public boolean deletar(Usuario usuario) throws SQLException {
-        if (usuario == null) return false;
+    public void deletar(Usuario usuario) throws SQLException {
+        if (usuario == null) return;
         if (usuario.getId() != 0) {
             usuarioDao.delete(usuario);
-            return true;
-        } else {
-            return false;
         }
     }
 
@@ -74,6 +85,11 @@ public class UserService {
         if (atualizado == null || salvo == null) return false;
 
         atualizado.setId(salvo.getId());
+        if (atualizado.getId() == 0) atualizado.setId(salvo.getId());
+        if (atualizado.getAcesso() == null) atualizado.setAcesso(salvo.getAcesso());
+        if (atualizado.getNome() == null || atualizado.getNome().isBlank()) atualizado.setNome(salvo.getNome());
+        if (atualizado.getEmail() == null || atualizado.getEmail().isBlank()) atualizado.setEmail(salvo.getEmail());
+        if (atualizado.getSenha() == null || atualizado.getSenha().isBlank()) atualizado.setSenha(salvo.getSenha());
         usuarioDao.update(atualizado);
         return true;
     }
