@@ -23,8 +23,8 @@ dependencies {
     testCompileOnly("org.projectlombok:lombok:1.18.30")
     testAnnotationProcessor("org.projectlombok:lombok:1.18.30")
 
-    // Driver para o mySql -- Vou tentar adicionar ele
-    implementation("mysql:mysql-connector-java:8.0.33")
+    // Source: https://mvnrepository.com/artifact/com.mysql/mysql-connector-j
+    implementation("com.mysql:mysql-connector-j:9.7.0")
 
     // Use JUnit Jupiter for testing.
     testImplementation(libs.junit.jupiter)
