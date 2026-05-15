@@ -1,8 +1,8 @@
 package edu.fatec.poo.controllers.donation;
 
 import edu.fatec.poo.TipoProdutoStringConverter;
-import edu.fatec.poo.model.produto.Doacao;
 import edu.fatec.poo.model.produto.MarcaProduto;
+import edu.fatec.poo.model.produto.Produto;
 import edu.fatec.poo.model.produto.TipoProduto;
 import edu.fatec.poo.persistence.connection.CurrentConnection;
 import edu.fatec.poo.persistence.entityDao.MarcaProdutoDao;
@@ -42,7 +42,7 @@ public class CCadastrarDoacaoProduto {
     private ObjectProperty<MarcaProduto> marcaSelecionada = new SimpleObjectProperty<>();
     private ObjectProperty<LocalDate> validade = new SimpleObjectProperty<>();
 
-    private ObjectProperty<Doacao> produtoCriado = new SimpleObjectProperty<>();
+    private ObjectProperty<Produto> produtoCriado = new SimpleObjectProperty<>();
 
     public CCadastrarDoacaoProduto() {
         validade.setValue(LocalDate.now());
@@ -61,19 +61,20 @@ public class CCadastrarDoacaoProduto {
         }
     }
 
-    public Doacao cadastrar() {
+    public Produto cadastrar() {
         return toEntity();
     }
 
-    private Doacao toEntity() {
+    private Produto toEntity() {
         try {
-            Doacao doacao = new Doacao();
-            doacao.setIdMarcaProduto(marcaSelecionada.get() == null ? 0 : marcaSelecionada.get().getId());
-            doacao.setIdTipoProduto(tipoSelecionado.get() == null ? 0 : tipoSelecionado.get().getId());
-            doacao.setIdCesta(null);
-            doacao.setCodigoBarras(codigo.get());
-            doacao.setDataValidade(validade.get());
-            return doacao;
+
+            Produto produto = new Produto();
+            produto.setMarca(marcaSelecionada.get());
+            produto.setTipo(tipoSelecionado.get());
+            produto.setCesta(null);
+            produto.setCodigoBarras(codigo.get());
+            produto.setDataValidade(validade.get());
+            return produto;
         } catch (Exception e) {
             showError(e);
         }

@@ -15,9 +15,6 @@ public class MarcaProdutoService {
     }
 
     public List<MarcaProduto> searchAll() throws SQLException, ClassNotFoundException {
-        for (MarcaProduto m : dao.searchAll()) {
-            System.out.println(m);
-        }
         return dao.searchAll();
     }
 }
