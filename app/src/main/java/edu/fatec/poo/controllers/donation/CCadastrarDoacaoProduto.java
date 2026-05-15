@@ -1,6 +1,7 @@
 package edu.fatec.poo.controllers.donation;
 
 import edu.fatec.poo.TipoProdutoStringConverter;
+import edu.fatec.poo.adapter.produto.DtoProdutoCadastrarDoacao;
 import edu.fatec.poo.model.produto.MarcaProduto;
 import edu.fatec.poo.model.produto.Produto;
 import edu.fatec.poo.model.produto.TipoProduto;
@@ -67,14 +68,13 @@ public class CCadastrarDoacaoProduto {
 
     private Produto toEntity() {
         try {
-
-            Produto produto = new Produto();
-            produto.setMarca(marcaSelecionada.get());
-            produto.setTipo(tipoSelecionado.get());
-            produto.setCesta(null);
-            produto.setCodigoBarras(codigo.get());
-            produto.setDataValidade(validade.get());
-            return produto;
+            DtoProdutoCadastrarDoacao dto = new DtoProdutoCadastrarDoacao(
+                    marcaSelecionada.get(),
+                    tipoSelecionado.get(),
+                    codigo.get(),
+                    validade.get()
+            );
+            return dto.toProduto();
         } catch (Exception e) {
             showError(e);
         }
