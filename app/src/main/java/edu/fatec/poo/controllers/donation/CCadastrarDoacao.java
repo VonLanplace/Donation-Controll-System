@@ -19,6 +19,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 @Getter
 @Setter
@@ -71,6 +72,7 @@ public class CCadastrarDoacao {
         this.coordenador = coordenador;
         this.usuarioLogado = usuarioLogado;
 
+        fromEntity(doacao);
         date.setValue(LocalDate.now());
         try {
             CurrentConnection connector = new CurrentConnection();
@@ -82,14 +84,22 @@ public class CCadastrarDoacao {
     }
 
     private void fromEntity(Doacao doacao) {
-        nomeDoador.set(doacao.getNomeDoador());
-        date.set(doacao.getData());
-        listaProdutos.setAll(doacao.getProdutos());
+        nomeDoador.set(doacao.getNomeDoador() == null ? "" : doacao.getNomeDoador());
+        date.set(doacao.getData() == null ? LocalDate.now() : doacao.getData());
+        listaProdutos.setAll(doacao.getProdutos() == null ? new ArrayList<Produto>() : doacao.getProdutos());
         this.doacao = doacao;
     }
 
     private Doacao toEntity() {
-        return null; // TODO
+        Doacao novaDoacao = new Doacao();
+        novaDoacao.setData(date.get());
+        novaDoacao.setCadastrante(usuarioLogado);
+        novaDoacao.setProdutos(listaProdutos);
+        novaDoacao.setNomeDoador(nomeDoador.get());
+        for (Produto p : listaProdutos) {
+            p.setDoacao(novaDoacao);
+        }
+        return novaDoacao; // TODO
     }
 
     public void adicionar() {
@@ -119,7 +129,9 @@ public class CCadastrarDoacao {
     public void cadastrar() {
         if (doacao != null) {
             try {
+                doacao = toEntity();
                 service.save(doacao);
+                coordenador.returnToPreviosScreen();
             } catch (Exception e) {
                 coordenador.showError(e);
             }
