@@ -15,6 +15,8 @@ public class DoacaoService {
 
 
     public void save(Doacao doacao) throws SQLException, ClassNotFoundException {
+        if (doacao == null) return;
+
         Doacao antigo = dao.searchById(doacao.getId());
         if (antigo == null) {
             dao.add(doacao);
