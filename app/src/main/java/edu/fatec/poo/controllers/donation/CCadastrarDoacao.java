@@ -3,6 +3,9 @@ package edu.fatec.poo.controllers.donation;
 import edu.fatec.poo.model.Doacao;
 import edu.fatec.poo.model.Usuario;
 import edu.fatec.poo.model.produto.Produto;
+import edu.fatec.poo.persistence.DoacaoDao;
+import edu.fatec.poo.persistence.connection.CurrentConnection;
+import edu.fatec.poo.service.DoacaoService;
 import edu.fatec.poo.views.UICoordenador;
 import edu.fatec.poo.views.donation.UICadastarDoacaoProduto;
 import javafx.beans.property.ObjectProperty;
@@ -22,6 +25,7 @@ import java.time.LocalDate;
 public class CCadastrarDoacao {
     private final UICoordenador coordenador;
     private final Usuario usuarioLogado;
+    private DoacaoService service;
     private Doacao doacao;
 
     private StringProperty nomeDoador = new SimpleStringProperty();
@@ -51,7 +55,7 @@ public class CCadastrarDoacao {
      * @param coordenador   A instância do {@link UICoordenador} responsável pela navegação.
      */
     public CCadastrarDoacao(Usuario usuarioLogado, UICoordenador coordenador) {
-        this(usuarioLogado, null, coordenador);
+        this(usuarioLogado, new Doacao(), coordenador);
     }
 
     /**
@@ -66,11 +70,22 @@ public class CCadastrarDoacao {
         this.doacao = doacao;
         this.coordenador = coordenador;
         this.usuarioLogado = usuarioLogado;
+
         date.setValue(LocalDate.now());
+        try {
+            CurrentConnection connector = new CurrentConnection();
+            DoacaoDao dao = new DoacaoDao(connector.getConector());
+            service = new DoacaoService(dao);
+        } catch (Exception e) {
+            coordenador.showError(e);
+        }
     }
 
     private void fromEntity(Doacao doacao) {
-        // TODO
+        nomeDoador.set(doacao.getNomeDoador());
+        date.set(doacao.getData());
+        listaProdutos.setAll(doacao.getProdutos());
+        this.doacao = doacao;
     }
 
     private Doacao toEntity() {
@@ -85,6 +100,7 @@ public class CCadastrarDoacao {
             uiProduto.start(newStage);
             Produto produtoNovo = uiProduto.getProdutoNovo();
             if (produtoNovo != null) {
+                produtoNovo.setDoacao(doacao);
                 listaProdutos.add(produtoNovo);
             }
         } catch (Exception e) {
@@ -101,8 +117,13 @@ public class CCadastrarDoacao {
     }
 
     public void cadastrar() {
-        //TODO
-        System.out.println("CADASTRAR");
+        if (doacao != null) {
+            try {
+                service.save(doacao);
+            } catch (Exception e) {
+                coordenador.showError(e);
+            }
+        }
     }
 
     public void cancelar() {
