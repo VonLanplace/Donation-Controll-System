@@ -2,8 +2,8 @@ package edu.fatec.poo.views.donation;
 
 import atlantafx.base.theme.Styles;
 import edu.fatec.poo.controllers.donation.CCadastrarDoacaoProduto;
+import edu.fatec.poo.model.produto.Doacao;
 import edu.fatec.poo.model.produto.MarcaProduto;
-import edu.fatec.poo.model.produto.Produto;
 import edu.fatec.poo.model.produto.TipoProduto;
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -26,33 +26,24 @@ public class UICadastarDoacaoProduto extends Application {
     private static final double WHIDTH = 360;
     private static final double HEIGHT = 360;
     private static final double SPACING = 10;
-
+    // TODO Use DTO
+    Doacao doacaoNova;
     private CCadastrarDoacaoProduto controller;
-
     private VBox paneMain;
     private VBox paneProduto;
     private Scene scene;
-
     private HBox paneButtonsBottom;
-
     private Label lblProduto;
     private Label lblCodigo;
     private Label lblTipo;
     private Label lblMarca;
     private Label lblValidade;
-
     private TextField txtCodigo;
-
     private ComboBox<TipoProduto> cbbTipo;
     private ComboBox<MarcaProduto> cbbMarca;
-
     private DatePicker dpcValidade;
-
     private Button btnCancelar;
     private Button btnCadastrar;
-
-    // TODO Use DTO
-    Produto produtoNovo;
 
     @Override
     public void start(Stage stage) {
@@ -109,8 +100,8 @@ public class UICadastarDoacaoProduto extends Application {
         btnCadastrar.setPrefWidth(100);
         btnCadastrar.setDefaultButton(true);
         btnCadastrar.setOnAction(p -> {
-            produtoNovo = controller.cadastrar();
-            if (produtoNovo != null) {
+            doacaoNova = controller.cadastrar();
+            if (doacaoNova != null) {
                 stage.close();
             }
         });

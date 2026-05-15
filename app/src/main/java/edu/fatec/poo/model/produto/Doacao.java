@@ -10,7 +10,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @EqualsAndHashCode
 @ToString
-public class Produto {
+public class Doacao {
     private Long id;
     private Long idMarcaProduto;
     private Long idTipoProduto;

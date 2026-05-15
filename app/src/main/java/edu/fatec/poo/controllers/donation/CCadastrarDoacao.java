@@ -1,7 +1,7 @@
 package edu.fatec.poo.controllers.donation;
 
 import edu.fatec.poo.model.Usuario;
-import edu.fatec.poo.model.produto.Produto;
+import edu.fatec.poo.model.produto.Doacao;
 import edu.fatec.poo.views.UICoordenador;
 import edu.fatec.poo.views.donation.UICadastarDoacaoProduto;
 import javafx.beans.property.ObjectProperty;
@@ -25,8 +25,8 @@ public class CCadastrarDoacao {
     private StringProperty nomeDoador = new SimpleStringProperty();
     private ObjectProperty<LocalDate> date = new SimpleObjectProperty<>();
 
-    private ObjectProperty<Produto> produtoSelecionado = new SimpleObjectProperty<>();
-    private ObservableList<Produto> listaProdutos = FXCollections.observableArrayList();
+    private ObjectProperty<Doacao> produtoSelecionado = new SimpleObjectProperty<>();
+    private ObservableList<Doacao> listaDoacaos = FXCollections.observableArrayList();
 
     public CCadastrarDoacao(Usuario usuarioLogado, UICoordenador coordenador) {
         this.coordenador = coordenador;
@@ -49,9 +49,9 @@ public class CCadastrarDoacao {
             UICadastarDoacaoProduto uiProduto = new UICadastarDoacaoProduto();
             Stage newStage = new Stage();
             uiProduto.start(newStage);
-            Produto produtoNovo = uiProduto.getProdutoNovo();
-            if (produtoNovo != null) {
-                listaProdutos.add(produtoNovo);
+            Doacao doacaoNova = uiProduto.getDoacaoNova();
+            if (doacaoNova != null) {
+                listaDoacaos.add(doacaoNova);
             }
         } catch (Exception e) {
             coordenador.showError(e);
@@ -64,7 +64,7 @@ public class CCadastrarDoacao {
         //TODO
         System.out.println("REMOVER");
         // TODO Confirmar PopUp
-        listaProdutos.remove(produtoSelecionado.get());
+        listaDoacaos.remove(produtoSelecionado.get());
     }
 
     public void cadastrar() {

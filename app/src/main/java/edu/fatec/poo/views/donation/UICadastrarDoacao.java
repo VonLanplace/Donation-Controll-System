@@ -2,7 +2,7 @@ package edu.fatec.poo.views.donation;
 
 import atlantafx.base.theme.Styles;
 import edu.fatec.poo.controllers.donation.CCadastrarDoacao;
-import edu.fatec.poo.model.produto.Produto;
+import edu.fatec.poo.model.produto.Doacao;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -22,7 +22,7 @@ public class UICadastrarDoacao extends GridPane {
     private HBox paneBotoes;
 
     // Tabelas
-    private TableView<Produto> tabelaProdutos;
+    private TableView<Doacao> tabelaProdutos;
 
     public UICadastrarDoacao(CCadastrarDoacao controller) {
         super();
@@ -115,28 +115,28 @@ public class UICadastrarDoacao extends GridPane {
     private void configurarAreaProdutoTabela() {
         tabelaProdutos = new TableView<>();
         tabelaProdutos.setPlaceholder(new Label("Nenhum produto na lista."));
-        tabelaProdutos.setItems(controller.getListaProdutos());
+        tabelaProdutos.setItems(controller.getListaDoacaos());
         tabelaProdutos.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
 
         controller.getProdutoSelecionado().bind(
                 tabelaProdutos.getSelectionModel().selectedItemProperty()
         );
 
-        TableColumn<Produto, String> colCodigo = new TableColumn<>("Codigo de Barras");
+        TableColumn<Doacao, String> colCodigo = new TableColumn<>("Codigo de Barras");
         colCodigo.setCellValueFactory(produto -> new ReadOnlyObjectWrapper<>(produto.getValue().getCodigoBarras()));
         colCodigo.setMinWidth(140);
         colCodigo.setPrefWidth(160);
         colCodigo.setMaxWidth(200);
 
-        TableColumn<Produto, Long> colTipo = new TableColumn<>("Tipo");
+        TableColumn<Doacao, Long> colTipo = new TableColumn<>("Tipo");
         colTipo.setCellValueFactory(produto ->
                 new ReadOnlyObjectWrapper<>(produto.getValue().getIdTipoProduto()));
 
-        TableColumn<Produto, Long> colMarca = new TableColumn<>("Marca");
+        TableColumn<Doacao, Long> colMarca = new TableColumn<>("Marca");
         colMarca.setCellValueFactory(produto ->
                 new ReadOnlyObjectWrapper<>(produto.getValue().getIdMarcaProduto()));
 
-        TableColumn<Produto, String> colValidade = new TableColumn<>("Validade");
+        TableColumn<Doacao, String> colValidade = new TableColumn<>("Validade");
         colValidade.setCellValueFactory(produto ->
                 new ReadOnlyObjectWrapper<>());
 
