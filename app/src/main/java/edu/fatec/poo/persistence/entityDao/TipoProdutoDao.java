@@ -20,7 +20,7 @@ public class TipoProdutoDao extends GenericDao<TipoProduto> {
         TipoProduto tipoProduto = new TipoProduto();
         tipoProduto.setId(rs.getLong("id"));
         tipoProduto.setNome(rs.getString("nome"));
-        return null;
+        return tipoProduto;
     }
 
     @Override

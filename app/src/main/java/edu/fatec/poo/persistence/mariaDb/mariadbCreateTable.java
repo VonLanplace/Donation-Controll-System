@@ -129,6 +129,7 @@ public class mariadbCreateTable implements ICreateTable {
                 ) AS novos_valores
                 WHERE NOT EXISTS (SELECT id FROM marca_produto);
                 """;
+        runStatementData(sql, nomeTabela);
     }
 
     private void runStatementTabela(String sql, String nomeTabela) throws SQLException {

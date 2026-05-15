@@ -1,8 +1,14 @@
 package edu.fatec.poo.controllers.donation;
 
+import edu.fatec.poo.TipoProdutoStringConverter;
 import edu.fatec.poo.model.produto.Doacao;
 import edu.fatec.poo.model.produto.MarcaProduto;
 import edu.fatec.poo.model.produto.TipoProduto;
+import edu.fatec.poo.persistence.connection.CurrentConnection;
+import edu.fatec.poo.persistence.entityDao.MarcaProdutoDao;
+import edu.fatec.poo.persistence.entityDao.TipoProdutoDao;
+import edu.fatec.poo.service.MarcaProdutoService;
+import edu.fatec.poo.service.TipoProdutoService;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -10,6 +16,7 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
+import javafx.util.StringConverter;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,10 +27,16 @@ import java.time.LocalDate;
 @Setter
 public class CCadastrarDoacaoProduto {
 
+    private TipoProdutoService tipoService;
+    private MarcaProdutoService marcaService;
+
     private StringProperty codigo = new SimpleStringProperty();
 
-    private ObservableList<TipoProduto> produtosCadastrados = FXCollections.observableArrayList();
+    private ObservableList<TipoProduto> tiposCadastrados = FXCollections.observableArrayList();
+    private SimpleObjectProperty<StringConverter<TipoProduto>> tiposConverter = new SimpleObjectProperty<>(new TipoProdutoStringConverter());
+
     private ObservableList<MarcaProduto> marcasCadastradas = FXCollections.observableArrayList();
+    private SimpleObjectProperty<StringConverter<MarcaProduto>> marcasConverter = new SimpleObjectProperty<>(new MarcaProdutoStringConverter());
 
     private ObjectProperty<TipoProduto> tipoSelecionado = new SimpleObjectProperty<>();
     private ObjectProperty<MarcaProduto> marcaSelecionada = new SimpleObjectProperty<>();
@@ -32,8 +45,20 @@ public class CCadastrarDoacaoProduto {
     private ObjectProperty<Doacao> produtoCriado = new SimpleObjectProperty<>();
 
     public CCadastrarDoacaoProduto() {
-
         validade.setValue(LocalDate.now());
+        try {
+            CurrentConnection connector = new CurrentConnection();
+
+            TipoProdutoDao tipoDao = new TipoProdutoDao(connector.getConector());
+            tipoService = new TipoProdutoService(tipoDao);
+            tiposCadastrados.setAll(tipoService.searchAll());
+
+            MarcaProdutoDao marcaDao = new MarcaProdutoDao(connector.getConector());
+            marcaService = new MarcaProdutoService(marcaDao);
+            marcasCadastradas.setAll(marcaService.searchAll());
+        } catch (Exception e) {
+            showError(e);
+        }
     }
 
     public Doacao cadastrar() {
@@ -50,7 +75,6 @@ public class CCadastrarDoacaoProduto {
             doacao.setDataValidade(validade.get());
             return doacao;
         } catch (Exception e) {
-            e.printStackTrace();
             showError(e);
         }
         return null;

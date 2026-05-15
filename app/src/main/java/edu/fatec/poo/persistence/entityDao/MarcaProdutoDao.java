@@ -1,7 +1,6 @@
 package edu.fatec.poo.persistence.entityDao;
 
 import edu.fatec.poo.model.produto.MarcaProduto;
-import edu.fatec.poo.model.produto.TipoProduto;
 import edu.fatec.poo.persistence.connection.ADaoConnector;
 
 import java.sql.Connection;
@@ -14,15 +13,15 @@ import java.util.List;
 public class MarcaProdutoDao extends GenericDao<MarcaProduto> {
 
     public MarcaProdutoDao(ADaoConnector connector) throws SQLException, ClassNotFoundException {
-        super(connector, "tipo_produto");
+        super(connector, "marca_produto");
     }
 
     @Override
     protected MarcaProduto map(ResultSet rs) throws SQLException {
-        TipoProduto tipoProduto = new TipoProduto();
-        tipoProduto.setId(rs.getLong("id"));
-        tipoProduto.setNome(rs.getString("nome"));
-        return null;
+        MarcaProduto marcaProduto = new MarcaProduto();
+        marcaProduto.setId(rs.getLong("id"));
+        marcaProduto.setNome(rs.getString("nome"));
+        return marcaProduto;
     }
 
     @Override

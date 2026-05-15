@@ -1,5 +1,6 @@
 package edu.fatec.poo.model.produto;
 
+import edu.fatec.poo.model.IEntity;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -10,7 +11,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @EqualsAndHashCode
 @ToString
-public class Doacao {
+public class Doacao implements IEntity {
     private Long id;
     private Long idMarcaProduto;
     private Long idTipoProduto;

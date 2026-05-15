@@ -68,13 +68,15 @@ public class UICadastarDoacaoProduto extends Application {
 
         VBox boxTipo = new VBox(5, new Label("Tipo"), cbbTipo = new ComboBox<>());
         cbbTipo.setMaxWidth(Double.MAX_VALUE);
-        cbbTipo.setItems(controller.getProdutosCadastrados());
+        cbbTipo.setItems(controller.getTiposCadastrados());
         cbbTipo.valueProperty().bindBidirectional(controller.getTipoSelecionado());
+        cbbTipo.converterProperty().bindBidirectional(controller.getTiposConverter());
 
         VBox boxMarca = new VBox(5, new Label("Marca"), cbbMarca = new ComboBox<>());
         cbbMarca.setMaxWidth(Double.MAX_VALUE);
         cbbMarca.setItems(controller.getMarcasCadastradas());
         cbbMarca.valueProperty().bindBidirectional(controller.getMarcaSelecionada());
+        cbbMarca.converterProperty().bindBidirectional(controller.getMarcasConverter());
 
         VBox boxValidade = new VBox(5, new Label("Validade"), dpcValidade = new DatePicker(LocalDate.now()));
         dpcValidade.setMaxWidth(Double.MAX_VALUE);
