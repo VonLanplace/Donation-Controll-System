@@ -124,7 +124,18 @@ public class UICadastrarDoacao extends GridPane {
 
         TableColumn<Produto, String> colCodigo = new TableColumn<>("Codigo de Barras");
         colCodigo.setCellValueFactory(produto ->
-                new ReadOnlyObjectWrapper<>(produto.getValue().getCodigoBarras()));
+        {
+            if (produto.getValue() != null) {
+                if (produto.getValue().getCodigoBarras() == null
+                        || produto.getValue().getCodigoBarras().isBlank()) {
+                    return new ReadOnlyObjectWrapper<>("Código não cadastrado.");
+                } else {
+                    return new ReadOnlyObjectWrapper<>(produto.getValue().getCodigoBarras());
+                }
+            } else {
+                return null;
+            }
+        });
         colCodigo.setMinWidth(140);
         colCodigo.setPrefWidth(160);
         colCodigo.setMaxWidth(200);
