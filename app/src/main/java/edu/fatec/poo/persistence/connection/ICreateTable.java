@@ -9,4 +9,6 @@ public interface ICreateTable {
     void createTabelUsuario() throws SQLException;
 
     void createTabelTipoProduto() throws SQLException;
+
+    void createTableMarcaProduto() throws SQLException;
 }

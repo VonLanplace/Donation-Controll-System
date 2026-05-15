@@ -18,13 +18,14 @@ public class mariadbCreateTable implements ICreateTable {
     public void createTableAll() throws SQLException {
         createTabelUsuario();
         createTabelTipoProduto();
+        createTableMarcaProduto();
     }
 
     @Override
     public void createTabelUsuario() throws SQLException {
         String sql = """
                 CREATE TABLE IF NOT EXISTS usuario (
-                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    id BIGINT AUTO_INCREMENT PRIMARY KEY,
                     acesso INT NOT NULL,
                     nome VARCHAR(100) NOT NULL,
                     email VARCHAR(100) UNIQUE NOT NULL,
@@ -57,12 +58,12 @@ public class mariadbCreateTable implements ICreateTable {
         String nomeTabela = "tipo_produto";
         String sql = """
                 CREATE TABLE IF NOT EXISTS tipo_produto(
-                    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                    nome VARCHAR(100) NOT NULL,
+                    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                    nome VARCHAR(100) NOT NULL UNIQUE
                 );
                 """;
         runStatementTabela(sql, nomeTabela);
-        String slq = """
+        sql = """
                 INSERT INTO tipo_produto (nome)
                 SELECT * FROM (
                     SELECT 'Arroz' AS nome UNION ALL
@@ -79,9 +80,55 @@ public class mariadbCreateTable implements ICreateTable {
                     SELECT 'Leite em pó' UNION ALL
                     SELECT 'Leite longa vida'
                 ) AS novos_valores
-                WHERE NOT EXISTS (SELECT id FROM tipo_produto)
+                WHERE NOT EXISTS (SELECT id FROM tipo_produto);
                 """;
         runStatementData(sql, nomeTabela);
+    }
+
+    @Override
+    public void createTableMarcaProduto() throws SQLException {
+        String nomeTabela = "marca_produto";
+        String sql = """
+                CREATE TABLE IF NOT EXISTS marca_produto(
+                    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                    nome VARCHAR(100) NOT NULL UNIQUE
+                );
+                """;
+        runStatementTabela(sql, nomeTabela);
+        sql = """
+                INSERT INTO marca_produto (nome)
+                SELECT * FROM(
+                    SELECT 'Camil' AS nome UNION ALL
+                    SELECT 'Tio João' UNION ALL
+                    SELECT 'Namorado' UNION ALL
+                    SELECT 'Broto Legal' UNION ALL
+                    SELECT 'Kicaldo' UNION ALL
+                    SELECT 'Liza' UNION ALL
+                    SELECT 'Soya' UNION ALL
+                    SELECT 'Vila Velha' UNION ALL
+                    SELECT 'Leve' UNION ALL
+                    SELECT 'União' UNION ALL
+                    SELECT 'Caravelas' UNION ALL
+                    SELECT 'Guarani' UNION ALL
+                    SELECT 'Pilão' UNION ALL
+                    SELECT 'Café Pelé' UNION ALL
+                    SELECT '3 Corações' UNION ALL
+                    SELECT 'Melitta' UNION ALL
+                    SELECT 'Adria' UNION ALL
+                    SELECT 'Vitarella' UNION ALL
+                    SELECT 'Renata' UNION ALL
+                    SELECT 'Isabela' UNION ALL
+                    SELECT 'Dona Benta' UNION ALL
+                    SELECT 'Sol' UNION ALL
+                    SELECT 'Ypê' UNION ALL
+                    SELECT 'Omo' UNION ALL
+                    SELECT 'Brilhante' UNION ALL
+                    SELECT 'Minuano' UNION ALL
+                    SELECT 'Colgate' UNION ALL
+                    SELECT 'Sorriso'
+                ) AS novos_valores
+                WHERE NOT EXISTS (SELECT id FROM marca_produto);
+                """;
     }
 
     private void runStatementTabela(String sql, String nomeTabela) throws SQLException {
