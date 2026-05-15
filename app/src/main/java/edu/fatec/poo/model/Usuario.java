@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 public class Usuario implements IEntity {
-    private long Id;
+    private Long Id;
     private Acesso acesso;
     private String nome;
     private String email;
@@ -14,12 +14,12 @@ public class Usuario implements IEntity {
     private long telefone;
 
     @Override
-    public long getId() {
+    public Long getId() {
         return Id;
     }
 
     @Override
-    public void setId(long id) {
+    public void setId(Long id) {
         Id = id;
     }
 

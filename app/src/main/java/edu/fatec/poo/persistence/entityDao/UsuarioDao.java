@@ -101,7 +101,7 @@ public class UsuarioDao extends GenericDao<Usuario> implements IDao<Usuario> {
 
     public Usuario map(ResultSet resultSet) throws SQLException {
         Usuario usuario = new Usuario();
-        usuario.setId(resultSet.getInt("id"));
+        usuario.setId(resultSet.getLong("id"));
         usuario.setAcesso(Acesso.getAcesso(resultSet.getInt("acesso")));
         usuario.setNome(resultSet.getString("nome"));
         usuario.setEmail(resultSet.getString("email"));

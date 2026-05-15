@@ -7,16 +7,14 @@ import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.*;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 public class UICadastrarDoacao extends GridPane {
 
     private static final double SPACING = 15;
-    private CCadastrarDoacao controller;
+    private final CCadastrarDoacao controller;
 
     // Componentes de Layout
     private VBox paneDoacao;

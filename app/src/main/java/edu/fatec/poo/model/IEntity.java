@@ -1,7 +1,7 @@
 package edu.fatec.poo.model;
 
 public interface IEntity {
-    public long getId();
+    public Long getId();
 
-    public void setId(long id);
+    public void setId(Long id);
 }
