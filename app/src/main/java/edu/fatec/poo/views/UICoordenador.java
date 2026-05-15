@@ -3,6 +3,7 @@ package edu.fatec.poo.views;
 import edu.fatec.poo.controllers.donation.CCadastrarDoacao;
 import edu.fatec.poo.controllers.user.CAdmin;
 import edu.fatec.poo.controllers.user.CUserLogin;
+import edu.fatec.poo.model.Doacao;
 import edu.fatec.poo.model.Usuario;
 import edu.fatec.poo.views.donation.UICadastrarDoacao;
 import edu.fatec.poo.views.user.UIAdmin;
@@ -24,9 +25,9 @@ import static edu.fatec.poo.configs.WindowStandardFormatting.WHIDTH;
 @Getter
 @Setter
 public class UICoordenador {
+    Stack<Parent> paneStack = new Stack<>();
     private Stage stage;
     private Scene scene;
-    Stack<Parent> paneStack = new Stack<>();
 
     public UICoordenador(Stage stage) {
         this.stage = stage;
@@ -50,6 +51,14 @@ public class UICoordenador {
 
     public void showCadastroDoacaoScreen(Usuario usuarioLogado) {
         showScreen(new UICadastrarDoacao(new CCadastrarDoacao(usuarioLogado, this)));
+    }
+
+    public void showUpdateDoacaoScreen(Usuario usuarioLogado, Doacao doacao) {
+        showScreen(new UICadastrarDoacao(new CCadastrarDoacao(usuarioLogado, doacao, this)));
+    }
+
+    public void showReadDoacaoScreen(Doacao doacao) {
+        showScreen(new UICadastrarDoacao(new CCadastrarDoacao(doacao, this)));
     }
 
     public void returnToPreviosScreen() {

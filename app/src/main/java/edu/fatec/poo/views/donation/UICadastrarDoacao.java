@@ -2,7 +2,7 @@ package edu.fatec.poo.views.donation;
 
 import atlantafx.base.theme.Styles;
 import edu.fatec.poo.controllers.donation.CCadastrarDoacao;
-import edu.fatec.poo.model.produto.Doacao;
+import edu.fatec.poo.model.produto.Produto;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -22,7 +22,7 @@ public class UICadastrarDoacao extends GridPane {
     private HBox paneBotoes;
 
     // Tabelas
-    private TableView<Doacao> tabelaProdutos;
+    private TableView<Produto> tabelaProdutos;
 
     public UICadastrarDoacao(CCadastrarDoacao controller) {
         super();
@@ -52,8 +52,6 @@ public class UICadastrarDoacao extends GridPane {
         ColumnConstraints constraints = new ColumnConstraints();
         constraints.setHgrow(Priority.ALWAYS);
         this.getColumnConstraints().add(constraints);
-
-        this.controller.start();
     }
 
 
@@ -65,20 +63,20 @@ public class UICadastrarDoacao extends GridPane {
 
         HBox campos = new HBox(SPACING);
 
-        // Campo Nome
         VBox boxNome = new VBox(5);
         Label lblNome = new Label("Nome Doador");
         TextField txtNome = new TextField();
         txtNome.setPromptText("Digite o nome completo");
         txtNome.textProperty().bindBidirectional(controller.getNomeDoador());
+        txtNome.setDisable(!controller.isEditavel());
         HBox.setHgrow(boxNome, Priority.ALWAYS);
         boxNome.getChildren().addAll(lblNome, txtNome);
 
-        // Campo Data
         VBox boxData = new VBox(5);
         Label lblData = new Label("Data");
         DatePicker dtpDataDoacao = new DatePicker(LocalDate.now());
         dtpDataDoacao.valueProperty().bindBidirectional(controller.getDate());
+        dtpDataDoacao.setDisable(!controller.isEditavel());
         boxData.getChildren().addAll(lblData, dtpDataDoacao);
 
         campos.getChildren().addAll(boxNome, boxData);
@@ -100,10 +98,12 @@ public class UICadastrarDoacao extends GridPane {
         Button btnAdicionar = new Button("Adicionar Produto");
         btnAdicionar.getStyleClass().addAll(Styles.BUTTON_OUTLINED, Styles.ACCENT);
         btnAdicionar.setOnAction(event -> controller.adicionar());
+        btnAdicionar.setVisible(controller.isEditavel());
 
         Button btnRemover = new Button("Remover");
         btnRemover.getStyleClass().addAll(Styles.BUTTON_OUTLINED, Styles.DANGER);
         btnRemover.setOnAction(event -> controller.remover());
+        btnRemover.setVisible(controller.isEditavel());
 
         paneProdutosBotoes.getChildren().addAll(btnRemover, btnAdicionar);
         headerProdutos.getChildren().addAll(lblTituloProdutos, spacer, paneProdutosBotoes);
@@ -115,30 +115,31 @@ public class UICadastrarDoacao extends GridPane {
     private void configurarAreaProdutoTabela() {
         tabelaProdutos = new TableView<>();
         tabelaProdutos.setPlaceholder(new Label("Nenhum produto na lista."));
-        tabelaProdutos.setItems(controller.getListaDoacaos());
+        tabelaProdutos.setItems(controller.getListaProdutos());
         tabelaProdutos.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
 
         controller.getProdutoSelecionado().bind(
                 tabelaProdutos.getSelectionModel().selectedItemProperty()
         );
 
-        TableColumn<Doacao, String> colCodigo = new TableColumn<>("Codigo de Barras");
-        colCodigo.setCellValueFactory(produto -> new ReadOnlyObjectWrapper<>(produto.getValue().getCodigoBarras()));
+        TableColumn<Produto, String> colCodigo = new TableColumn<>("Codigo de Barras");
+        colCodigo.setCellValueFactory(produto ->
+                new ReadOnlyObjectWrapper<>(produto.getValue().getCodigoBarras()));
         colCodigo.setMinWidth(140);
         colCodigo.setPrefWidth(160);
         colCodigo.setMaxWidth(200);
 
-        TableColumn<Doacao, Long> colTipo = new TableColumn<>("Tipo");
+        TableColumn<Produto, String> colTipo = new TableColumn<>("Tipo");
         colTipo.setCellValueFactory(produto ->
-                new ReadOnlyObjectWrapper<>(produto.getValue().getIdTipoProduto()));
+                new ReadOnlyObjectWrapper<>(produto.getValue().getTipo().getNome()));
 
-        TableColumn<Doacao, Long> colMarca = new TableColumn<>("Marca");
+        TableColumn<Produto, String> colMarca = new TableColumn<>("Marca");
         colMarca.setCellValueFactory(produto ->
-                new ReadOnlyObjectWrapper<>(produto.getValue().getIdMarcaProduto()));
+                new ReadOnlyObjectWrapper<>(produto.getValue().getMarca().getNome()));
 
-        TableColumn<Doacao, String> colValidade = new TableColumn<>("Validade");
+        TableColumn<Produto, String> colValidade = new TableColumn<>("Validade");
         colValidade.setCellValueFactory(produto ->
-                new ReadOnlyObjectWrapper<>());
+                new ReadOnlyObjectWrapper<>(produto.getValue().getDataValidadeDdMmYyyy()));
 
         tabelaProdutos.getColumns().add(colCodigo);
         tabelaProdutos.getColumns().add(colTipo);
@@ -154,11 +155,18 @@ public class UICadastrarDoacao extends GridPane {
         Button btnCancelar = new Button("Cancelar");
         btnCancelar.setPrefWidth(120);
         btnCancelar.setOnAction(event -> controller.cancelar());
+        btnCancelar.setVisible(controller.isEditavel());
 
-        Button btnCadastrar = new Button("Finalizar Cadastro");
+        Button btnCadastrar = new Button();
         btnCadastrar.getStyleClass().addAll(Styles.SUCCESS, Styles.SUCCESS);
         btnCadastrar.setPrefWidth(160);
-        btnCadastrar.setOnAction(event -> controller.cadastrar());
+        if (controller.isEditavel()) {
+            btnCadastrar.setText("Finalizar Cadastro");
+            btnCadastrar.setOnAction(event -> controller.cadastrar());
+        } else {
+            btnCadastrar.setText("Voltar");
+            btnCadastrar.setOnAction(event -> controller.voltar());
+        }
 
         paneBotoes.getChildren().addAll(btnCancelar, btnCadastrar);
     }
