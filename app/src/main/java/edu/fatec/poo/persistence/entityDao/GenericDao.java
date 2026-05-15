@@ -31,6 +31,7 @@ public abstract class GenericDao<T extends IEntity> implements IDao<T> {
 
     @Override
     public T searchById(Long id) throws SQLException, ClassNotFoundException {
+        if (id == null) return null;
         String sql = "SELECT * FROM " + tableName + " WHERE id = ?";
         try (Connection connection = conector.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -60,6 +61,7 @@ public abstract class GenericDao<T extends IEntity> implements IDao<T> {
 
     @Override
     public void delete(T object) throws SQLException, ClassNotFoundException {
+        if (object == null) return;
         String sql = "DELETE FROM " + tableName + " WHERE id = ?;";
         try (Connection connection = conector.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
