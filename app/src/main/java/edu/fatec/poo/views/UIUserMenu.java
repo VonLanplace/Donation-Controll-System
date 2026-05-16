@@ -2,22 +2,15 @@ package edu.fatec.poo.views;
 
 import atlantafx.base.theme.Styles;
 import edu.fatec.poo.model.Doacao;
-import edu.fatec.poo.model.Usuario;
-import javafx.beans.Observable;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -27,30 +20,32 @@ public class UIUserMenu extends BorderPane {
 
     public UIUserMenu(CUserMenu cUserMenu) {
         this.controller = cUserMenu;
+        this.setPadding(new Insets(20));
+
         configSearch();
         configTabela();
         configButtonsBottom();
     }
 
     private void configSearch() {
-        HBox paneTop = new HBox(15);
-        paneTop.setAlignment(Pos.CENTER);
-        paneTop.setPadding(new Insets(10, 0, 0, 0));
+        HBox paneTop = new HBox(10);
+        paneTop.setAlignment(Pos.CENTER_LEFT);
+        paneTop.setPadding(new Insets(0, 0, 15, 0));
 
         TextField txtPesquisa = new TextField();
-        txtPesquisa.setPromptText("Insira o nome do Doador");
+        txtPesquisa.setPromptText("Insira o nome do Doador...");
         txtPesquisa.textProperty().bindBidirectional(controller.getNomePesquisa());
+        HBox.setHgrow(txtPesquisa, Priority.ALWAYS);
 
-        Button btnPesquisar = new Button("\uD83D\uDD0D\uFE0E");
-        btnPesquisar.getStyleClass().add(Styles.SUCCESS); // Verde sólido
-        btnPesquisar.setPrefWidth(110);
+        Button btnPesquisar = new Button("\uD83D\uDD0D"); // Ícone de lupa limpo
+        btnPesquisar.getStyleClass().add(Styles.ACCENT); // Azul Nord para ação principal
+        btnPesquisar.setPrefWidth(100);
         btnPesquisar.setDefaultButton(true);
         btnPesquisar.setOnAction(event -> controller.pesquisar());
 
         Button btnLimpar = new Button("Limpar");
         btnLimpar.getStyleClass().add(Styles.FLAT);
-        btnLimpar.setPrefWidth(100);
-        btnLimpar.setCancelButton(true);
+        btnLimpar.setPrefWidth(90);
         btnLimpar.setOnAction(event -> controller.limpar());
 
         paneTop.getChildren().addAll(txtPesquisa, btnLimpar, btnPesquisar);
@@ -58,26 +53,9 @@ public class UIUserMenu extends BorderPane {
     }
 
     private void configButtonsBottom() {
-        HBox paneBottom = new HBox(15);
-        paneBottom.setAlignment(Pos.CENTER);
-        paneBottom.setPadding(new Insets(10, 0, 0, 0));
-
-        Button btnNovo = new Button("Novo");
-        btnNovo.getStyleClass().add(Styles.SUCCESS); // Verde sólido
-        btnNovo.setPrefWidth(110);
-        btnNovo.setDefaultButton(true);
-        btnNovo.setOnAction(event -> controller.novo());
-
-        Button btnVer = new Button("Ver");
-        btnVer.getStyleClass().addAll(Styles.BUTTON_OUTLINED, Styles.DANGER); // Borda vermelha
-        btnVer.setPrefWidth(110);
-        btnVer.setOnAction(event -> controller.ver());
-
-
-        Button btnEditar = new Button("Editar");
-        btnEditar.getStyleClass().add(Styles.FLAT);
-        btnEditar.setPrefWidth(100);
-        btnEditar.setOnAction(event -> controller.editar());
+        HBox paneBottom = new HBox(12);
+        paneBottom.setAlignment(Pos.CENTER_RIGHT);
+        paneBottom.setPadding(new Insets(15, 0, 0, 0));
 
         Button btnVoltar = new Button("Voltar");
         btnVoltar.getStyleClass().add(Styles.FLAT);
@@ -85,33 +63,53 @@ public class UIUserMenu extends BorderPane {
         btnVoltar.setCancelButton(true);
         btnVoltar.setOnAction(event -> controller.voltar());
 
-        paneBottom.getChildren().addAll(btnVoltar, btnEditar, btnVer, btnNovo);
+        Button btnEditar = new Button("Editar");
+        btnEditar.getStyleClass().add(Styles.BUTTON_OUTLINED);
+        btnEditar.setPrefWidth(100);
+        btnEditar.setOnAction(event -> controller.editar());
+
+        Button btnVer = new Button("Visualizar");
+        btnVer.getStyleClass().add(Styles.BUTTON_OUTLINED);
+        btnVer.setPrefWidth(110);
+        btnVer.setOnAction(event -> controller.ver());
+
+        Button btnNovo = new Button("Novo");
+        btnNovo.getStyleClass().add(Styles.ACCENT);
+        btnNovo.setPrefWidth(100);
+        btnNovo.setOnAction(event -> controller.novo());
+
+        paneBottom.getChildren().addAll(btnVoltar, new javafx.scene.layout.Region(), btnEditar, btnVer, btnNovo);
+        HBox.setHgrow(paneBottom.getChildren().get(1), Priority.ALWAYS);
+
         this.setBottom(paneBottom);
     }
 
     public void configTabela() {
         TableView<Doacao> tbvDoacao = new TableView<>();
         tbvDoacao.setItems(controller.getDoacaos());
+        tbvDoacao.setPlaceholder(new Label("Nenhuma doação encontrada."));
         tbvDoacao.getSelectionModel().selectedItemProperty().addListener(
-                (doacao, velho, novo) ->
-                        controller.getDoacaoSelecionada().setValue(novo)
+                (doacao, velho, novo) -> controller.getDoacaoSelecionada().setValue(novo)
         );
-        tbvDoacao.setPrefHeight(180);
+
         tbvDoacao.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
-        tbvDoacao.getStyleClass().add(Styles.STRIPED);
+        tbvDoacao.getStyleClass().addAll(Styles.STRIPED, Styles.BORDERED); // Bordas sutis combinam com Nord
 
         TableColumn<Doacao, String> colData = new TableColumn<>("Data");
-        colData.setCellValueFactory(docaco
-                -> new ReadOnlyObjectWrapper<>(docaco.getValue().getDataValidadeDdMmYyyy()
-        ));
+        colData.setCellValueFactory(doacao
+                -> new ReadOnlyObjectWrapper<>(doacao.getValue().getDataValidadeDdMmYyyy())
+        );
+        colData.setMaxWidth(1200);
+
         TableColumn<Doacao, String> colNome = new TableColumn<>("Doador");
-        colData.setCellValueFactory(docaco
-                -> new ReadOnlyObjectWrapper<>(docaco.getValue().getNomeDoador()
-        ));
+        colNome.setCellValueFactory(doacao
+                -> new ReadOnlyObjectWrapper<>(doacao.getValue().getNomeDoador())
+        );
+
         TableColumn<Doacao, String> colCadastrante = new TableColumn<>("Cadastrante");
-        colData.setCellValueFactory(docaco
-                -> new ReadOnlyObjectWrapper<>(docaco.getValue().getCadastrante().getNome()
-        ));
+        colCadastrante.setCellValueFactory(doacao
+                -> new ReadOnlyObjectWrapper<>(doacao.getValue().getCadastrante().getNome())
+        );
 
         tbvDoacao.getColumns().add(colData);
         tbvDoacao.getColumns().add(colNome);

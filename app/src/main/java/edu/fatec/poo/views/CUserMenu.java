@@ -9,12 +9,8 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.Singular;
-
-import java.sql.SQLException;
 
 @Getter
 @Setter
@@ -36,6 +32,7 @@ public class CUserMenu {
             CurrentConnection connector = new CurrentConnection();
             DoacaoDao dao = new DoacaoDao(connector.getConector());
             this.doacaoService = new DoacaoService(dao);
+            doacaoSelecionada.setValue(new Doacao());
 
             doacaos.setAll(dao.searchLastNByDate(5));
         } catch (Exception e) {
