@@ -1,10 +1,11 @@
-package edu.fatec.poo.views;
+package edu.fatec.poo.controllers.donation;
 
 import edu.fatec.poo.model.Doacao;
 import edu.fatec.poo.model.Usuario;
 import edu.fatec.poo.persistence.DoacaoDao;
 import edu.fatec.poo.persistence.connection.CurrentConnection;
 import edu.fatec.poo.service.DoacaoService;
+import edu.fatec.poo.views.UICoordenador;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -32,7 +33,6 @@ public class CUserMenu {
             CurrentConnection connector = new CurrentConnection();
             DoacaoDao dao = new DoacaoDao(connector.getConector());
             this.doacaoService = new DoacaoService(dao);
-            doacaoSelecionada.setValue(new Doacao());
 
             doacaos.setAll(dao.searchLastNByDate(5));
         } catch (Exception e) {
@@ -73,7 +73,12 @@ public class CUserMenu {
 
     public void pesquisar() {
         if (nomePesquisa.get() != null && !nomePesquisa.get().isEmpty()) {
-            doacaos.setAll(doacaoService.searchByLikeName(nomePesquisa.get()));
+            try {
+                doacaos.setAll(doacaoService.searchByLikeName(nomePesquisa.get()));
+
+            } catch (Exception e) {
+                coordenador.showError(e);
+            }
         }
     }
 

@@ -54,13 +54,12 @@ public class CUserLogin {
             switch (usuarioLogado.getAcesso()) {
                 case USER -> {
                     getCoodenator().stashScreen();
-                    getCoodenator().showCadastroDoacaoScreen(usuarioLogado);
+                    getCoodenator().showUserMenu(usuarioLogado);
                 }
                 case ADMIN -> {
                     getCoodenator().stashScreen();
-                    getCoodenator().showUserMenu(usuarioLogado);
+                    getCoodenator().showAdminScreen(usuarioLogado);
                 }
-                //TODO
                 case PUBLIC -> {
                     Alert alert = new Alert(Alert.AlertType.INFORMATION, "Área pública não disponível neste App", ButtonType.CLOSE);
                     alert.setTitle("Acesso Negado");

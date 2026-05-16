@@ -1,6 +1,7 @@
-package edu.fatec.poo.views;
+package edu.fatec.poo.views.donation;
 
 import atlantafx.base.theme.Styles;
+import edu.fatec.poo.controllers.donation.CUserMenu;
 import edu.fatec.poo.model.Doacao;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.geometry.Insets;

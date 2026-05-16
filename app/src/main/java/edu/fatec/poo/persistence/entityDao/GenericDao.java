@@ -62,9 +62,11 @@ public abstract class GenericDao<T extends IEntity> implements IDao<T> {
     @Override
     public void delete(T object) throws SQLException, ClassNotFoundException {
         if (object == null) return;
+        if (object.getId() == null || object.getId() == 0) return;
         String sql = "DELETE FROM " + tableName + " WHERE id = ?;";
         try (Connection connection = conector.getConnection();
-             PreparedStatement ps = connection.prepareStatement(sql)) {
+             PreparedStatement ps = connection.prepareStatement(sql)
+        ) {
             ps.setLong(1, object.getId());
             ps.execute();
         }

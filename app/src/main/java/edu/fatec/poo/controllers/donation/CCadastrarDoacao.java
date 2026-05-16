@@ -148,7 +148,23 @@ public class CCadastrarDoacao {
         return usuarioLogado != null;
     }
 
+    public boolean isSaved() {
+        return doacao != null && doacao.getId() != null && doacao.getId() != 0;
+    }
+
+
     public void voltar() {
         coordenador.returnToPreviosScreen();
+    }
+
+    public void deletar() {
+        if (doacao != null && doacao.getId() != null) {
+            try {
+                service.deleteById(doacao);
+                coordenador.returnToPreviosScreen();
+            } catch (Exception e) {
+                coordenador.showError(e);
+            }
+        }
     }
 }

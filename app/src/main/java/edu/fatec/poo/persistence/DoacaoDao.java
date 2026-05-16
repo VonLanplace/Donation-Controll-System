@@ -38,12 +38,12 @@ public class DoacaoDao extends GenericDao<Doacao> {
         System.out.println("UPDATED");
     }
 
-    public List<Doacao> searchLastNByDate(int n) {
+    public List<Doacao> searchLastNByDate(int n) throws SQLException, ClassNotFoundException {
         System.out.println("Found Last date " + n);
         return List.of();
     }
 
-    public List<Doacao> searchByLikeName(String s) {
+    public List<Doacao> searchByLikeName(String s) throws SQLException, ClassNotFoundException {
         System.out.println("Found By Name Like " + s);
         return List.of();
     }

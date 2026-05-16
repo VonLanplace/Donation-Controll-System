@@ -42,11 +42,17 @@ public class DoacaoService {
         return dao.searchAll();
     }
 
-    public List<Doacao> searchLastInt(int n) {
+    public List<Doacao> searchLastInt(int n) throws SQLException, ClassNotFoundException {
         return dao.searchLastNByDate(n);
     }
 
-    public List<Doacao> searchByLikeName(String s) {
+    public List<Doacao> searchByLikeName(String s) throws SQLException, ClassNotFoundException {
         return dao.searchByLikeName(s);
+    }
+
+    public void deleteById(Doacao doacao) throws SQLException, ClassNotFoundException {
+        if (doacao != null && doacao.getId() != null && doacao.getId() != 0) {
+            dao.delete(doacao);
+        }
     }
 }

@@ -163,6 +163,12 @@ public class UICadastrarDoacao extends GridPane {
         paneBotoes.setAlignment(Pos.CENTER_RIGHT);
         paneBotoes.setPadding(new Insets(10, 0, 0, 0));
 
+        Button btdDeletar = new Button("Deletar");
+        btdDeletar.setPrefWidth(120);
+        btdDeletar.setOnAction(event -> controller.deletar());
+        btdDeletar.getStyleClass().addAll(Styles.DANGER);
+        btdDeletar.setVisible(controller.isSaved());
+
         Button btnCancelar = new Button("Cancelar");
         btnCancelar.setPrefWidth(120);
         btnCancelar.setOnAction(event -> controller.cancelar());
@@ -179,6 +185,6 @@ public class UICadastrarDoacao extends GridPane {
             btnCadastrar.setOnAction(event -> controller.voltar());
         }
 
-        paneBotoes.getChildren().addAll(btnCancelar, btnCadastrar);
+        paneBotoes.getChildren().addAll(btdDeletar, btnCancelar, btnCadastrar);
     }
 }
