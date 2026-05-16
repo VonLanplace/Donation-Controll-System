@@ -51,6 +51,10 @@ public class UICoordenador {
         showScreen(new UIAdmin(new CAdmin(usuarioLogado, this)));
     }
 
+    public void showUserMenu(Usuario usuarioLogado) {
+        showScreen(new UIUserMenu(new CUserMenu(usuarioLogado, this)));
+    }
+
     public void showCadastroDoacaoScreen(Usuario usuarioLogado) {
         showScreen(new UICadastrarDoacao(new CCadastrarDoacao(usuarioLogado, this)));
     }
@@ -76,6 +80,13 @@ public class UICoordenador {
         if (currentView != null)
             paneStack.push(currentView);
     }
+
+    public void stashScreen() {
+        Parent currentView = this.getScene().getRoot();
+        if (currentView != null)
+            paneStack.push(currentView);
+    }
+
 
     public void showError(Exception e) {
         Alert alert = new Alert(Alert.AlertType.ERROR);

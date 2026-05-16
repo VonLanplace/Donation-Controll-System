@@ -1,4 +1,4 @@
-package edu.fatec.poo.controllers.donation;
+package edu.fatec.poo.util;
 
 import edu.fatec.poo.model.produto.MarcaProduto;
 import javafx.util.StringConverter;

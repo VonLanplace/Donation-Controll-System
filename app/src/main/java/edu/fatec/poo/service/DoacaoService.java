@@ -2,6 +2,7 @@ package edu.fatec.poo.service;
 
 import edu.fatec.poo.model.Doacao;
 import edu.fatec.poo.persistence.DoacaoDao;
+import javafx.collections.ObservableList;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -39,5 +40,13 @@ public class DoacaoService {
 
     public List<Doacao> searchAll() throws SQLException, ClassNotFoundException {
         return dao.searchAll();
+    }
+
+    public List<Doacao> searchLastInt(int n) {
+        return dao.searchLastNByDate(n);
+    }
+
+    public List<Doacao> searchByLikeName(String s) {
+        return dao.searchByLikeName(s);
     }
 }

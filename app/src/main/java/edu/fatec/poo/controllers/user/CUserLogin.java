@@ -1,6 +1,5 @@
 package edu.fatec.poo.controllers.user;
 
-import edu.fatec.poo.controllers.AController;
 import edu.fatec.poo.exceptions.UsuarioNaoCadastradoException;
 import edu.fatec.poo.model.Usuario;
 import edu.fatec.poo.persistence.connection.CurrentConnection;
@@ -9,14 +8,14 @@ import edu.fatec.poo.views.UICoordenador;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-import javafx.scene.layout.Pane;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class CUserLogin extends AController {
+public class CUserLogin {
 
+    private UICoordenador coodenator;
     private UserService userService;
 
     private SimpleStringProperty email;
@@ -24,7 +23,7 @@ public class CUserLogin extends AController {
     private SimpleStringProperty mensagem;
 
     public CUserLogin(UICoordenador coordenador) {
-        super(coordenador);
+        this.coodenator = coordenador;
         try {
             CurrentConnection connection = new CurrentConnection();
             userService = new UserService(connection.getConector());
@@ -54,12 +53,12 @@ public class CUserLogin extends AController {
             clearFields();
             switch (usuarioLogado.getAcesso()) {
                 case USER -> {
-                    getCoodenator().stashScreen(getCoodenator().getScene().getRoot());
+                    getCoodenator().stashScreen();
                     getCoodenator().showCadastroDoacaoScreen(usuarioLogado);
                 }
                 case ADMIN -> {
-                    getCoodenator().stashScreen(getCoodenator().getScene().getRoot());
-                    getCoodenator().showAdminScreen(usuarioLogado);
+                    getCoodenator().stashScreen();
+                    getCoodenator().showUserMenu(usuarioLogado);
                 }
                 //TODO
                 case PUBLIC -> {
@@ -82,4 +81,7 @@ public class CUserLogin extends AController {
         senha.setValue("");
     }
 
+    public void voltar() {
+        coodenator.returnToPreviosScreen();
+    }
 }

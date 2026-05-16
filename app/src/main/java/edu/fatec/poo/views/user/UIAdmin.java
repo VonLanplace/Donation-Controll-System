@@ -73,7 +73,8 @@ public class UIAdmin extends BorderPane {
         colNome.setCellValueFactory(item -> new ReadOnlyObjectWrapper<>(item.getValue().getNome()));
 
         TableColumn<Usuario, String> colAcesso = new TableColumn<>("Acesso");
-        colAcesso.setCellValueFactory(item -> new ReadOnlyObjectWrapper<>(item.getValue().getAcesso().name()));
+        colAcesso.setCellValueFactory(item ->
+                new ReadOnlyObjectWrapper<>(item.getValue().getAcesso().name()));
         colAcesso.setPrefWidth(100);
         colAcesso.setMinWidth(colAcesso.getPrefWidth());
         colAcesso.setMaxWidth(colAcesso.getPrefWidth());
@@ -84,7 +85,8 @@ public class UIAdmin extends BorderPane {
         tbvUsuario.getColumns().addAll(colAcesso, colCpf, colNome, colEmail);
 
         tbvUsuario.getSelectionModel().selectedItemProperty().addListener(
-                (observable, oldValue, newValue) -> controller.select(newValue)
+                (observable, oldValue, newValue) ->
+                        controller.select(newValue)
         );
 
         containerTopo.getChildren().addAll(lblTitulo, tbvUsuario);

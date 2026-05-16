@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Data
@@ -28,5 +29,10 @@ public class Doacao implements IEntity {
     @Override
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getDataValidadeDdMmYyyy() {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/uuuu");
+        return data.format(dtf);
     }
 }

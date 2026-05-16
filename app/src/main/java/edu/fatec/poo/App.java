@@ -24,7 +24,8 @@ public class App extends Application {
             connection.buildMariaDb();
         }
         //coodenator.showReadDoacaoScreen(new Doacao());
-        coodenator.showCadastroDoacaoScreen(new Usuario());
+        //coodenator.showCadastroDoacaoScreen(new Usuario());
+        coodenator.showUserMenu(new Usuario());
         //coodenator.showLoginScreen();
     }
 }
