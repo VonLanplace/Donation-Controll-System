@@ -1,9 +1,11 @@
 package edu.fatec.poo.model;
 
 import edu.fatec.poo.util.Acesso;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
+@AllArgsConstructor
 public class Usuario implements IEntity {
     private Long Id;
     private Acesso acesso;

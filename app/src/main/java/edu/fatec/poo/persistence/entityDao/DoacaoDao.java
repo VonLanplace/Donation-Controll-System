@@ -9,10 +9,10 @@ import java.util.List;
 
 public class DoacaoDao extends GenericDao<Doacao> {
 
-    public DoacaoDao(ADaoConnector connector) throws SQLException, ClassNotFoundException {
+    public DoacaoDao(ADaoConnector conWnector) throws SQLException, ClassNotFoundException {
         super(connector, "doacao");
     }
-
+qweqwe
     @Override
     protected Doacao map(ResultSet rs) throws SQLException {
         System.out.println("MAPED");
