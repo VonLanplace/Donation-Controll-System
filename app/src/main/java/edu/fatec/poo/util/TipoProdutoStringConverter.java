@@ -1,4 +1,4 @@
-package edu.fatec.poo;
+package edu.fatec.poo.util;
 
 import edu.fatec.poo.model.produto.TipoProduto;
 import javafx.util.StringConverter;

@@ -1,9 +1,7 @@
-package edu.fatec.poo.persistence;
+package edu.fatec.poo.persistence.entityDao;
 
 import edu.fatec.poo.model.Doacao;
 import edu.fatec.poo.persistence.connection.ADaoConnector;
-import edu.fatec.poo.persistence.entityDao.GenericDao;
-import javafx.collections.ObservableList;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

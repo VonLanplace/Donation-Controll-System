@@ -4,7 +4,6 @@
 package edu.fatec.poo;
 
 import atlantafx.base.theme.NordDark;
-import edu.fatec.poo.model.Usuario;
 import edu.fatec.poo.persistence.connection.CurrentConnection;
 import edu.fatec.poo.views.UICoordenador;
 import javafx.application.Application;

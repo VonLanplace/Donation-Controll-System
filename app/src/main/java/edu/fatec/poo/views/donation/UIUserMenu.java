@@ -38,8 +38,8 @@ public class UIUserMenu extends BorderPane {
         txtPesquisa.textProperty().bindBidirectional(controller.getNomePesquisa());
         HBox.setHgrow(txtPesquisa, Priority.ALWAYS);
 
-        Button btnPesquisar = new Button("\uD83D\uDD0D"); // Ícone de lupa limpo
-        btnPesquisar.getStyleClass().add(Styles.ACCENT); // Azul Nord para ação principal
+        Button btnPesquisar = new Button("Pesquisar︎");
+        btnPesquisar.getStyleClass().add(Styles.ACCENT);
         btnPesquisar.setPrefWidth(100);
         btnPesquisar.setDefaultButton(true);
         btnPesquisar.setOnAction(event -> controller.pesquisar());

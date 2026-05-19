@@ -1,6 +1,5 @@
 package edu.fatec.poo.controllers.donation;
 
-import edu.fatec.poo.TipoProdutoStringConverter;
 import edu.fatec.poo.adapter.produto.DtoProdutoCadastrarDoacao;
 import edu.fatec.poo.model.produto.MarcaProduto;
 import edu.fatec.poo.model.produto.Produto;
@@ -11,6 +10,7 @@ import edu.fatec.poo.persistence.entityDao.TipoProdutoDao;
 import edu.fatec.poo.service.MarcaProdutoService;
 import edu.fatec.poo.service.TipoProdutoService;
 import edu.fatec.poo.util.MarcaProdutoStringConverter;
+import edu.fatec.poo.util.TipoProdutoStringConverter;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;

@@ -2,8 +2,8 @@ package edu.fatec.poo.controllers.donation;
 
 import edu.fatec.poo.model.Doacao;
 import edu.fatec.poo.model.Usuario;
-import edu.fatec.poo.persistence.DoacaoDao;
 import edu.fatec.poo.persistence.connection.CurrentConnection;
+import edu.fatec.poo.persistence.entityDao.DoacaoDao;
 import edu.fatec.poo.service.DoacaoService;
 import edu.fatec.poo.views.UICoordenador;
 import javafx.beans.property.SimpleObjectProperty;

@@ -1,8 +1,7 @@
 package edu.fatec.poo.service;
 
 import edu.fatec.poo.model.Doacao;
-import edu.fatec.poo.persistence.DoacaoDao;
-import javafx.collections.ObservableList;
+import edu.fatec.poo.persistence.entityDao.DoacaoDao;
 
 import java.sql.SQLException;
 import java.util.List;
