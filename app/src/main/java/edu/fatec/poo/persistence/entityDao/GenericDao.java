@@ -20,7 +20,7 @@ public abstract class GenericDao<T extends IEntity> implements IDao<T> {
         this.tableName = tableName;
     }
 
-    protected abstract T map(ResultSet rs) throws SQLException;
+    protected abstract T map(ResultSet rs) throws SQLException, ClassNotFoundException;
 
     protected abstract List<Object> getAtributos(T object);
 
