@@ -43,10 +43,10 @@ public class MarcaProdutoDao extends GenericDao<MarcaProduto> {
         List<Object> atributos = getAtributos(marcaProduto);
         try (Connection connection = conector.getConnection()) {
             try (PreparedStatement ps = connection.prepareStatement(sql)) {
-                ps.executeUpdate();
                 for (int i = 0; i < atributos.size(); i++) {
                     ps.setObject(i + 1, atributos.get(i));
                 }
+                ps.executeUpdate();
             }
         }
         return marcaProduto;
@@ -62,6 +62,7 @@ public class MarcaProdutoDao extends GenericDao<MarcaProduto> {
                 id = ?;
                 """;
         List<Object> atributos = getAtributos(marcaProduto);
+        atributos.add(marcaProduto.getId());
         try (Connection connection = conector.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
             for (int i = 0; i < atributos.size(); i++) {

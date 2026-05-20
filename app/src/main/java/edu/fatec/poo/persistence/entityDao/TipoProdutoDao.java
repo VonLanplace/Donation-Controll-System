@@ -42,10 +42,10 @@ public class TipoProdutoDao extends GenericDao<TipoProduto> {
         List<Object> atributos = getAtributos(tipoProduto);
         try (Connection connection = conector.getConnection()) {
             try (PreparedStatement ps = connection.prepareStatement(sql)) {
-                ps.executeUpdate();
                 for (int i = 0; i < atributos.size(); i++) {
                     ps.setObject(i + 1, atributos.get(i));
                 }
+                ps.executeUpdate();
             }
         }
         return tipoProduto;
@@ -61,6 +61,7 @@ public class TipoProdutoDao extends GenericDao<TipoProduto> {
                 id = ?;
                 """;
         List<Object> atributos = getAtributos(tipoProduto);
+        atributos.add(tipoProduto.getId());
         try (Connection connection = conector.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
             for (int i = 0; i < atributos.size(); i++) {
