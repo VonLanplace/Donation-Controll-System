@@ -17,8 +17,11 @@ public class mariadbCreateTable implements ICreateTable {
     @Override
     public void createTableAll() throws SQLException {
         createTabelUsuario();
+        createTableCesta();
         createTabelTipoProduto();
         createTableMarcaProduto();
+        createTableDoacao();
+        createTableProduto();
     }
 
     @Override
@@ -42,7 +45,7 @@ public class mariadbCreateTable implements ICreateTable {
                     SELECT 1 FROM usuario WHERE acesso = 0
                 );
                 """;
-        runStatementData(sql, "Usuario");
+        runStatementData(sql, "usuario");
         sql = """
                 INSERT INTO usuario (acesso, nome, email, senha, cpf, telefone)
                 SELECT 1, 'user', 'user', 'user', '09876543210', '40028922'
@@ -130,6 +133,50 @@ public class mariadbCreateTable implements ICreateTable {
                 WHERE NOT EXISTS (SELECT id FROM marca_produto);
                 """;
         runStatementData(sql, nomeTabela);
+    }
+
+    public void createTableProduto() throws SQLException {
+        String nomeTabela = "produto";
+        String sql = """
+                CREATE TABLE IF NOT EXISTS produto(
+                    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                    doacao_id BIGINT NOT NULL,
+                    marca_id BIGINT NOT NULL,
+                    tipo_id BIGINT NOT NULL,
+                    cesta_id BIGINT,
+                    codigo_barras VARCHAR(15),
+                    validade DATE,
+                    FOREIGN KEY (doacao_id) REFERENCES doacao(id),
+                    FOREIGN KEY (marca_id) REFERENCES marca_produto(id),
+                    FOREIGN KEY (tipo_id) REFERENCES tipo_produto(id),
+                    FOREIGN KEY (cesta_id) REFERENCES cesta(id)
+                );
+                """;
+        runStatementTabela(sql, nomeTabela);
+    }
+
+    private void createTableDoacao() throws SQLException {
+        String nomeTabela = "doacao";
+        String sql = """
+                CREATE TABLE IF NOT EXISTS doacao(
+                    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                    nome_doador VARCHAR(255) NOT NULL,
+                    data DATE NOT NULL,
+                    usuario_id BIGINT NOT NULL,
+                    FOREIGN KEY (usuario_id) REFERENCES usuario(id)
+                );
+                """;
+        runStatementTabela(sql, nomeTabela);
+    }
+
+    public void createTableCesta() throws SQLException {
+        String nomeTabela = "cesta";
+        String sql = """
+                CREATE TABLE IF NOT EXISTS cesta(
+                    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY
+                );
+                """;
+        runStatementTabela(sql, nomeTabela);
     }
 
     private void runStatementTabela(String sql, String nomeTabela) throws SQLException {

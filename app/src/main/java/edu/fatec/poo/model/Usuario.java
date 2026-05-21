@@ -3,8 +3,10 @@ package edu.fatec.poo.model;
 import edu.fatec.poo.util.Acesso;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 @AllArgsConstructor
 public class Usuario implements IEntity {
     private Long Id;

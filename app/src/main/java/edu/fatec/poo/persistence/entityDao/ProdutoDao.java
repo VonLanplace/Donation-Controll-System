@@ -11,7 +11,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +24,7 @@ public class ProdutoDao extends GenericDao<Produto> {
         Produto produto = new Produto();
         produto.setId(rs.getLong("id"));
         {
-            Long doacaoId = rs.getLong("id_doacao");
+            Long doacaoId = rs.getLong("doacao_id");
             if (!rs.wasNull()) {
                 Doacao doacao = new Doacao();
                 doacao.setId(doacaoId);
@@ -33,23 +32,26 @@ public class ProdutoDao extends GenericDao<Produto> {
             }
         }
         {
-            Long marcaId = rs.getLong("id_marca");
+            Long marcaId = rs.getLong("marca_id");
             if (!rs.wasNull()) {
-                MarcaProdutoDao marcaDao = new MarcaProdutoDao(conector);
-                produto.setMarca(marcaDao.searchById(marcaId));
+                MarcaProduto marca = new MarcaProduto();
+                marca.setId(marcaId);
+                marca.setNome(rs.getString("marca_nome"));
+                produto.setMarca(marca);
             }
         }
         {
-            Long tipoId = rs.getLong("id_tipo");
+            Long tipoId = rs.getLong("tipo_id");
             if (!rs.wasNull()) {
-                TipoProdutoDao tipoDao = new TipoProdutoDao(conector);
-                produto.setTipo(tipoDao.searchById(tipoId));
+                TipoProduto tipo = new TipoProduto();
+                tipo.setId(tipoId);
+                tipo.setNome(rs.getString("tipo_nome"));
+                produto.setTipo(tipo);
             }
         }
         {
-            Long cestaId = rs.getLong("id_cesta");
+            Long cestaId = rs.getLong("cesta_id");
             if (!rs.wasNull()) {
-                // TODO - IMPLEMT CESTA ON SYSTEM
                 Cesta cesta = new Cesta();
                 cesta.setId(cestaId);
                 produto.setCesta(cesta);
@@ -75,22 +77,35 @@ public class ProdutoDao extends GenericDao<Produto> {
     @Override
     public Produto add(Produto produto) throws SQLException, ClassNotFoundException {
         String sql = "INSERT INTO " + tableName +
-                " (id_doacao, id_marca, id_tipo, id_cesta, codigo_barras, validade) " +
+                " (doacao_id, marca_id, tipo_id, cesta_id, codigo_barras, validade) " +
                 "VALUES (?, ?, ?, ?, ?, ?);";
         List<Object> atributos = getAtributos(produto);
         runCommand(sql, atributos);
         return produto;
     }
 
+    public List<Produto> add(List<Produto> produtos) throws SQLException, ClassNotFoundException {
+        for (Produto p : produtos) {
+            add(p);
+        }
+        return produtos;
+    }
+
     @Override
     public void update(Produto produto) throws SQLException, ClassNotFoundException {
         String sql = "UPDATE " + tableName
-                + " SET id_doacao = ?, id_marca = ?, id_tipo = ?, id_cesta = ?, " +
+                + " SET doacao_id = ?, marca_id = ?, tipo_id = ?, cesta_id = ?, " +
                 "codigo_barras = ?, validade = ? WHERE id = ?;";
 
         List<Object> atributos = getAtributos(produto);
         atributos.add(produto.getId());
         runCommand(sql, atributos);
+    }
+
+    public void update(List<Produto> produtos) throws SQLException, ClassNotFoundException {
+        for (Produto p : produtos) {
+            update(p);
+        }
     }
 
     private void runCommand(String sql, List<Object> atributos) throws SQLException, ClassNotFoundException {
@@ -103,13 +118,28 @@ public class ProdutoDao extends GenericDao<Produto> {
             }
         }
     }
-asdasd
+
     @Override
     public Produto searchById(Long id) throws SQLException, ClassNotFoundException {
         if (id == null) return null;
-        String sql = "SELECT * FROM " + tableName + " WHERE id = ?";
+        StringBuilder sql = new StringBuilder();
+        sql.append("""
+                     SELECT
+                         pro.id, pro.codigo_barras, pro.validade,
+                         pro.marca_id, mar.nome AS marca_nome,
+                         pro.tipo_id, tip.nome AS tipo_nome,
+                         pro.doacao_id,
+                         pro.cesta_id
+                     FROM produto pro
+                     LEFT JOIN marca_produto mar
+                         ON pro.marca_id = mar.id
+                     LEFT JOIN tipo_produto tip
+                         ON pro.tipo_id = tip.id
+                     WHERE pro.id = ?;
+                """);
+
         try (Connection connection = conector.getConnection();
-             PreparedStatement ps = connection.prepareStatement(sql)) {
+             PreparedStatement ps = connection.prepareStatement(sql.toString())) {
             ps.setLong(1, id);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
@@ -123,12 +153,55 @@ asdasd
     @Override
     public List<Produto> searchAll() throws SQLException, ClassNotFoundException {
         List<Produto> list = new ArrayList<>();
-        String sql = "SELECT * FROM " + tableName;
+        StringBuilder sql = new StringBuilder();
+        sql.append("""
+                    SELECT 
+                        pro.id, pro.codigo_barras, pro.validade,
+                        pro.marca_id, mar.nome AS marca_nome,
+                        pro.tipo_id, tip.nome AS tipo_nome,
+                        pro.doacao_id,
+                        pro.cesta_id
+                    FROM produto pro 
+                    LEFT JOIN marca_produto mar
+                        ON pro.marca_id = mar.id
+                    LEFT JOIN tipo_produto tip
+                        ON pro.tipo_id = tip.id;
+                """);
         try (Connection connection = conector.getConnection();
-             PreparedStatement ps = connection.prepareStatement(sql);
+             PreparedStatement ps = connection.prepareStatement(sql.toString());
              ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 list.add(map(rs));
+            }
+        }
+        return list;
+    }
+
+    public List<Produto> serarchAllByDoacao(Doacao doacao) throws SQLException, ClassNotFoundException {
+        if (doacao == null || doacao.getId() == null) return null;
+        List<Produto> list = new ArrayList<>();
+        StringBuilder sql = new StringBuilder();
+        sql.append("""
+                    SELECT 
+                        pro.id, pro.codigo_barras, pro.validade,
+                        pro.marca_id, mar.nome AS marca_nome,
+                        pro.tipo_id, tip.nome AS tipo_nome,
+                        pro.doacao_id,
+                        pro.cesta_id
+                    FROM produto pro 
+                    LEFT JOIN marca_produto mar
+                        ON pro.marca_id = mar.id
+                    LEFT JOIN tipo_produto tip
+                        ON pro.tipo_id = tip.id;
+                """);
+        try (Connection connection = conector.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql.toString());
+             ResultSet rs = ps.executeQuery()) {
+            ps.setLong(1, doacao.getId());
+            while (rs.next()) {
+                Produto produto = map(rs);
+                produto.setDoacao(doacao);
+                list.add(produto);
             }
         }
         return list;
