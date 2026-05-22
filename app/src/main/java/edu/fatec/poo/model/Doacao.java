@@ -21,11 +21,7 @@ public class Doacao {
     private LocalDate data;
     private Usuario cadastrante;
     private List<Produto> produtos;
-
-    public void setId(String id) {
-        this.id = UUID.fromString(id);
-    }
-
+    
     public String getDataValidadeDdMmYyyy() {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/uuuu");
         return data.format(dtf);

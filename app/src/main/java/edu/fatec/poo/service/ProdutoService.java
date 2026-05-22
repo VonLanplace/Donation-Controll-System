@@ -50,9 +50,17 @@ public class ProdutoService {
         return dao.serarchAllByDoacao(doacao);
     }
 
-    public void delete(Produto p) throws SQLException, ClassNotFoundException {
-        if (p == null) throw new IllegalArgumentException("Produto nulo");
-        if (p.getId() == null || p.getId() == 0) throw new IllegalArgumentException("Produto com id Inválida");
-        dao.delete(p);
+    public void delete(Produto produto) throws SQLException, ClassNotFoundException {
+        if (produto == null) throw new IllegalArgumentException("Produto nulo");
+        if (produto.getId() == null || produto.getId() == 0)
+            throw new IllegalArgumentException("Produto com id Inválida");
+        dao.delete(produto);
+    }
+
+    public void delete(List<Produto> produtos) throws SQLException, ClassNotFoundException {
+        if (produtos == null) throw new IllegalArgumentException("Produto nulo");
+        for (Produto p : produtos) {
+            dao.delete(p);
+        }
     }
 }

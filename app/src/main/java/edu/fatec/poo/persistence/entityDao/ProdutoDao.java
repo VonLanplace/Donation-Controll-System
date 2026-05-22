@@ -13,6 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class ProdutoDao extends GenericDao<Produto> {
     public ProdutoDao(ADaoConnector aDaoConnector) throws SQLException, ClassNotFoundException {
@@ -27,7 +28,7 @@ public class ProdutoDao extends GenericDao<Produto> {
             String doacaoId = rs.getString("doacao_id");
             if (!rs.wasNull()) {
                 Doacao doacao = new Doacao();
-                doacao.setId(doacaoId);
+                doacao.setId(UUID.fromString(doacaoId));
                 produto.setDoacao(doacao);
             }
         }

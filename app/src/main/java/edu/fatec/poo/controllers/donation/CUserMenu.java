@@ -40,7 +40,7 @@ public class CUserMenu {
             DoacaoDao dao = new DoacaoDao(connector.getConector());
             this.doacaoService = new DoacaoService(dao, pService);
 
-            doacaos.setAll(dao.searchLastNByDate(5));
+            doacaos.setAll(dao.searchLastNByDate(7));
         } catch (Exception e) {
             coordenador.showError(e);
         }

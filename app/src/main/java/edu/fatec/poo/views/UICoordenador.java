@@ -2,11 +2,11 @@ package edu.fatec.poo.views;
 
 import edu.fatec.poo.controllers.donation.CCadastrarDoacao;
 import edu.fatec.poo.controllers.donation.CDoacao;
+import edu.fatec.poo.controllers.donation.CUserMenu;
 import edu.fatec.poo.controllers.user.CAdmin;
 import edu.fatec.poo.controllers.user.CUserLogin;
 import edu.fatec.poo.model.Doacao;
 import edu.fatec.poo.model.Usuario;
-import edu.fatec.poo.controllers.donation.CUserMenu;
 import edu.fatec.poo.views.donation.UICadastrarDoacao;
 import edu.fatec.poo.views.donation.UIDoacao;
 import edu.fatec.poo.views.donation.UIUserMenu;
@@ -62,7 +62,7 @@ public class UICoordenador {
     }
 
     public void showUpdateDoacaoScreen(Usuario usuarioLogado, Doacao doacao) {
-        showScreen(new UICadastrarDoacao(new CCadastrarDoacao(usuarioLogado, doacao, this)));
+        showScreen(new UICadastrarDoacao(new CCadastrarDoacao(usuarioLogado, doacao.getId(), this)));
     }
 
     public void showReadDoacaoScreen(Doacao doacao) {

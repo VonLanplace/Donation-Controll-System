@@ -22,6 +22,7 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -46,8 +47,7 @@ public class CCadastrarDoacao {
      * @param coordenador A instância da interface de usuário {@link UICoordenador} que gerencia o fluxo.
      */
     public CCadastrarDoacao(Doacao doacao, UICoordenador coordenador) {
-        this(null, doacao, coordenador);
-        fromEntity(doacao);
+        this(null, doacao.getId(), coordenador);
     }
 
     /**
@@ -58,7 +58,7 @@ public class CCadastrarDoacao {
      * @param coordenador   A instância do {@link UICoordenador} responsável pela navegação.
      */
     public CCadastrarDoacao(Usuario usuarioLogado, UICoordenador coordenador) {
-        this(usuarioLogado, new Doacao(), coordenador);
+        this(usuarioLogado, null, coordenador);
     }
 
     /**
@@ -69,12 +69,10 @@ public class CCadastrarDoacao {
      * @param doacao        A {@link Doacao} a ser manipulada ou atualizada.
      * @param coordenador   A instância de {@link UICoordenador} para controle de fluxo da UI.
      */
-    public CCadastrarDoacao(Usuario usuarioLogado, Doacao doacao, UICoordenador coordenador) {
-        this.doacao = doacao;
+    public CCadastrarDoacao(Usuario usuarioLogado, UUID doacaoUuid, UICoordenador coordenador) {
         this.coordenador = coordenador;
         this.usuarioLogado = usuarioLogado;
 
-        fromEntity(doacao);
         date.setValue(LocalDate.now());
         try {
             CurrentConnection connector = new CurrentConnection();
@@ -85,7 +83,16 @@ public class CCadastrarDoacao {
             DoacaoDao dao = new DoacaoDao(connector.getConector());
             doacaoService = new DoacaoService(dao, pSer);
 
+            System.out.println("Doacao: " + doacaoUuid);
+            System.out.println("User: " + usuarioLogado);
+            this.doacao = doacaoService.searchByUUID(doacaoUuid);
+            if (doacao == null) {
+                this.doacao = new Doacao();
+            }
+            System.out.println(doacao.getId().toString());
             doacaoService.loadProdutos(doacao);
+            fromEntity(doacao);
+
         } catch (Exception e) {
             coordenador.showError(e);
         }
@@ -94,12 +101,15 @@ public class CCadastrarDoacao {
     private void fromEntity(Doacao doacao) {
         nomeDoador.set(doacao.getNomeDoador() == null ? "" : doacao.getNomeDoador());
         date.set(doacao.getData() == null ? LocalDate.now() : doacao.getData());
-        listaProdutos.setAll(doacao.getProdutos() == null ? new ArrayList<Produto>() : doacao.getProdutos());
+        listaProdutos.setAll(doacao.getProdutos() == null || doacao.getProdutos().isEmpty()
+                ? new ArrayList<Produto>() : doacao.getProdutos());
         this.doacao = doacao;
     }
 
     private Doacao toEntity() {
+        if (this.doacao == null) return new Doacao();
         Doacao novaDoacao = new Doacao();
+        novaDoacao.setId(doacao.getId());
         novaDoacao.setData(date.get());
         novaDoacao.setCadastrante(usuarioLogado);
         novaDoacao.setProdutos(listaProdutos);
@@ -130,7 +140,11 @@ public class CCadastrarDoacao {
 
     public void remover() {
         if (produtoSelecionado != null) {
-            listaProdutos.remove(produtoSelecionado.get());
+            try {
+                listaProdutos.remove(produtoSelecionado.get());
+            } catch (Exception e) {
+                coordenador.showError(e);
+            }
         }
     }
 

@@ -24,7 +24,10 @@ public class DoacaoDao {
 
     protected Doacao map(ResultSet rs) throws SQLException {
         Doacao doacao = new Doacao();
-        doacao.setId(rs.getString("id"));
+
+        String id = rs.getString("id");
+        doacao.setId(!rs.wasNull() ? UUID.fromString(id) : null);
+
         doacao.setNomeDoador(rs.getString("nome_doador"));
         doacao.setData(rs.getDate("data").toLocalDate());
 
@@ -66,7 +69,7 @@ public class DoacaoDao {
         atributos.add(doacao.getId());
         atributos.addAll(getAtributos(doacao));
         runCommand(sql.toString(), atributos);
-        
+
         return doacao;
     }
 
@@ -113,7 +116,7 @@ public class DoacaoDao {
     }
 
     public List<Doacao> searchByName(String s) throws SQLException, ClassNotFoundException {
-        System.out.println("Found By Name Like " + s);
+        System.out.println("Found By Name Like " + s);//TODO
         return List.of();
     }
 
