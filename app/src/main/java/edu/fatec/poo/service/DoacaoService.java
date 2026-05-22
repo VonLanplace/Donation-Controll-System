@@ -5,6 +5,7 @@ import edu.fatec.poo.model.produto.Produto;
 import edu.fatec.poo.persistence.entityDao.DoacaoDao;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class DoacaoService {
@@ -86,5 +87,10 @@ public class DoacaoService {
     public Doacao loadProdutos(Doacao doacao) throws SQLException, ClassNotFoundException {
         doacao.setProdutos(produtoService.searchAllByDoacao(doacao));
         return doacao;
+    }
+
+    public List<Doacao> searchLastNByDate(int i) throws SQLException, ClassNotFoundException {
+        if (i == 0) return new ArrayList<>();
+        return dao.searchLastNByDate(5);
     }
 }
