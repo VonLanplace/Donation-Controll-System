@@ -46,7 +46,7 @@ public class DoacaoService {
     }
 
     public List<Doacao> searchByLikeName(String s) throws SQLException, ClassNotFoundException {
-        return dao.searchByLikeName(s);
+        return dao.searchByName(s);
     }
 
     public void deleteById(Doacao doacao) throws SQLException, ClassNotFoundException {

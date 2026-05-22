@@ -206,4 +206,35 @@ public class ProdutoDao extends GenericDao<Produto> {
         }
         return list;
     }
+
+    public void deleteByDoacao(Doacao doacao) throws SQLException, ClassNotFoundException {
+        if (doacao == null) return;
+        if (doacao.getId() == null || doacao.getId() == 0) return;
+        String sql = "DELETE FROM " + tableName + " WHERE doacao_id = ?;";
+        try (Connection connection = conector.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)
+        ) {
+            ps.setLong(1, doacao.getId());
+            ps.execute();
+        }
+    }
+
+    public void delete(List<Produto> produtos) throws SQLException, ClassNotFoundException {
+        for (Produto p : produtos) {
+            delete(p);
+        }
+    }
+
+    @Override
+    public void delete(Produto produto) throws SQLException, ClassNotFoundException {
+        if (produto == null) return;
+        if (produto.getId() == null || produto.getId() == 0) return;
+        String sql = "DELETE FROM " + tableName + " WHERE id = ?;";
+        try (Connection connection = conector.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)
+        ) {
+            ps.setLong(1, produto.getId());
+            ps.execute();
+        }
+    }
 }

@@ -146,7 +146,7 @@ public class mariadbCreateTable implements ICreateTable {
                     cesta_id BIGINT,
                     codigo_barras VARCHAR(15),
                     validade DATE,
-                    FOREIGN KEY (doacao_id) REFERENCES doacao(id),
+                    FOREIGN KEY (doacao_id) REFERENCES doacao(id) ON DELETE CASCADE,
                     FOREIGN KEY (marca_id) REFERENCES marca_produto(id),
                     FOREIGN KEY (tipo_id) REFERENCES tipo_produto(id),
                     FOREIGN KEY (cesta_id) REFERENCES cesta(id)
