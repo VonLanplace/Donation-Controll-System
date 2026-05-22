@@ -192,12 +192,13 @@ public class ProdutoDao extends GenericDao<Produto> {
                     LEFT JOIN marca_produto mar
                         ON pro.marca_id = mar.id
                     LEFT JOIN tipo_produto tip
-                        ON pro.tipo_id = tip.id;
+                        ON pro.tipo_id = tip.id
+                    WHERE pro.doacao_id = ?;
                 """);
         try (Connection connection = conector.getConnection();
-             PreparedStatement ps = connection.prepareStatement(sql.toString());
-             ResultSet rs = ps.executeQuery()) {
+             PreparedStatement ps = connection.prepareStatement(sql.toString())) {
             ps.setString(1, doacao.getId().toString());
+            ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Produto produto = map(rs);
                 produto.setDoacao(doacao);
