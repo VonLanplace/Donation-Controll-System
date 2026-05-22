@@ -4,7 +4,9 @@ import edu.fatec.poo.model.Doacao;
 import edu.fatec.poo.model.Usuario;
 import edu.fatec.poo.persistence.connection.CurrentConnection;
 import edu.fatec.poo.persistence.entityDao.DoacaoDao;
+import edu.fatec.poo.persistence.entityDao.ProdutoDao;
 import edu.fatec.poo.service.DoacaoService;
+import edu.fatec.poo.service.ProdutoService;
 import edu.fatec.poo.views.UICoordenador;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -31,8 +33,12 @@ public class CUserMenu {
             this.coordenador = uiCoordenador;
             this.usuarioLogado = usuarioLogado;
             CurrentConnection connector = new CurrentConnection();
+
+            ProdutoDao pDao = new ProdutoDao(connector.getConector());
+            ProdutoService pService = new ProdutoService(pDao);
+
             DoacaoDao dao = new DoacaoDao(connector.getConector());
-            this.doacaoService = new DoacaoService(dao);
+            this.doacaoService = new DoacaoService(dao, pService);
 
             doacaos.setAll(dao.searchLastNByDate(5));
         } catch (Exception e) {

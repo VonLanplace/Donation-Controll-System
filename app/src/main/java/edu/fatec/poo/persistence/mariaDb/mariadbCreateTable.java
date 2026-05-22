@@ -140,7 +140,7 @@ public class mariadbCreateTable implements ICreateTable {
         String sql = """
                 CREATE TABLE IF NOT EXISTS produto(
                     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                    doacao_id BIGINT NOT NULL,
+                    doacao_id CHAR(36) NOT NULL,
                     marca_id BIGINT NOT NULL,
                     tipo_id BIGINT NOT NULL,
                     cesta_id BIGINT,
@@ -159,7 +159,7 @@ public class mariadbCreateTable implements ICreateTable {
         String nomeTabela = "doacao";
         String sql = """
                 CREATE TABLE IF NOT EXISTS doacao(
-                    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                    id CHAR(36) NOT NULL PRIMARY KEY,
                     nome_doador VARCHAR(255) NOT NULL,
                     data DATE NOT NULL,
                     usuario_id BIGINT NOT NULL,

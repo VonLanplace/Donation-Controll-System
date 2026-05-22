@@ -19,10 +19,11 @@ public class UserService {
     }
 
     public Usuario login(Usuario usuario) throws SQLException, LoginInvalidoException, ClassNotFoundException {
-        if (usuario == null) return null;
+        if (usuario == null || usuario.getSenha() == null) return null;
 
         Usuario usuarioBD = usuarioDao.searchByEmail(usuario.getEmail());
-        if (usuarioBD != null && usuarioBD.getSenha().equals(usuario.getSenha().trim())) {
+        if (usuarioBD != null && usuarioBD.getSenha() != null
+                && usuarioBD.getSenha().equals(usuario.getSenha().trim())) {
             return usuarioBD;
         } else {
             throw new LoginInvalidoException("Usuário ou Senha Inválido.");

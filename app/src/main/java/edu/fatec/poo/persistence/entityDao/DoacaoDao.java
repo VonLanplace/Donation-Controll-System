@@ -11,17 +11,20 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
-public class DoacaoDao extends GenericDao<Doacao> {
+public class DoacaoDao {
+    protected ADaoConnector conector;
+    protected String tableName;
 
     public DoacaoDao(ADaoConnector connector) throws SQLException, ClassNotFoundException {
-        super(connector, "doacao");
+        this.conector = connector;
+        this.tableName = "doacao";
     }
 
-    @Override
     protected Doacao map(ResultSet rs) throws SQLException {
         Doacao doacao = new Doacao();
-        doacao.setId(rs.getLong("id"));
+        doacao.setId(rs.getString("id"));
         doacao.setNomeDoador(rs.getString("nome_doador"));
         doacao.setData(rs.getDate("data").toLocalDate());
 
@@ -42,7 +45,6 @@ public class DoacaoDao extends GenericDao<Doacao> {
         return doacao;
     }
 
-    @Override
     protected List<Object> getAtributos(Doacao doacao) {
         List<Object> atributos = new ArrayList<>();
         atributos.add(doacao.getNomeDoador());
@@ -53,18 +55,21 @@ public class DoacaoDao extends GenericDao<Doacao> {
         return atributos;
     }
 
-    @Override
     public Doacao add(Doacao doacao) throws SQLException, ClassNotFoundException {
         StringBuilder sql = new StringBuilder();
         sql.append("INSERT INTO ").append(tableName);
-        sql.append("(nome_doador, data, usuario_id)");
+        sql.append("(id, nome_doador, data, usuario_id)");
         sql.append(" VALUES ");
-        sql.append("(?, ?, ?)");
-        runCommand(sql.toString(), getAtributos(doacao));
+        sql.append("(?, ?, ?, ?)");
+
+        List<Object> atributos = new ArrayList<>();
+        atributos.add(doacao.getId());
+        atributos.addAll(getAtributos(doacao));
+        runCommand(sql.toString(), atributos);
+        
         return doacao;
     }
 
-    @Override
     public void update(Doacao doacao) throws SQLException, ClassNotFoundException {
         StringBuilder sql = new StringBuilder();
         sql.append("UPDATE ").append(tableName);
@@ -87,17 +92,21 @@ public class DoacaoDao extends GenericDao<Doacao> {
         sql.append("doa.id, doa.nome_doador, doa.data, doa.usuario_id, ");
         sql.append("usu.acesso AS usuario_acesso, ");
         sql.append("usu.nome AS usuario_nome, usu.email AS usuario_email, ");
-        sql.append("usu.senha AS usuario_senha, usu.cpf AS usuario_cpf, ");
+        sql.append("usu.senha AS usuario_senha, ");
         sql.append("usu.cpf AS usuario_cpf, usu.telefone AS usuario_telefone ");
         sql.append("FROM doacao doa ");
-        sql.append("LEFT JOIN usuario usu ");
-        sql.append("ON doa.usuario_id = usu.id;");
+        sql.append("LEFT JOIN usuario usu ON doa.usuario_id = usu.id ");
+        sql.append("ORDER BY doa.data DESC ");
+        sql.append("LIMIT ?");
 
         try (Connection connection = conector.getConnection();
-             PreparedStatement ps = connection.prepareStatement(sql.toString());
-             ResultSet rs = ps.executeQuery()) {
-            while (rs.next()) {
-                list.add(map(rs));
+             PreparedStatement ps = connection.prepareStatement(sql.toString())) {
+            ps.setInt(1, n);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    list.add(map(rs));
+                }
             }
         }
         return list;
@@ -119,8 +128,7 @@ public class DoacaoDao extends GenericDao<Doacao> {
         }
     }
 
-    @Override
-    public Doacao searchById(Long id) throws SQLException, ClassNotFoundException {
+    public Doacao searchById(UUID id) throws SQLException, ClassNotFoundException {
         if (id == null) return null;
 
         StringBuilder sql = new StringBuilder();
@@ -130,17 +138,17 @@ public class DoacaoDao extends GenericDao<Doacao> {
         sql.append("usu.acesso AS usuario_acesso, ");
         sql.append("usu.nome AS usuario_nome, usu.email AS usuario_email, ");
         sql.append("usu.senha AS usuario_senha, usu.cpf AS usuario_cpf, ");
-        sql.append("usu.cpf AS usuario_cpf, usu.telefone AS usuario_telefone ");
+        sql.append("usu.telefone AS usuario_telefone ");
         sql.append("FROM doacao doa ");
         sql.append("LEFT JOIN usuario usu ");
         sql.append("ON doa.usuario_id = usu.id ");
-        sql.append("WHERE ");
-        sql.append("id = ?;");
+        sql.append("WHERE doa.id = ?;");
 
         try (Connection connection = conector.getConnection();
-             PreparedStatement ps = connection.prepareStatement(sql.toString());
-             ResultSet rs = ps.executeQuery()) {
-            ps.setLong(1, id);
+             PreparedStatement ps = connection.prepareStatement(sql.toString())
+        ) {
+            ps.setString(1, id.toString());
+            ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 return map(rs);
             }
@@ -148,7 +156,6 @@ public class DoacaoDao extends GenericDao<Doacao> {
         return null;
     }
 
-    @Override
     public List<Doacao> searchAll() throws SQLException, ClassNotFoundException {
         List<Doacao> list = new ArrayList<>();
         StringBuilder sql = new StringBuilder();
@@ -173,15 +180,14 @@ public class DoacaoDao extends GenericDao<Doacao> {
         return list;
     }
 
-    @Override
     public void delete(Doacao doacao) throws SQLException, ClassNotFoundException {
         if (doacao == null) return;
-        if (doacao.getId() == null || doacao.getId() == 0) return;
+        if (doacao.getId() == null) return;
         String sql = "DELETE FROM doacao WHERE id = ?;";
         try (Connection connection = conector.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)
         ) {
-            ps.setLong(1, doacao.getId());
+            ps.setString(1, doacao.getId().toString());
             ps.execute();
         }
     }

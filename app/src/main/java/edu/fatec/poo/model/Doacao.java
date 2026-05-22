@@ -9,26 +9,21 @@ import lombok.ToString;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class Doacao implements IEntity {
-    private Long id;
+public class Doacao {
+    private UUID id = UUID.randomUUID();
     private String nomeDoador;
     private LocalDate data;
     private Usuario cadastrante;
     private List<Produto> produtos;
 
-    @Override
-    public Long getId() {
-        return id;
-    }
-
-    @Override
-    public void setId(Long id) {
-        this.id = id;
+    public void setId(String id) {
+        this.id = UUID.fromString(id);
     }
 
     public String getDataValidadeDdMmYyyy() {

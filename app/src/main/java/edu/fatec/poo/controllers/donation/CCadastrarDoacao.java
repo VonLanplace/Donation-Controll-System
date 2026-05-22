@@ -5,7 +5,9 @@ import edu.fatec.poo.model.Usuario;
 import edu.fatec.poo.model.produto.Produto;
 import edu.fatec.poo.persistence.connection.CurrentConnection;
 import edu.fatec.poo.persistence.entityDao.DoacaoDao;
+import edu.fatec.poo.persistence.entityDao.ProdutoDao;
 import edu.fatec.poo.service.DoacaoService;
+import edu.fatec.poo.service.ProdutoService;
 import edu.fatec.poo.views.UICoordenador;
 import edu.fatec.poo.views.donation.UICadastarDoacaoProduto;
 import javafx.beans.property.ObjectProperty;
@@ -26,7 +28,8 @@ import java.util.ArrayList;
 public class CCadastrarDoacao {
     private final UICoordenador coordenador;
     private final Usuario usuarioLogado;
-    private DoacaoService service;
+    private DoacaoService doacaoService;
+    private ProdutoService produtoService;
     private Doacao doacao;
 
     private StringProperty nomeDoador = new SimpleStringProperty();
@@ -76,8 +79,12 @@ public class CCadastrarDoacao {
         date.setValue(LocalDate.now());
         try {
             CurrentConnection connector = new CurrentConnection();
+
+            ProdutoDao pDao = new ProdutoDao(connector.getConector());
+            ProdutoService pSer = new ProdutoService(pDao);
+
             DoacaoDao dao = new DoacaoDao(connector.getConector());
-            service = new DoacaoService(dao);
+            doacaoService = new DoacaoService(dao, pSer);
         } catch (Exception e) {
             coordenador.showError(e);
         }
@@ -99,7 +106,7 @@ public class CCadastrarDoacao {
         for (Produto p : listaProdutos) {
             p.setDoacao(novaDoacao);
         }
-        return novaDoacao; // TODO
+        return novaDoacao;
     }
 
     public void adicionar() {
@@ -130,7 +137,7 @@ public class CCadastrarDoacao {
         if (doacao != null) {
             try {
                 doacao = toEntity();
-                service.save(doacao);
+                doacaoService.save(doacao);
                 coordenador.returnToPreviosScreen();
             } catch (Exception e) {
                 coordenador.showError(e);
@@ -149,7 +156,7 @@ public class CCadastrarDoacao {
     }
 
     public boolean isSaved() {
-        return doacao != null && doacao.getId() != null && doacao.getId() != 0;
+        return doacao != null && doacao.getId() != null;
     }
 
 
@@ -160,7 +167,7 @@ public class CCadastrarDoacao {
     public void deletar() {
         if (doacao != null && doacao.getId() != null) {
             try {
-                service.deleteById(doacao);
+                doacaoService.deleteById(doacao);
                 coordenador.returnToPreviosScreen();
             } catch (Exception e) {
                 coordenador.showError(e);

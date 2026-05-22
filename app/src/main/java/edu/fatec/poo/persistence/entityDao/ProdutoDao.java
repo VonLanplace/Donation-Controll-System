@@ -24,7 +24,7 @@ public class ProdutoDao extends GenericDao<Produto> {
         Produto produto = new Produto();
         produto.setId(rs.getLong("id"));
         {
-            Long doacaoId = rs.getLong("doacao_id");
+            String doacaoId = rs.getString("doacao_id");
             if (!rs.wasNull()) {
                 Doacao doacao = new Doacao();
                 doacao.setId(doacaoId);
@@ -197,7 +197,7 @@ public class ProdutoDao extends GenericDao<Produto> {
         try (Connection connection = conector.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql.toString());
              ResultSet rs = ps.executeQuery()) {
-            ps.setLong(1, doacao.getId());
+            ps.setString(1, doacao.getId().toString());
             while (rs.next()) {
                 Produto produto = map(rs);
                 produto.setDoacao(doacao);
@@ -209,12 +209,12 @@ public class ProdutoDao extends GenericDao<Produto> {
 
     public void deleteByDoacao(Doacao doacao) throws SQLException, ClassNotFoundException {
         if (doacao == null) return;
-        if (doacao.getId() == null || doacao.getId() == 0) return;
+        if (doacao.getId() == null) return;
         String sql = "DELETE FROM " + tableName + " WHERE doacao_id = ?;";
         try (Connection connection = conector.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)
         ) {
-            ps.setLong(1, doacao.getId());
+            ps.setString(1, doacao.getId().toString());
             ps.execute();
         }
     }
