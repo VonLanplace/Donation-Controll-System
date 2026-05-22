@@ -29,7 +29,6 @@ public class CCadastrarDoacao {
     private final UICoordenador coordenador;
     private final Usuario usuarioLogado;
     private DoacaoService doacaoService;
-    private ProdutoService produtoService;
     private Doacao doacao;
 
     private StringProperty nomeDoador = new SimpleStringProperty();
@@ -85,6 +84,8 @@ public class CCadastrarDoacao {
 
             DoacaoDao dao = new DoacaoDao(connector.getConector());
             doacaoService = new DoacaoService(dao, pSer);
+
+            doacaoService.loadProdutos(doacao);
         } catch (Exception e) {
             coordenador.showError(e);
         }
@@ -147,7 +148,6 @@ public class CCadastrarDoacao {
 
     public void cancelar() {
         System.out.println("CANCELAR");
-        // TODO SHOW CONFIMR MESSAGE
         coordenador.returnToPreviosScreen();
     }
 

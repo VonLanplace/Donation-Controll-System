@@ -70,8 +70,15 @@ public class DoacaoService {
         return doacoes;
     }
 
+    public void delete(Doacao doacao) throws SQLException, ClassNotFoundException {
+        deleteById(doacao);
+    }
+
     public void deleteById(Doacao doacao) throws SQLException, ClassNotFoundException {
         if (doacao != null && doacao.getId() != null) {
+            for (Produto p : doacao.getProdutos()) {
+                produtoService.delete(p);
+            }
             dao.delete(doacao);
         }
     }

@@ -49,4 +49,10 @@ public class ProdutoService {
     public List<Produto> searchAllByDoacao(Doacao doacao) throws SQLException, ClassNotFoundException {
         return dao.serarchAllByDoacao(doacao);
     }
+
+    public void delete(Produto p) throws SQLException, ClassNotFoundException {
+        if (p == null) throw new IllegalArgumentException("Produto nulo");
+        if (p.getId() == null || p.getId() == 0) throw new IllegalArgumentException("Produto com id Inválida");
+        dao.delete(p);
+    }
 }
