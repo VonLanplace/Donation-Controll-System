@@ -46,6 +46,14 @@ public class CUserMenu {
         }
     }
 
+    public void update() {
+        try {
+            doacaos.setAll(doacaoService.searchLastNByDate(7));
+        } catch (Exception e) {
+            coordenador.showError(e);
+        }
+    }
+
     public void novo() {
         coordenador.stashScreen();
         coordenador.showCadastroDoacaoScreen(usuarioLogado);

@@ -75,6 +75,9 @@ public class UICoordenador {
 
     public void returnToPreviosScreen() {
         Parent previousScreen = paneStack.pop();
+        if (previousScreen instanceof UIUserMenu) {
+            ((UIUserMenu) previousScreen).getController().update();
+        }
         scene.setRoot(previousScreen);
     }
 
