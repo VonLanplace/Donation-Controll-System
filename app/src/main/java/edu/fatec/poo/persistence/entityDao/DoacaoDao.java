@@ -115,9 +115,31 @@ public class DoacaoDao {
         return list;
     }
 
-    public List<Doacao> searchByName(String s) throws SQLException, ClassNotFoundException {
-        System.out.println("Found By Name Like " + s);//TODO
-        return List.of();
+    public List<Doacao> searchByName(String name) throws SQLException, ClassNotFoundException {
+        List<Doacao> list = new ArrayList<>();
+        StringBuilder sql = new StringBuilder();
+
+        sql.append("SELECT ");
+        sql.append("doa.id, doa.nome_doador, doa.data, doa.usuario_id, ");
+        sql.append("usu.acesso AS usuario_acesso, ");
+        sql.append("usu.nome AS usuario_nome, usu.email AS usuario_email, ");
+        sql.append("usu.senha AS usuario_senha, usu.cpf AS usuario_cpf, ");
+        sql.append("usu.cpf AS usuario_cpf, usu.telefone AS usuario_telefone ");
+        sql.append("FROM doacao doa ");
+        sql.append("LEFT JOIN usuario usu ");
+        sql.append("ON doa.usuario_id = usu.id ");
+        sql.append("WHERE doa.nome_doador LIKE ?;");
+
+        try (Connection connection = conector.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql.toString());
+        ) {
+            ps.setString(1, "%" + name + "%");
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                list.add(map(rs));
+            }
+        }
+        return list;
     }
 
     private void runCommand(String sql, List<Object> atributos) throws SQLException, ClassNotFoundException {
@@ -163,7 +185,7 @@ public class DoacaoDao {
         List<Doacao> list = new ArrayList<>();
         StringBuilder sql = new StringBuilder();
 
-        sql.append("SELECT");
+        sql.append("SELECT ");
         sql.append("doa.id, doa.nome_doador, doa.data, doa.usuario_id, ");
         sql.append("usu.acesso AS usuario_acesso, ");
         sql.append("usu.nome AS usuario_nome, usu.email AS usuario_email, ");

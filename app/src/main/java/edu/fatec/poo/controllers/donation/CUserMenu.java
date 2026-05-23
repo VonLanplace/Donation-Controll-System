@@ -89,7 +89,6 @@ public class CUserMenu {
         if (nomePesquisa.get() != null && !nomePesquisa.get().isEmpty()) {
             try {
                 doacaos.setAll(doacaoService.searchByLikeName(nomePesquisa.get()));
-
             } catch (Exception e) {
                 coordenador.showError(e);
             }
