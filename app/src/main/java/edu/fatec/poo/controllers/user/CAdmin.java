@@ -50,6 +50,7 @@ public class CAdmin {
             email = new SimpleStringProperty("");
             acesso = new SimpleObjectProperty<>();
             resetarSenha = new SimpleBooleanProperty(false);
+            this.usuario = new Usuario();
 
             usuariosCadastrados = FXCollections.observableArrayList(userService.searchAll());
             stage = new SimpleObjectProperty<>();
@@ -120,7 +121,7 @@ public class CAdmin {
                     acesso.get(),
                     resetarSenha.get()
             ), new AdapterCAdmin());
-            usuario = userService.findByEmail(nome.get());
+            usuario = userService.findByEmail(email.get());
             fromEntity(usuario);
             updateUsuarios();
         } catch (Exception e) {
