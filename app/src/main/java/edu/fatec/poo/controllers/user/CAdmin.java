@@ -10,6 +10,8 @@ import edu.fatec.poo.views.UICoordenador;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
 import lombok.Data;
 
@@ -132,11 +134,23 @@ public class CAdmin {
             if (usuario == null || usuario.getId() == 0) return;
             if (usuario.getId() == usuarioLogado.getId())
                 throw new IllegalArgumentException("Usuário não pode se Deletar do sistema.");
-            System.out.println("ASD");
 
-            userService.deletar(usuario);
-            updateUsuarios();
-            limpar();
+            Stage stage = coodenator.getStage();
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Deseja realmente deletar?", ButtonType.YES, ButtonType.NO);
+            alert.initOwner(stage);
+            alert.showAndWait().ifPresent(response -> {
+                if (response == ButtonType.YES) {
+                    if (usuario != null && usuario.getId() != null) {
+                        try {
+                            userService.deletar(usuario);
+                            updateUsuarios();
+                            limpar();
+                        } catch (Exception e) {
+                            coodenator.showError(e);
+                        }
+                    }
+                }
+            });
         } catch (Exception e) {
             coodenator.showError(e);
         }

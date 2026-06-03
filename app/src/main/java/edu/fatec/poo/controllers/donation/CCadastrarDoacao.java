@@ -16,6 +16,8 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
 import lombok.Getter;
 import lombok.Setter;
@@ -66,7 +68,6 @@ public class CCadastrarDoacao {
      * Permite associar simultaneamente o autor da modificação, a doação alvo e o coordenador de interface.
      *
      * @param usuarioLogado O {@link Usuario} que está operando o sistema.
-     * @param doacao        A {@link Doacao} a ser manipulada ou atualizada.
      * @param coordenador   A instância de {@link UICoordenador} para controle de fluxo da UI.
      */
     public CCadastrarDoacao(Usuario usuarioLogado, UUID doacaoUuid, UICoordenador coordenador) {
@@ -179,13 +180,20 @@ public class CCadastrarDoacao {
     }
 
     public void deletar() {
-        if (doacao != null && doacao.getId() != null) {
-            try {
-                doacaoService.deleteById(doacao);
-                coordenador.returnToPreviosScreen();
-            } catch (Exception e) {
-                coordenador.showError(e);
+        Stage stage = coordenador.getStage();
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Deseja realmente deletar?", ButtonType.YES, ButtonType.NO);
+        alert.initOwner(stage);
+        alert.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.YES) {
+                if (doacao != null && doacao.getId() != null) {
+                    try {
+                        doacaoService.deleteById(doacao);
+                        coordenador.returnToPreviosScreen();
+                    } catch (Exception e) {
+                        coordenador.showError(e);
+                    }
+                }
             }
-        }
+        });
     }
 }
