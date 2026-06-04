@@ -1,8 +1,6 @@
 # Donation Control System 🏢🥦
 
-O **Donation Control System** é uma aplicação desktop para gerenciamento e triagem de doações de alimentos e montagem de cestas básicas. Desenvolvido em **Java 21** com interface **JavaFX** e gerenciado via **Gradle (Kotlin DSL)**.
-
-O projeto segue o padrão arquitetural **Ports & Adapters (Hexagonal)** para garantir o isolamento das regras de negócio.
+O **Donation Control System** é uma aplicação desktop para gerenciamento e triagem de doações de alimentos. Desenvolvido em **Java 21** com interface **JavaFX** e gerenciado via **Gradle (Kotlin DSL)**.
 
 ---
 
@@ -23,7 +21,7 @@ https://github.com/user-attachments/assets/7e44b91a-6a88-4ef6-bc0f-31eb7d629764
 - **Java 21:** Uso de Pattern Matching e Records.
 - **JavaFX:** Interface gráfica e controle de eventos reativos.
 - **Gradle:** Build script via `build.gradle.kts` (Kotlin DSL).
-- **MariaDB 11.x:** Persistência de dados com Driver JDBC Nativo.
+- **MariaDB:** Persistência de dados com Driver JDBC Nativo.
 - **Docker Compose:** Orquestração do banco de dados local.
 
 ---
@@ -103,7 +101,6 @@ gradlew.bat clean app:run
 
 ## 📝 Detalhes de Implementação
 
-* **Validações:** Formatação e checagem de dados em tempo real na interface com `WindowStandardFormatting`.
 * **Tabelas Automáticas:** A classe `mariadbCreateTable` gera a estrutura do banco dinamicamente no primeiro boot.
 * **Níveis de Acesso:** Controle hierárquico mapeado via enum `Acesso`, gerenciando as permissões de telas de forma segura.
 
