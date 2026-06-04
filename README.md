@@ -8,16 +8,11 @@ O projeto segue o padrão arquitetural **Ports & Adapters (Hexagonal)** para gar
 
 ## 📺 Demonstração do Sistema
 
-<p align="center">
-  <kbd>
-    <video src="TrabalhoPOO.mp4" 
-           controls 
-           width="750" 
-           height="auto" 
-           style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); display: block;">
-    </video>
-  </kbd>
-</p>
+
+
+https://github.com/user-attachments/assets/7e44b91a-6a88-4ef6-bc0f-31eb7d629764
+
+
 
 *Caso o player não carregue, assista abrindo o arquivo por aqui: [TrabalhoPOO.mp4](./TrabalhoPOO.mp4)*
 
