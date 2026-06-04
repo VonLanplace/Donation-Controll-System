@@ -14,7 +14,7 @@ https://github.com/user-attachments/assets/7e44b91a-6a88-4ef6-bc0f-31eb7d629764
 
 
 
-*Caso o player não carregue, assista abrindo o arquivo por aqui: [TrabalhoPOO.mp4](./TrabalhoPOO.mp4)*
+*Caso o player não carregue, assista abrindo o arquivo por aqui: [Video de Exemplo.mp4](./TrabalhoPOO.mp4)*
 
 ---
 
