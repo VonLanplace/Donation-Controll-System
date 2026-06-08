@@ -3,7 +3,6 @@ package edu.fatec.poo.adapter.user;
 import edu.fatec.poo.adapter.AdapterIn;
 import edu.fatec.poo.adapter.user.in.dto.DTOUserAdmin;
 import edu.fatec.poo.model.Usuario;
-import edu.fatec.poo.util.Acesso;
 
 public class AdapterCAdmin implements AdapterIn<DTOUserAdmin, Usuario> {
     @Override

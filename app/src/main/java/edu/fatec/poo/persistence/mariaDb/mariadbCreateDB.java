@@ -1,6 +1,5 @@
 package edu.fatec.poo.persistence.mariaDb;
 
-import edu.fatec.poo.persistence.connection.ADaoConnector;
 import edu.fatec.poo.persistence.connection.ICreateDB;
 
 import java.sql.Connection;

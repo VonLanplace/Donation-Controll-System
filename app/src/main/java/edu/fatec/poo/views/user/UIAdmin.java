@@ -74,7 +74,10 @@ public class UIAdmin extends BorderPane {
         TableColumn<Usuario, String> colEmail = new TableColumn<>("Email");
         colEmail.setCellValueFactory(item -> new ReadOnlyObjectWrapper<>(item.getValue().getEmail()));
 
-        tbvUsuario.getColumns().addAll(colAcesso, colCpf, colNome, colEmail);
+        tbvUsuario.getColumns().add(colAcesso);
+        tbvUsuario.getColumns().add(colCpf);
+        tbvUsuario.getColumns().add(colNome);
+        tbvUsuario.getColumns().add(colEmail);
 
         tbvUsuario.getSelectionModel().selectedItemProperty().addListener(
                 (observable, oldValue, newValue) ->
