@@ -13,13 +13,9 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.time.LocalDate;
 
-@Getter
-@Setter
 public class UICadastarDoacaoProduto extends Application {
 
     // Size Variables
@@ -64,23 +60,23 @@ public class UICadastarDoacaoProduto extends Application {
 
         VBox boxCodigo = new VBox(5, new Label("Código de Barras"), txtCodigo = new TextField());
         txtCodigo.setPromptText("Opcional");
-        txtCodigo.textProperty().bindBidirectional(controller.getCodigo());
+        txtCodigo.textProperty().bindBidirectional(controller.codigoProperty());
 
         VBox boxTipo = new VBox(5, new Label("Tipo"), cbbTipo = new ComboBox<>());
         cbbTipo.setMaxWidth(Double.MAX_VALUE);
         cbbTipo.setItems(controller.getTiposCadastrados());
-        cbbTipo.valueProperty().bindBidirectional(controller.getTipoSelecionado());
-        cbbTipo.converterProperty().bindBidirectional(controller.getTiposConverter());
+        cbbTipo.valueProperty().bindBidirectional(controller.tipoSelecionadoProperty());
+        cbbTipo.converterProperty().bindBidirectional(controller.tiposConverterProperty());
 
         VBox boxMarca = new VBox(5, new Label("Marca"), cbbMarca = new ComboBox<>());
         cbbMarca.setMaxWidth(Double.MAX_VALUE);
         cbbMarca.setItems(controller.getMarcasCadastradas());
-        cbbMarca.valueProperty().bindBidirectional(controller.getMarcaSelecionada());
-        cbbMarca.converterProperty().bindBidirectional(controller.getMarcasConverter());
+        cbbMarca.valueProperty().bindBidirectional(controller.marcaSelecionadaProperty());
+        cbbMarca.converterProperty().bindBidirectional(controller.marcasConverterProperty());
 
         VBox boxValidade = new VBox(5, new Label("Validade"), dpcValidade = new DatePicker(LocalDate.now()));
         dpcValidade.setMaxWidth(Double.MAX_VALUE);
-        dpcValidade.valueProperty().bindBidirectional(controller.getValidade());
+        dpcValidade.valueProperty().bindBidirectional(controller.validadeProperty());
 
         paneProduto.getChildren().addAll(boxCodigo, boxTipo, boxMarca, boxValidade);
 
@@ -110,7 +106,6 @@ public class UICadastarDoacaoProduto extends Application {
 
         paneButtonsBottom.getChildren().addAll(btnCancelar, btnCadastrar);
 
-        // Montagem final
         paneMain.getChildren().addAll(lblProduto, new Separator(), paneProduto, paneButtonsBottom);
 
         stage.setTitle("Cadastro de Doação");
@@ -118,5 +113,141 @@ public class UICadastarDoacaoProduto extends Application {
         stage.setScene(scene);
 
         stage.showAndWait();
+    }
+
+    public Produto getProdutoNovo() {
+        return produtoNovo;
+    }
+
+    public void setProdutoNovo(Produto produtoNovo) {
+        this.produtoNovo = produtoNovo;
+    }
+
+    public CCadastrarDoacaoProduto getController() {
+        return controller;
+    }
+
+    public void setController(CCadastrarDoacaoProduto controller) {
+        this.controller = controller;
+    }
+
+    public VBox getPaneMain() {
+        return paneMain;
+    }
+
+    public void setPaneMain(VBox paneMain) {
+        this.paneMain = paneMain;
+    }
+
+    public VBox getPaneProduto() {
+        return paneProduto;
+    }
+
+    public void setPaneProduto(VBox paneProduto) {
+        this.paneProduto = paneProduto;
+    }
+
+    public Scene getScene() {
+        return scene;
+    }
+
+    public void setScene(Scene scene) {
+        this.scene = scene;
+    }
+
+    public HBox getPaneButtonsBottom() {
+        return paneButtonsBottom;
+    }
+
+    public void setPaneButtonsBottom(HBox paneButtonsBottom) {
+        this.paneButtonsBottom = paneButtonsBottom;
+    }
+
+    public Label getLblProduto() {
+        return lblProduto;
+    }
+
+    public void setLblProduto(Label lblProduto) {
+        this.lblProduto = lblProduto;
+    }
+
+    public Label getLblCodigo() {
+        return lblCodigo;
+    }
+
+    public void setLblCodigo(Label lblCodigo) {
+        this.lblCodigo = lblCodigo;
+    }
+
+    public Label getLblTipo() {
+        return lblTipo;
+    }
+
+    public void setLblTipo(Label lblTipo) {
+        this.lblTipo = lblTipo;
+    }
+
+    public Label getLblMarca() {
+        return lblMarca;
+    }
+
+    public void setLblMarca(Label lblMarca) {
+        this.lblMarca = lblMarca;
+    }
+
+    public Label getLblValidade() {
+        return lblValidade;
+    }
+
+    public void setLblValidade(Label lblValidade) {
+        this.lblValidade = lblValidade;
+    }
+
+    public TextField getTxtCodigo() {
+        return txtCodigo;
+    }
+
+    public void setTxtCodigo(TextField txtCodigo) {
+        this.txtCodigo = txtCodigo;
+    }
+
+    public ComboBox<TipoProduto> getCbbTipo() {
+        return cbbTipo;
+    }
+
+    public void setCbbTipo(ComboBox<TipoProduto> cbbTipo) {
+        this.cbbTipo = cbbTipo;
+    }
+
+    public ComboBox<MarcaProduto> getCbbMarca() {
+        return cbbMarca;
+    }
+
+    public void setCbbMarca(ComboBox<MarcaProduto> cbbMarca) {
+        this.cbbMarca = cbbMarca;
+    }
+
+    public DatePicker getDpcValidade() {
+        return dpcValidade;
+    }
+
+    public void setDpcValidade(DatePicker dpcValidade) {
+        this.dpcValidade = dpcValidade;
+    }
+
+    public Button getBtnCancelar() {
+        return btnCancelar;
+    }
+
+    public void setBtnCancelar(Button btnCancelar) {
+        this.btnCancelar = btnCancelar;
+    }
+
+    public Button getBtnCadastrar() {
+        return btnCadastrar;
+    }
+
+    public void setBtnCadastrar(Button btnCadastrar) {
+        this.btnCadastrar = btnCadastrar;
     }
 }

@@ -1,8 +1,5 @@
 package edu.fatec.poo.util;
 
-import lombok.Getter;
-
-@Getter
 public enum Acesso {
     ADMIN(0),
     USER(1),
@@ -23,4 +20,7 @@ public enum Acesso {
         };
     }
 
+    public int getIndice() {
+        return indice;
+    }
 }

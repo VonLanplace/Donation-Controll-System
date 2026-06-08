@@ -3,14 +3,12 @@ package edu.fatec.poo.service;
 import edu.fatec.poo.model.Doacao;
 import edu.fatec.poo.model.produto.Produto;
 import edu.fatec.poo.persistence.entityDao.DoacaoDao;
-import lombok.Getter;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-@Getter
 public class DoacaoService {
 
     private ProdutoService produtoService;
@@ -29,7 +27,7 @@ public class DoacaoService {
         }
 
         Doacao antigo = dao.searchById(doacao.getId());
-        System.out.println(antigo);
+        //System.out.println(antigo);
         if (antigo == null) {
             dao.add(doacao);
             produtoService.save(doacao.getProdutos());
@@ -99,5 +97,21 @@ public class DoacaoService {
 
     public Doacao searchByUUID(UUID doacaoUuid) throws SQLException, ClassNotFoundException {
         return dao.searchById(doacaoUuid);
+    }
+
+    public ProdutoService getProdutoService() {
+        return produtoService;
+    }
+
+    public void setProdutoService(ProdutoService produtoService) {
+        this.produtoService = produtoService;
+    }
+
+    public DoacaoDao getDao() {
+        return dao;
+    }
+
+    public void setDao(DoacaoDao dao) {
+        this.dao = dao;
     }
 }

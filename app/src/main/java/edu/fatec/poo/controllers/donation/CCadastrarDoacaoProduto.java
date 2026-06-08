@@ -19,14 +19,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
 import javafx.util.StringConverter;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
 
-@Getter
-@Setter
 public class CCadastrarDoacaoProduto {
 
     private TipoProdutoService tipoService;
@@ -101,5 +97,121 @@ public class CCadastrarDoacaoProduto {
             alert.setContentText("Um erro inesperado ocorreu: " + e.getMessage());
         }
         alert.showAndWait();
+    }
+
+    public TipoProdutoService getTipoService() {
+        return tipoService;
+    }
+
+    public void setTipoService(TipoProdutoService tipoService) {
+        this.tipoService = tipoService;
+    }
+
+    public MarcaProdutoService getMarcaService() {
+        return marcaService;
+    }
+
+    public void setMarcaService(MarcaProdutoService marcaService) {
+        this.marcaService = marcaService;
+    }
+
+    public String getCodigo() {
+        return codigo.get();
+    }
+
+    public void setCodigo(String codigo) {
+        this.codigo.set(codigo);
+    }
+
+    public StringProperty codigoProperty() {
+        return codigo;
+    }
+
+    public ObservableList<TipoProduto> getTiposCadastrados() {
+        return tiposCadastrados;
+    }
+
+    public void setTiposCadastrados(ObservableList<TipoProduto> tiposCadastrados) {
+        this.tiposCadastrados = tiposCadastrados;
+    }
+
+    public StringConverter<TipoProduto> getTiposConverter() {
+        return tiposConverter.get();
+    }
+
+    public void setTiposConverter(StringConverter<TipoProduto> tiposConverter) {
+        this.tiposConverter.set(tiposConverter);
+    }
+
+    public SimpleObjectProperty<StringConverter<TipoProduto>> tiposConverterProperty() {
+        return tiposConverter;
+    }
+
+    public ObservableList<MarcaProduto> getMarcasCadastradas() {
+        return marcasCadastradas;
+    }
+
+    public void setMarcasCadastradas(ObservableList<MarcaProduto> marcasCadastradas) {
+        this.marcasCadastradas = marcasCadastradas;
+    }
+
+    public StringConverter<MarcaProduto> getMarcasConverter() {
+        return marcasConverter.get();
+    }
+
+    public void setMarcasConverter(StringConverter<MarcaProduto> marcasConverter) {
+        this.marcasConverter.set(marcasConverter);
+    }
+
+    public SimpleObjectProperty<StringConverter<MarcaProduto>> marcasConverterProperty() {
+        return marcasConverter;
+    }
+
+    public TipoProduto getTipoSelecionado() {
+        return tipoSelecionado.get();
+    }
+
+    public void setTipoSelecionado(TipoProduto tipoSelecionado) {
+        this.tipoSelecionado.set(tipoSelecionado);
+    }
+
+    public ObjectProperty<TipoProduto> tipoSelecionadoProperty() {
+        return tipoSelecionado;
+    }
+
+    public MarcaProduto getMarcaSelecionada() {
+        return marcaSelecionada.get();
+    }
+
+    public void setMarcaSelecionada(MarcaProduto marcaSelecionada) {
+        this.marcaSelecionada.set(marcaSelecionada);
+    }
+
+    public ObjectProperty<MarcaProduto> marcaSelecionadaProperty() {
+        return marcaSelecionada;
+    }
+
+    public LocalDate getValidade() {
+        return validade.get();
+    }
+
+    public void setValidade(LocalDate validade) {
+        this.validade.set(validade);
+    }
+
+    public ObjectProperty<LocalDate> validadeProperty() {
+        return validade;
+    }
+
+    public Produto getProdutoCriado() {
+        return produtoCriado.get();
+    }
+
+    public void setProdutoCriado(Produto produtoCriado) {
+        this.produtoCriado.set(produtoCriado);
+    }
+
+    public ObjectProperty<Produto> produtoCriadoProperty() {
+        return produtoCriado;
     }
 }

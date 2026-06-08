@@ -1,14 +1,13 @@
 package edu.fatec.poo.persistence.connection;
 
-import edu.fatec.poo.persistence.mariaDb.mariadbDaoConnector;
 import edu.fatec.poo.persistence.mariaDb.mariadbCreateDB;
 import edu.fatec.poo.persistence.mariaDb.mariadbCreateTable;
-import lombok.Data;
+import edu.fatec.poo.persistence.mariaDb.mariadbDaoConnector;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Objects;
 
-@Data
 public class CurrentConnection {
 
     private ADaoConnector conector;
@@ -56,5 +55,32 @@ public class CurrentConnection {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public ADaoConnector getConector() {
+        return conector;
+    }
+
+    public void setConector(ADaoConnector conector) {
+        this.conector = conector;
+    }
+
+    @Override
+    public String toString() {
+        return "CurrentConnection{" +
+                "conector=" + conector +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        CurrentConnection that = (CurrentConnection) o;
+        return Objects.equals(conector, that.conector);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(conector);
     }
 }

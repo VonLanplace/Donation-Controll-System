@@ -16,30 +16,25 @@ public class UICadastrarDoacao extends GridPane {
     private static final double SPACING = 15;
     private final CCadastrarDoacao controller;
 
-    // Componentes de Layout
     private VBox paneDoacao;
     private VBox paneProdutos;
     private HBox paneBotoes;
 
-    // Tabelas
     private TableView<Produto> tabelaProdutos;
 
     public UICadastrarDoacao(CCadastrarDoacao controller) {
         super();
         this.controller = controller;
 
-        // Configuração do Grid Principal
         this.setPadding(new Insets(20));
         this.setHgap(SPACING);
         this.setVgap(SPACING);
         this.setAlignment(Pos.TOP_CENTER);
 
-        // Criar as seções
         configurarAreaDoacao();
         configurarAreaProdutos();
         configurarAreaBotoesBase();
 
-        // Posicionamento no Grid (coluna, linha)
         Label lblTitulo = new Label("Nova Doação");
         lblTitulo.getStyleClass().add(Styles.TITLE_3);
 
@@ -48,7 +43,6 @@ public class UICadastrarDoacao extends GridPane {
         this.add(paneProdutos, 0, 2);
         this.add(paneBotoes, 0, 3);
 
-        // Ajuste para que a interface cresça horizontalmente
         ColumnConstraints constraints = new ColumnConstraints();
         constraints.setHgrow(Priority.ALWAYS);
         this.getColumnConstraints().add(constraints);
@@ -67,7 +61,7 @@ public class UICadastrarDoacao extends GridPane {
         Label lblNome = new Label("Nome Doador");
         TextField txtNome = new TextField();
         txtNome.setPromptText("Digite o nome completo");
-        txtNome.textProperty().bindBidirectional(controller.getNomeDoador());
+        txtNome.textProperty().bindBidirectional(controller.nomeDoadorProperty());
         txtNome.setDisable(!controller.isEditavel());
         HBox.setHgrow(boxNome, Priority.ALWAYS);
         boxNome.getChildren().addAll(lblNome, txtNome);
@@ -75,7 +69,7 @@ public class UICadastrarDoacao extends GridPane {
         VBox boxData = new VBox(5);
         Label lblData = new Label("Data");
         DatePicker dtpDataDoacao = new DatePicker(LocalDate.now());
-        dtpDataDoacao.valueProperty().bindBidirectional(controller.getDate());
+        dtpDataDoacao.valueProperty().bindBidirectional(controller.dateProperty());
         dtpDataDoacao.setDisable(!controller.isEditavel());
         boxData.getChildren().addAll(lblData, dtpDataDoacao);
 
@@ -118,7 +112,7 @@ public class UICadastrarDoacao extends GridPane {
         tabelaProdutos.setItems(controller.getListaProdutos());
         tabelaProdutos.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
 
-        controller.getProdutoSelecionado().bind(
+        controller.produtoSelecionadoProperty().bind(
                 tabelaProdutos.getSelectionModel().selectedItemProperty()
         );
 

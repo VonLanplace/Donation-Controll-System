@@ -12,11 +12,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import lombok.Getter;
-import lombok.Setter;
 
-@Getter
-@Setter
 public class CUserMenu {
 
     private UICoordenador coordenador;
@@ -98,5 +94,61 @@ public class CUserMenu {
     public void limpar() {
         nomePesquisa.setValue("");
         doacaoSelecionada.setValue(null);
+    }
+
+    public UICoordenador getCoordenador() {
+        return coordenador;
+    }
+
+    public void setCoordenador(UICoordenador coordenador) {
+        this.coordenador = coordenador;
+    }
+
+    public Usuario getUsuarioLogado() {
+        return usuarioLogado;
+    }
+
+    public void setUsuarioLogado(Usuario usuarioLogado) {
+        this.usuarioLogado = usuarioLogado;
+    }
+
+    public DoacaoService getDoacaoService() {
+        return doacaoService;
+    }
+
+    public void setDoacaoService(DoacaoService doacaoService) {
+        this.doacaoService = doacaoService;
+    }
+
+    public ObservableList<Doacao> getDoacaos() {
+        return doacaos;
+    }
+
+    public void setDoacaos(ObservableList<Doacao> doacaos) {
+        this.doacaos = doacaos;
+    }
+
+    public Doacao getDoacaoSelecionada() {
+        return doacaoSelecionada.get();
+    }
+
+    public void setDoacaoSelecionada(Doacao doacaoSelecionada) {
+        this.doacaoSelecionada.set(doacaoSelecionada);
+    }
+
+    public SimpleObjectProperty<Doacao> doacaoSelecionadaProperty() {
+        return doacaoSelecionada;
+    }
+
+    public String getNomePesquisa() {
+        return nomePesquisa.get();
+    }
+
+    public void setNomePesquisa(String nomePesquisa) {
+        this.nomePesquisa.set(nomePesquisa);
+    }
+
+    public SimpleStringProperty nomePesquisaProperty() {
+        return nomePesquisa;
     }
 }

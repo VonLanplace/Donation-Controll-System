@@ -1,11 +1,8 @@
 package edu.fatec.poo.persistence.connection;
 
-import lombok.Data;
-
 import java.sql.Connection;
 import java.sql.SQLException;
 
-@Data
 public abstract class ADaoConnector {
 
     protected String porta;
@@ -23,4 +20,44 @@ public abstract class ADaoConnector {
     }
 
     public abstract Connection getConnection() throws ClassNotFoundException, SQLException;
+
+    public String getPorta() {
+        return porta;
+    }
+
+    public void setPorta(String porta) {
+        this.porta = porta;
+    }
+
+    public String getHostname() {
+        return hostname;
+    }
+
+    public void setHostname(String hostname) {
+        this.hostname = hostname;
+    }
+
+    public String getDbName() {
+        return dbName;
+    }
+
+    public void setDbName(String dbName) {
+        this.dbName = dbName;
+    }
+
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
+    }
+
+    public String getSenha() {
+        return senha;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
+    }
 }

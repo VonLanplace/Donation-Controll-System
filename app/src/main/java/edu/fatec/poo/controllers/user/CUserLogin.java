@@ -1,5 +1,6 @@
 package edu.fatec.poo.controllers.user;
 
+import edu.fatec.poo.exceptions.LoginInvalidoException;
 import edu.fatec.poo.exceptions.UsuarioNaoCadastradoException;
 import edu.fatec.poo.model.Usuario;
 import edu.fatec.poo.persistence.connection.CurrentConnection;
@@ -8,11 +9,9 @@ import edu.fatec.poo.views.UICoordenador;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-import lombok.Getter;
-import lombok.Setter;
 
-@Getter
-@Setter
+import java.sql.SQLException;
+
 public class CUserLogin {
 
     private UICoordenador coodenator;
@@ -66,8 +65,11 @@ public class CUserLogin {
                     alert.showAndWait();
                 }
             }
-        } catch (UsuarioNaoCadastradoException e) {
+        } catch (LoginInvalidoException e) {
             mensagem.set(e.getMessage());
+        } catch (SQLException e) {
+            mensagem.set("Erro com a conecção ao Banco de Dados:\n" + e.getMessage());
+            e.printStackTrace();
         } catch (Exception e) {
             mensagem.set("Erro inesperado ao realizar login.");
             e.printStackTrace();
@@ -82,5 +84,57 @@ public class CUserLogin {
 
     public void voltar() {
         coodenator.returnToPreviosScreen();
+    }
+
+    public UICoordenador getCoodenator() {
+        return coodenator;
+    }
+
+    public void setCoodenator(UICoordenador coodenator) {
+        this.coodenator = coodenator;
+    }
+
+    public UserService getUserService() {
+        return userService;
+    }
+
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
+
+    public String getEmail() {
+        return email.get();
+    }
+
+    public void setEmail(String email) {
+        this.email.set(email);
+    }
+
+    public SimpleStringProperty emailProperty() {
+        return email;
+    }
+
+    public String getSenha() {
+        return senha.get();
+    }
+
+    public void setSenha(String senha) {
+        this.senha.set(senha);
+    }
+
+    public SimpleStringProperty senhaProperty() {
+        return senha;
+    }
+
+    public String getMensagem() {
+        return mensagem.get();
+    }
+
+    public void setMensagem(String mensagem) {
+        this.mensagem.set(mensagem);
+    }
+
+    public SimpleStringProperty mensagemProperty() {
+        return mensagem;
     }
 }

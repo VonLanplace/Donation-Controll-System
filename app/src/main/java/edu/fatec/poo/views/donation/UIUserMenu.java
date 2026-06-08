@@ -10,11 +10,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
-import lombok.Getter;
-import lombok.Setter;
 
-@Getter
-@Setter
 public class UIUserMenu extends BorderPane {
 
     private final CUserMenu controller;
@@ -35,7 +31,7 @@ public class UIUserMenu extends BorderPane {
 
         TextField txtPesquisa = new TextField();
         txtPesquisa.setPromptText("Insira o nome do Doador...");
-        txtPesquisa.textProperty().bindBidirectional(controller.getNomePesquisa());
+        txtPesquisa.textProperty().bindBidirectional(controller.nomePesquisaProperty());
         HBox.setHgrow(txtPesquisa, Priority.ALWAYS);
 
         Button btnPesquisar = new Button("Pesquisar︎");
@@ -90,7 +86,7 @@ public class UIUserMenu extends BorderPane {
         tbvDoacao.setItems(controller.getDoacaos());
         tbvDoacao.setPlaceholder(new Label("Nenhuma doação encontrada."));
         tbvDoacao.getSelectionModel().selectedItemProperty().addListener(
-                (doacao, velho, novo) -> controller.getDoacaoSelecionada().setValue(novo)
+                (doacao, velho, novo) -> controller.doacaoSelecionadaProperty().setValue(novo)
         );
 
         tbvDoacao.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
@@ -117,5 +113,9 @@ public class UIUserMenu extends BorderPane {
         tbvDoacao.getColumns().add(colCadastrante);
 
         this.setCenter(tbvDoacao);
+    }
+
+    public CUserMenu getController() {
+        return controller;
     }
 }

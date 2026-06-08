@@ -17,8 +17,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.sql.SQLException;
 import java.util.Stack;
@@ -26,8 +24,6 @@ import java.util.Stack;
 import static edu.fatec.poo.configs.WindowStandardFormatting.HEIGHT;
 import static edu.fatec.poo.configs.WindowStandardFormatting.WHIDTH;
 
-@Getter
-@Setter
 public class UICoordenador {
     Stack<Parent> paneStack = new Stack<>();
     private Stage stage;
@@ -112,5 +108,29 @@ public class UICoordenador {
             alert.setContentText("Um erro inesperado ocorreu: " + e.getMessage());
         }
         alert.showAndWait();
+    }
+
+    public Stack<Parent> getPaneStack() {
+        return paneStack;
+    }
+
+    public void setPaneStack(Stack<Parent> paneStack) {
+        this.paneStack = paneStack;
+    }
+
+    public Stage getStage() {
+        return stage;
+    }
+
+    public void setStage(Stage stage) {
+        this.stage = stage;
+    }
+
+    public Scene getScene() {
+        return scene;
+    }
+
+    public void setScene(Scene scene) {
+        this.scene = scene;
     }
 }

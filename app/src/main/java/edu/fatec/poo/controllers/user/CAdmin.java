@@ -13,11 +13,10 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
-import lombok.Data;
 
 import java.util.List;
+import java.util.Objects;
 
-@Data
 public class CAdmin {
 
     private Usuario usuario;
@@ -174,5 +173,160 @@ public class CAdmin {
     public void select(Usuario usuario) {
         this.usuario = usuario;
         fromEntity(usuario);
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+
+    public Usuario getUsuarioLogado() {
+        return usuarioLogado;
+    }
+
+    public void setUsuarioLogado(Usuario usuarioLogado) {
+        this.usuarioLogado = usuarioLogado;
+    }
+
+    public UICoordenador getCoodenator() {
+        return coodenator;
+    }
+
+    public void setCoodenator(UICoordenador coodenator) {
+        this.coodenator = coodenator;
+    }
+
+    public UserService getUserService() {
+        return userService;
+    }
+
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
+
+    public String getNome() {
+        return nome.get();
+    }
+
+    public void setNome(String nome) {
+        this.nome.set(nome);
+    }
+
+    public StringProperty nomeProperty() {
+        return nome;
+    }
+
+    public String getCpf() {
+        return cpf.get();
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf.set(cpf);
+    }
+
+    public StringProperty cpfProperty() {
+        return cpf;
+    }
+
+    public String getTelefone() {
+        return telefone.get();
+    }
+
+    public void setTelefone(String telefone) {
+        this.telefone.set(telefone);
+    }
+
+    public StringProperty telefoneProperty() {
+        return telefone;
+    }
+
+    public String getEmail() {
+        return email.get();
+    }
+
+    public void setEmail(String email) {
+        this.email.set(email);
+    }
+
+    public StringProperty emailProperty() {
+        return email;
+    }
+
+    public Acesso getAcesso() {
+        return acesso.get();
+    }
+
+    public void setAcesso(Acesso acesso) {
+        this.acesso.set(acesso);
+    }
+
+    public ObjectProperty<Acesso> acessoProperty() {
+        return acesso;
+    }
+
+    public boolean isResetarSenha() {
+        return resetarSenha.get();
+    }
+
+    public void setResetarSenha(boolean resetarSenha) {
+        this.resetarSenha.set(resetarSenha);
+    }
+
+    public BooleanProperty resetarSenhaProperty() {
+        return resetarSenha;
+    }
+
+    public ObservableList<Usuario> getUsuariosCadastrados() {
+        return usuariosCadastrados;
+    }
+
+    public void setUsuariosCadastrados(ObservableList<Usuario> usuariosCadastrados) {
+        this.usuariosCadastrados = usuariosCadastrados;
+    }
+
+    public Stage getStage() {
+        return stage.get();
+    }
+
+    public void setStage(Stage stage) {
+        this.stage.set(stage);
+    }
+
+    public SimpleObjectProperty<Stage> stageProperty() {
+        return stage;
+    }
+
+    @Override
+    public String toString() {
+        return "CAdmin{" +
+                "usuario=" + usuario +
+                ", usuarioLogado=" + usuarioLogado +
+                ", coodenator=" + coodenator +
+                ", userService=" + userService +
+                ", nome=" + nome +
+                ", cpf=" + cpf +
+                ", telefone=" + telefone +
+                ", email=" + email +
+                ", acesso=" + acesso +
+                ", resetarSenha=" + resetarSenha +
+                ", usuariosCadastrados=" + usuariosCadastrados +
+                ", stage=" + stage +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        
+        if (o == null || getClass() != o.getClass()) return false;
+        CAdmin cAdmin = (CAdmin) o;
+        return Objects.equals(usuario, cAdmin.usuario) && Objects.equals(usuarioLogado, cAdmin.usuarioLogado) && Objects.equals(coodenator, cAdmin.coodenator) && Objects.equals(userService, cAdmin.userService) && Objects.equals(nome, cAdmin.nome) && Objects.equals(cpf, cAdmin.cpf) && Objects.equals(telefone, cAdmin.telefone) && Objects.equals(email, cAdmin.email) && Objects.equals(acesso, cAdmin.acesso) && Objects.equals(resetarSenha, cAdmin.resetarSenha) && Objects.equals(usuariosCadastrados, cAdmin.usuariosCadastrados) && Objects.equals(stage, cAdmin.stage);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(usuario, usuarioLogado, coodenator, userService, nome, cpf, telefone, email, acesso, resetarSenha, usuariosCadastrados, stage);
     }
 }

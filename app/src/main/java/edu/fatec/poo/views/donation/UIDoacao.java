@@ -5,13 +5,9 @@ import edu.fatec.poo.model.Doacao;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.BorderPane;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.time.LocalDate;
 
-@Getter
-@Setter
 public class UIDoacao extends BorderPane {
 
     private final CDoacao controller;
@@ -31,7 +27,11 @@ public class UIDoacao extends BorderPane {
 
         tbvDoacao.getColumns().add(colData);
         tbvDoacao.getColumns().add(colNome);
-        
+
         this.setTop(tbvDoacao);
+    }
+
+    public CDoacao getController() {
+        return controller;
     }
 }

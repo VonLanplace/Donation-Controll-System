@@ -26,7 +26,7 @@ public class UserService {
                 && usuarioBD.getSenha().equals(usuario.getSenha().trim())) {
             return usuarioBD;
         } else {
-            throw new LoginInvalidoException("Usuário ou Senha Inválido.");
+            throw new LoginInvalidoException("Usuário ou Senha Inválidos.");
         }
     }
 

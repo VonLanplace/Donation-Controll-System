@@ -19,15 +19,11 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.UUID;
 
-@Getter
-@Setter
 public class CCadastrarDoacao {
     private final UICoordenador coordenador;
     private final Usuario usuarioLogado;
@@ -84,13 +80,13 @@ public class CCadastrarDoacao {
             DoacaoDao dao = new DoacaoDao(connector.getConector());
             doacaoService = new DoacaoService(dao, pSer);
 
-            System.out.println("Doacao: " + doacaoUuid);
-            System.out.println("User: " + usuarioLogado);
+            //System.out.println("Doacao: " + doacaoUuid);
+            //System.out.println("User: " + usuarioLogado);
             this.doacao = doacaoService.searchByUUID(doacaoUuid);
             if (doacao == null) {
                 this.doacao = new Doacao();
             }
-            System.out.println(doacao.getId().toString());
+            //System.out.println(doacao.getId().toString());
             doacaoService.loadProdutos(doacao);
             fromEntity(doacao);
 
@@ -162,7 +158,7 @@ public class CCadastrarDoacao {
     }
 
     public void cancelar() {
-        System.out.println("CANCELAR");
+        //System.out.println("CANCELAR");
         coordenador.returnToPreviosScreen();
     }
 
@@ -195,5 +191,73 @@ public class CCadastrarDoacao {
                 }
             }
         });
+    }
+
+    public UICoordenador getCoordenador() {
+        return coordenador;
+    }
+
+    public Usuario getUsuarioLogado() {
+        return usuarioLogado;
+    }
+
+    public DoacaoService getDoacaoService() {
+        return doacaoService;
+    }
+
+    public void setDoacaoService(DoacaoService doacaoService) {
+        this.doacaoService = doacaoService;
+    }
+
+    public Doacao getDoacao() {
+        return doacao;
+    }
+
+    public void setDoacao(Doacao doacao) {
+        this.doacao = doacao;
+    }
+
+    public String getNomeDoador() {
+        return nomeDoador.get();
+    }
+
+    public void setNomeDoador(String nomeDoador) {
+        this.nomeDoador.set(nomeDoador);
+    }
+
+    public StringProperty nomeDoadorProperty() {
+        return nomeDoador;
+    }
+
+    public LocalDate getDate() {
+        return date.get();
+    }
+
+    public void setDate(LocalDate date) {
+        this.date.set(date);
+    }
+
+    public ObjectProperty<LocalDate> dateProperty() {
+        return date;
+    }
+
+    public Produto getProdutoSelecionado() {
+        return produtoSelecionado.get();
+    }
+
+    public void setProdutoSelecionado(Produto produtoSelecionado) {
+        this.produtoSelecionado.set(produtoSelecionado);
+    }
+
+    public ObjectProperty<Produto> produtoSelecionadoProperty() {
+        return produtoSelecionado;
+    }
+
+    public ObservableList<Produto> getListaProdutos() {
+        return listaProdutos;
+    }
+
+    public void setListaProdutos(ObservableList<Produto> listaProdutos) {
+        this.listaProdutos = listaProdutos;
     }
 }

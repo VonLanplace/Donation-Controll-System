@@ -3,8 +3,8 @@ package edu.fatec.poo.views.user;
 import atlantafx.base.theme.Styles;
 import edu.fatec.poo.controllers.user.CUserLogin;
 import edu.fatec.poo.model.Usuario;
-import javafx.geometry.Pos;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
@@ -14,6 +14,7 @@ public class UIUserLogin extends BorderPane {
     private CUserLogin controller;
     private VBox centralPane;
     private Label lblTelaLogin;
+    private Label lblMessage;
     private TextField txtEmail;
     private PasswordField txtSenha;
     private Button btnLogin;
@@ -22,48 +23,46 @@ public class UIUserLogin extends BorderPane {
         super();
         this.controller = controller;
 
-        // Configuração do Painel Central
-        centralPane = new VBox(25); // Aumentado o espaçamento entre elementos
+        centralPane = new VBox(25);
         centralPane.setAlignment(Pos.CENTER);
         centralPane.setPadding(new Insets(40));
-        centralPane.setMaxWidth(400); // Limita a largura do formulário
+        centralPane.setMaxWidth(400);
 
-        // Título estilizado com AtlantaFX
         lblTelaLogin = new Label("Sistema de Doações");
         lblTelaLogin.getStyleClass().add(Styles.TITLE_2);
 
-        // Campo de Email
+        lblMessage = new Label();
+        lblMessage.textProperty().bindBidirectional(controller.mensagemProperty());
+        lblMessage.getStyleClass().add(Styles.WARNING);
+
         txtEmail = new TextField();
         txtEmail.setPromptText("E-mail do usuário");
-        txtEmail.setPrefHeight(40); // Mais alto para facilitar o clique
-        txtEmail.textProperty().bindBidirectional(controller.getEmail());
+        txtEmail.setPrefHeight(40);
+        txtEmail.textProperty().bindBidirectional(controller.emailProperty());
 
-        // Campo de Senha
         txtSenha = new PasswordField();
         txtSenha.setPromptText("Senha");
         txtSenha.setPrefHeight(40);
-        txtSenha.textProperty().bindBidirectional(controller.getSenha());
+        txtSenha.textProperty().bindBidirectional(controller.senhaProperty());
 
-        // Botão de Login (Sólido e com cor Accent/Nord)
         btnLogin = new Button("Entrar");
         btnLogin.getStyleClass().addAll(Styles.LARGE, Styles.ACCENT);
-        btnLogin.setPrefWidth(Double.MAX_VALUE); // Botão ocupa a largura do formulário
+        btnLogin.setPrefWidth(Double.MAX_VALUE);
         btnLogin.setDefaultButton(true);
 
         btnLogin.setOnAction(e -> {
             Usuario usuario = controller.login();
         });
 
-        // Agrupando elementos
         centralPane.getChildren().addAll(
                 lblTelaLogin,
-                new Separator(), // Linha sutil para separar título do form
+                new Separator(),
+                lblMessage,
                 txtEmail,
                 txtSenha,
                 btnLogin
         );
 
-        // Centralização absoluta na tela
         VBox centerWrapper = new VBox(centralPane);
         centerWrapper.setAlignment(Pos.CENTER);
 
