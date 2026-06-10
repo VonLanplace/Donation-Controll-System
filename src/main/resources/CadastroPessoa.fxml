@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<VBox xmlns:fx="http://javafx.com/fxml/1" fx:id="vboxMain" prefHeight="600.0" prefWidth="750.0"
+      style="-fx-background-color: #f4f4f4;" xmlns="http://javafx.com/javafx/25.0.1"
+      fx:controller="com.vonlanplace.doacao.controller.CadastroPessoaController">
+    <children>
+        <MenuBar fx:id="menuBar" VBox.vgrow="NEVER">
+            <menus>
+                <Menu fx:id="menuFile" mnemonicParsing="false" text="File">
+                    <items>
+                        <MenuItem fx:id="menuNew" mnemonicParsing="false" text="New"/>
+                        <MenuItem fx:id="menuOpen" mnemonicParsing="false" text="Open…"/>
+                        <Menu fx:id="menuOpenRecent" mnemonicParsing="false" text="Open Recent"/>
+                        <SeparatorMenuItem fx:id="sepFile1" mnemonicParsing="false"/>
+                        <MenuItem fx:id="menuClose" mnemonicParsing="false" text="Close"/>
+                        <MenuItem fx:id="menuSave" mnemonicParsing="false" text="Save"/>
+                        <MenuItem fx:id="menuSaveAs" mnemonicParsing="false" text="Save As…"/>
+                        <MenuItem fx:id="menuRevert" mnemonicParsing="false" text="Revert"/>
+                        <SeparatorMenuItem fx:id="sepFile2" mnemonicParsing="false"/>
+                        <MenuItem fx:id="menuPreferences" mnemonicParsing="false" text="Preferences…"/>
+                        <SeparatorMenuItem fx:id="sepFile3" mnemonicParsing="false"/>
+                        <MenuItem fx:id="menuQuit" mnemonicParsing="false" text="Quit"/>
+                    </items>
+                </Menu>
+                <Menu fx:id="menuEdit" mnemonicParsing="false" text="Edit">
+                    <items>
+                        <MenuItem fx:id="menuUndo" mnemonicParsing="false" text="Undo"/>
+                        <MenuItem fx:id="menuRedo" mnemonicParsing="false" text="Redo"/>
+                        <SeparatorMenuItem fx:id="sepEdit1" mnemonicParsing="false"/>
+                        <MenuItem fx:id="menuCut" mnemonicParsing="false" text="Cut"/>
+                        <MenuItem fx:id="menuCopy" mnemonicParsing="false" text="Copy"/>
+                        <MenuItem fx:id="menuPaste" mnemonicParsing="false" text="Paste"/>
+                        <MenuItem fx:id="menuDelete" mnemonicParsing="false" text="Delete"/>
+                        <SeparatorMenuItem fx:id="sepEdit2" mnemonicParsing="false"/>
+                        <MenuItem fx:id="menuSelectAll" mnemonicParsing="false" text="Select All"/>
+                        <MenuItem fx:id="menuUnselectAll" mnemonicParsing="false" text="Unselect All"/>
+                    </items>
+                </Menu>
+                <Menu fx:id="menuHelp" mnemonicParsing="false" text="Help">
+                    <items>
+                        <MenuItem fx:id="menuAbout" mnemonicParsing="false" text="About MyHelloApp"/>
+                    </items>
+                </Menu>
+            </menus>
+        </MenuBar>
+
+        <TabPane fx:id="mainTabPane" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
+            <tabs>
+                <Tab fx:id="tabPessoal" closable="false" text="Pessoal">
+                    <content>
+                        <VBox fx:id="vboxPessoal" spacing="15.0">
+                            <padding>
+                                <Insets bottom="15.0" left="15.0" right="15.0" top="15.0"/>
+                            </padding>
+                            <children>
+                                <VBox fx:id="vboxDadosPessoais" spacing="10.0">
+                                    <children>
+                                        <Label fx:id="lblDadosPessoais"
+                                               style="-fx-font-weight: bold; -fx-font-size: 14px;"
+                                               text="Dados Pessoais"/>
+                                        <GridPane fx:id="gridDadosPessoais" hgap="10.0" vgap="10.0">
+                                            <columnConstraints>
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                                            </columnConstraints>
+                                            <rowConstraints>
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                            </rowConstraints>
+                                            <children>
+                                                <TextField fx:id="txtNomeCompleto" promptText="Nome Completo"
+                                                           GridPane.columnSpan="2147483647"/>
+                                                <TextField fx:id="txtCpf" promptText="CPF" GridPane.columnSpan="2"
+                                                           GridPane.rowIndex="1"/>
+                                                <TextField fx:id="txtRg" promptText="RG" GridPane.columnIndex="2"
+                                                           GridPane.rowIndex="1"/>
+                                                <TextField fx:id="txtEmissorRg" promptText="Emissor RG"
+                                                           GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+                                                <DatePicker fx:id="dpDataNascimento" maxWidth="1.7976931348623157E308"
+                                                            promptText="Data Nascimento" GridPane.columnSpan="2"
+                                                            GridPane.rowIndex="2"/>
+                                                <CheckBox fx:id="chkLeEscreve" mnemonicParsing="false"
+                                                          text="Lê/Escreve?" GridPane.columnIndex="2"
+                                                          GridPane.columnSpan="2" GridPane.rowIndex="2"/>
+                                            </children>
+                                        </GridPane>
+                                    </children>
+                                </VBox>
+
+                                <VBox fx:id="vboxDadosContato" spacing="10.0">
+                                    <children>
+                                        <Label fx:id="lblDadosContato"
+                                               style="-fx-font-weight: bold; -fx-font-size: 14px;"
+                                               text="Dados de Contato"/>
+                                        <GridPane fx:id="gridDadosContato" hgap="10.0" vgap="10.0">
+                                            <columnConstraints>
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                                            </columnConstraints>
+                                            <rowConstraints>
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                            </rowConstraints>
+                                            <children>
+                                                <TextField fx:id="txtTelefonePessoal" promptText="Telefone Pessoal"
+                                                           GridPane.columnSpan="2"/>
+                                                <TextField fx:id="txtTelefoneContato" promptText="Telefone Contato"
+                                                           GridPane.columnIndex="2" GridPane.columnSpan="2"/>
+                                                <TextField fx:id="txtEmail" promptText="Email"
+                                                           GridPane.columnSpan="2147483647" GridPane.rowIndex="1"/>
+                                                <CheckBox fx:id="chkNecessitaJuridico" mnemonicParsing="false"
+                                                          text="Necessita Jurídico?" GridPane.columnSpan="2"
+                                                          GridPane.rowIndex="2"/>
+                                                <CheckBox fx:id="chkNecessitaPsicologo" mnemonicParsing="false"
+                                                          text="Necessita Psicólogo?" GridPane.columnIndex="2"
+                                                          GridPane.columnSpan="2" GridPane.rowIndex="2"/>
+                                            </children>
+                                        </GridPane>
+                                    </children>
+                                </VBox>
+                            </children>
+                        </VBox>
+                    </content>
+                </Tab>
+
+                <Tab fx:id="tabResidencial" closable="false" text="Residencial">
+                    <content>
+                        <VBox fx:id="vboxResidencial" spacing="10.0">
+                            <padding>
+                                <Insets bottom="15.0" left="15.0" right="15.0" top="15.0"/>
+                            </padding>
+                            <children>
+                                <Label fx:id="lblDadosResidenciais" style="-fx-font-weight: bold; -fx-font-size: 14px;"
+                                       text="Dados Residenciais"/>
+                                <GridPane fx:id="gridDadosResidenciais" hgap="10.0" vgap="10.0">
+                                    <columnConstraints>
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                                    </columnConstraints>
+                                    <rowConstraints>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                        <RowConstraints minHeight="10.0" prefHeight="25.0" vgrow="SOMETIMES"/>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                        <RowConstraints minHeight="10.0" prefHeight="25.0" vgrow="SOMETIMES"/>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                    </rowConstraints>
+                                    <children>
+                                        <TextField fx:id="txtRuaAvenida" promptText="Rua/Avenida"
+                                                   GridPane.columnSpan="2"/>
+                                        <TextField fx:id="txtCep" promptText="CEP" GridPane.columnIndex="2"/>
+                                        <TextField fx:id="txtNumero" promptText="Número" GridPane.columnIndex="3"/>
+
+                                        <TextField fx:id="txtCidade" promptText="Cidade" GridPane.columnSpan="2"
+                                                   GridPane.rowIndex="1"/>
+                                        <TextField fx:id="txtBairro" promptText="Bairro" GridPane.columnIndex="2"
+                                                   GridPane.columnSpan="2" GridPane.rowIndex="1"/>
+
+                                        <TextField fx:id="txtComplemento" promptText="Complemento"
+                                                   GridPane.columnSpan="4" GridPane.rowIndex="2"/>
+
+                                        <Label fx:id="lblNumeroMoradores" text="Número Moradores"
+                                               GridPane.columnSpan="2" GridPane.rowIndex="3"/>
+                                        <Label fx:id="lblNumeroTrabalhadores" text="Número Trabalhadores"
+                                               GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="3"/>
+
+                                        <Spinner fx:id="spnNumeroMoradores" maxWidth="1.7976931348623157E308"
+                                                 GridPane.columnSpan="2" GridPane.rowIndex="4">
+                                            <valueFactory>
+                                                <SpinnerValueFactory.IntegerSpinnerValueFactory min="1" max="100"
+                                                                                                initialValue="1"/>
+                                            </valueFactory>
+                                        </Spinner>
+
+                                        <Spinner fx:id="spnNumeroTrabalhadores" maxWidth="1.7976931348623157E308"
+                                                 GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="4">
+                                            <valueFactory>
+                                                <SpinnerValueFactory.IntegerSpinnerValueFactory min="0" max="100"
+                                                                                                initialValue="0"/>
+                                            </valueFactory>
+                                        </Spinner>
+
+                                        <Label fx:id="lblTipoMoradia" text="Tipo Moradia" GridPane.rowIndex="5"/>
+                                        <Label fx:id="lblTipoResidencia" text="Tipo Residência" GridPane.columnIndex="2"
+                                               GridPane.rowIndex="5"/>
+
+                                        <ChoiceBox fx:id="cbTipoMoradia" maxWidth="1.7976931348623157E308"
+                                                   GridPane.columnSpan="2" GridPane.rowIndex="6"/>
+                                        <ChoiceBox fx:id="cbTipoResidencia" maxWidth="1.7976931348623157E308"
+                                                   GridPane.columnIndex="2" GridPane.columnSpan="2"
+                                                   GridPane.rowIndex="6"/>
+                                    </children>
+                                </GridPane>
+                            </children>
+                        </VBox>
+                    </content>
+                </Tab>
+
+                <Tab fx:id="tabDependentes" closable="false" text="Dependentes">
+                    <content>
+                        <VBox fx:id="vboxDependentes" spacing="10.0">
+                            <padding>
+                                <Insets bottom="15.0" left="15.0" right="15.0" top="15.0"/>
+                            </padding>
+                            <children>
+                                <Label fx:id="lblDadosDependentes" style="-fx-font-weight: bold; -fx-font-size: 14px;"
+                                       text="Dados dos Dependentes"/>
+                                <TableView fx:id="tblDependentes" VBox.vgrow="ALWAYS">
+                                    <columns>
+                                        <TableColumn fx:id="colDepNome" prefWidth="75.0" text="Nome"/>
+                                        <TableColumn fx:id="colDepIdade" prefWidth="75.0" text="Idade"/>
+                                        <TableColumn fx:id="colDepDataNascimento" prefWidth="75.0"
+                                                     text="Data de Nascimento"/>
+                                    </columns>
+                                    <columnResizePolicy>
+                                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                                    </columnResizePolicy>
+                                </TableView>
+                                <HBox fx:id="hboxBotoesDependentes" spacing="10.0">
+                                    <children>
+                                        <Button fx:id="btnAdicionarDependente" mnemonicParsing="false" prefWidth="100.0"
+                                                text="Adicionar"/>
+                                        <Button fx:id="btnEditarDependente" mnemonicParsing="false" prefWidth="100.0"
+                                                text="Editar"/>
+                                        <Button fx:id="btnRemoverDependente" mnemonicParsing="false" prefWidth="100.0"
+                                                text="Remover"/>
+                                    </children>
+                                </HBox>
+                            </children>
+                        </VBox>
+                    </content>
+                </Tab>
+
+                <Tab fx:id="tabEconomicos" closable="false" text="Econômicos">
+                    <content>
+                        <VBox fx:id="vboxEconomicos" spacing="15.0">
+                            <padding>
+                                <Insets bottom="15.0" left="15.0" right="15.0" top="15.0"/>
+                            </padding>
+                            <children>
+                                <VBox fx:id="vboxDespesas" spacing="8.0" VBox.vgrow="ALWAYS">
+                                    <children>
+                                        <Label fx:id="lblDadosDespesas"
+                                               style="-fx-font-weight: bold; -fx-font-size: 13px;"
+                                               text="Dados das Despesas"/>
+                                        <TableView fx:id="tblDespesas" prefHeight="120.0" VBox.vgrow="ALWAYS">
+                                            <columns>
+                                                <TableColumn fx:id="colDespNome" prefWidth="75.0" text="Nome"/>
+                                                <TableColumn fx:id="colDespValor" prefWidth="75.0" text="Valor"/>
+                                            </columns>
+                                            <columnResizePolicy>
+                                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                                            </columnResizePolicy>
+                                        </TableView>
+                                        <HBox fx:id="hboxBotoesDespesas" spacing="10.0">
+                                            <children>
+                                                <Button fx:id="btnAdicionarDespesa" mnemonicParsing="false"
+                                                        prefWidth="100.0" text="Adicionar"/>
+                                                <Button fx:id="btnEditarDespesa" mnemonicParsing="false"
+                                                        prefWidth="100.0" text="Editar"/>
+                                                <Button fx:id="btnRemoverDespesa" mnemonicParsing="false"
+                                                        prefWidth="100.0" text="Remover"/>
+                                            </children>
+                                        </HBox>
+                                    </children>
+                                </VBox>
+
+                                <VBox fx:id="vboxAuxilios" spacing="8.0" VBox.vgrow="ALWAYS">
+                                    <children>
+                                        <Label fx:id="lblDadosAuxilios"
+                                               style="-fx-font-weight: bold; -fx-font-size: 13px;"
+                                               text="Dados dos Auxílios"/>
+                                        <TableView fx:id="tblAuxilios" prefHeight="120.0" VBox.vgrow="ALWAYS">
+                                            <columns>
+                                                <TableColumn fx:id="colAuxNome" prefWidth="75.0" text="Nome"/>
+                                                <TableColumn fx:id="colAuxValor" prefWidth="75.0" text="Valor"/>
+                                            </columns>
+                                            <columnResizePolicy>
+                                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                                            </columnResizePolicy>
+                                        </TableView>
+                                        <HBox fx:id="hboxBotoesAuxilios" spacing="10.0">
+                                            <children>
+                                                <Button fx:id="btnAdicionarAuxilio" mnemonicParsing="false"
+                                                        prefWidth="100.0" text="Adicionar"/>
+                                                <Button fx:id="btnEditarAuxilio" mnemonicParsing="false"
+                                                        prefWidth="100.0" text="Editar"/>
+                                                <Button fx:id="btnRemoverAuxilio" mnemonicParsing="false"
+                                                        prefWidth="100.0" text="Remover"/>
+                                            </children>
+                                        </HBox>
+                                    </children>
+                                </VBox>
+                            </children>
+                        </VBox>
+                    </content>
+                </Tab>
+
+                <Tab fx:id="tabOutros" closable="false" text="Outros">
+                    <content>
+                        <VBox fx:id="vboxOutros" spacing="15.0">
+                            <padding>
+                                <Insets bottom="15.0" left="15.0" right="15.0" top="15.0"/>
+                            </padding>
+                            <children>
+                                <CheckBox fx:id="chkRecebeuCesta" mnemonicParsing="false" text="Recebeu Cesta?"/>
+                                <CheckBox fx:id="chkParecerEntrevistador" mnemonicParsing="false"
+                                          text="Parecer do Entrevistador?"/>
+                                <VBox fx:id="vboxComentarios" spacing="5.0" VBox.vgrow="ALWAYS">
+                                    <children>
+                                        <Label fx:id="lblComentarios" text="Comentários:"/>
+                                        <TextArea fx:id="txtComentarios" prefHeight="180.0"
+                                                  promptText="Digite aqui as observações e comentários adicionais..."
+                                                  wrapText="true" VBox.vgrow="ALWAYS"/>
+                                    </children>
+                                </VBox>
+                            </children>
+                        </VBox>
+                    </content>
+                </Tab>
+            </tabs>
+        </TabPane>
+
+        <Separator fx:id="sepFim" prefWidth="200.0"/>
+
+        <HBox fx:id="hboxAcoes" alignment="CENTER_RIGHT" spacing="12.0" style="-fx-background-color: #eee;">
+            <children>
+                <Button fx:id="btnCancelar" mnemonicParsing="false" prefWidth="110.0" onAction="#cancelarCadastro"
+                        style="-fx-background-color: #dc3545; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 15 8 15; -fx-cursor: hand;"
+                        text="Cancelar"/>
+                <Button fx:id="btnSalvar" mnemonicParsing="false" prefWidth="110.0" onAction="#salvarCadastro"
+                        style="-fx-background-color: #28a745; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 15 8 15; -fx-cursor: hand;"
+                        text="Salvar"/>
+            </children>
+            <padding>
+                <Insets bottom="12.0" left="12.0" right="15.0" top="12.0"/>
+            </padding>
+        </HBox>
+    </children>
+</VBox>

@@ -1,5 +1,6 @@
 package com.vonlanplace.doacao.controller;
 
+import com.vonlanplace.doacao.springIntegration.StageManager;
 import javafx.fxml.FXML;
 import org.springframework.stereotype.Component;
 
@@ -10,8 +11,16 @@ public class MainController {
     // @Autowired
     // private DoacaoRepository repository;
 
+    private StageManager stageManager;
+
+    MainController(StageManager stageManager) {
+        this.stageManager = stageManager;
+    }
+
     @FXML
     public void handleButtonClick() {
+
         System.out.println("Botão clicado! O Controller é um Bean do Spring.");
+        stageManager.switchScene("/CadastroPessoa.fxml", "Sistema de Doação - Principal");
     }
 }
