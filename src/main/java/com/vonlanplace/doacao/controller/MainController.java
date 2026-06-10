@@ -1,7 +1,7 @@
-package com.vonlanplace.doacao;
+package com.vonlanplace.doacao.controller;
 
-import org.springframework.stereotype.Component;
 import javafx.fxml.FXML;
+import org.springframework.stereotype.Component;
 
 @Component // O Spring agora gerencia essa classe!
 public class MainController {

@@ -1,5 +1,6 @@
 package com.vonlanplace.doacao;
 
+import com.vonlanplace.doacao.springIntegration.JavaFXApplication;
 import javafx.application.Application;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 

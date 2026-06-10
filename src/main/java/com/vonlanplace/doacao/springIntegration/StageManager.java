@@ -1,4 +1,4 @@
-package com.vonlanplace.doacao;
+package com.vonlanplace.doacao.springIntegration;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -29,7 +29,7 @@ public class StageManager {
     /**
      * Método 1: Substitui o conteúdo da janela principal (Troca de tela)
      */
-    public void switchScene(String fxmlPath, String title) {
+    public void switchScene(String fxmlPath, String title) throws RuntimeException {
         try {
             Parent view = loadView(fxmlPath);
             primaryStage.setTitle(title);
@@ -43,7 +43,7 @@ public class StageManager {
     /**
      * Método 2: Abre uma NOVA janela separada (Pop-up/Modal)
      */
-    public void openModal(String fxmlPath, String title) {
+    public void openModal(String fxmlPath, String title) throws RuntimeException {
         try {
             Parent view = loadView(fxmlPath);
             Stage modalStage = new Stage();

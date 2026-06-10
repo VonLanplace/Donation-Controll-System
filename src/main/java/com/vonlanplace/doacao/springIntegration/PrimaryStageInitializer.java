@@ -1,7 +1,5 @@
-package com.vonlanplace.doacao;
+package com.vonlanplace.doacao.springIntegration;
 
-import com.vonlanplace.doacao.StageManager;
-import com.vonlanplace.doacao.StageReadyEvent;
 import javafx.stage.Stage;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;

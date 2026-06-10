@@ -1,4 +1,4 @@
-package com.vonlanplace.doacao;
+package com.vonlanplace.doacao.springIntegration;
 
 import javafx.stage.Stage;
 import org.springframework.context.ApplicationEvent;
