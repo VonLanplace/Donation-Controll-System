@@ -1,11 +1,18 @@
 package com.vonlanplace.doacao.controller;
 
+import com.vonlanplace.doacao.springIntegration.StageManager;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import org.springframework.stereotype.Component;
 
 @Component
 public class CadastroDoacaoController {
+
+    private final StageManager stageManager;
+
+    CadastroDoacaoController(StageManager stageManager) {
+        this.stageManager = stageManager;
+    }
 
     @FXML
     public void handleRemoverProduto(ActionEvent actionEvent) {
@@ -15,6 +22,7 @@ public class CadastroDoacaoController {
     @FXML
     public void handleAdicionarProduto(ActionEvent actionEvent) {
         System.out.println("Adicionar Produto");
+        stageManager.openModal("/CadastroProdutoDoacao.fxml", "Sistema de Doação - Principal");
     }
 
     @FXML
