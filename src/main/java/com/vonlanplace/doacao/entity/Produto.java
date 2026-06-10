@@ -6,9 +6,7 @@ import lombok.Data;
 import java.util.UUID;
 
 @Entity
-@Table(name = "produto", uniqueConstraints = {
-        @UniqueConstraint(name = "uk_produto_codigo_barras", columnNames = "codigo_barras")
-})
+@Table(name = "produto")
 @Data
 public class Produto {
 
@@ -17,7 +15,7 @@ public class Produto {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
-    @Column(name = "codigo_barras", length = 13) // Padrão EAN-13 (pode aumentar se usar outros padrões)
+    @Column(name = "codigo_barras", length = 13)
     private String codigoBarras;
 
     @ManyToOne(fetch = FetchType.LAZY)
