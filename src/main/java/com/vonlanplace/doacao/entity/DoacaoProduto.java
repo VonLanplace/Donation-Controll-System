@@ -8,22 +8,31 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 @Entity
-@IdClass(DoacaoProdutoId.class) // 1. Vincula a classe de chave composta
+@Table(name = "doacao_produto")
+@IdClass(DoacaoProdutoId.class)
 @Getter
 @Setter
 public class DoacaoProduto {
 
     @Id
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "doacao_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(
+            name = "doacao_id",
+            nullable = false,
+            foreignKey = @ForeignKey(name = "fk_doacao_produto_doacao")
+    )
     private Doacao doacao;
 
     @Id
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "produto_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(
+            name = "produto_id",
+            nullable = false,
+            foreignKey = @ForeignKey(name = "fk_doacao_produto_produto")
+    )
     private Produto produto;
 
-    @Column(name = "data_validade")
+    @Column(name = "data_validade", nullable = false)
     private LocalDate dataValidade;
 
     @Override

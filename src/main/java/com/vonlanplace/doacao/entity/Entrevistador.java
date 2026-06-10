@@ -6,11 +6,11 @@ import lombok.Data;
 import java.util.UUID;
 
 @Entity
-@Table(name = "tipo_produto", uniqueConstraints = {
-        @UniqueConstraint(name = "uk_tipo_produto_nome", columnNames = "nome")
+@Table(name = "entrevistador", uniqueConstraints = {
+        @UniqueConstraint(name = "uk_entrevistador_email", columnNames = "email")
 })
 @Data
-public class TipoProduto {
+public class Entrevistador {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -19,4 +19,10 @@ public class TipoProduto {
 
     @Column(name = "nome", nullable = false, length = 100)
     private String nome;
+
+    @Column(name = "email", nullable = false, length = 100)
+    private String email;
+
+    @Column(name = "senha", nullable = false, length = 255)
+    private String senha;
 }
