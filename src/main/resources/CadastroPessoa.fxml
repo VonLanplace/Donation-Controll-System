@@ -3,7 +3,7 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<VBox xmlns:fx="http://javafx.com/fxml/1" fx:id="vboxMain" prefHeight="600.0" prefWidth="750.0"
+<VBox xmlns:fx="http://javafx.com/fxml/1" fx:id="vboxMain" prefHeight="480.0" prefWidth="720.0"
       style="-fx-background-color: #f4f4f4;" xmlns="http://javafx.com/javafx/25.0.1"
       fx:controller="com.vonlanplace.doacao.controller.CadastroPessoaController">
     <children>
