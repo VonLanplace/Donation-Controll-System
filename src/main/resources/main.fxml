@@ -8,6 +8,6 @@
       fx:controller="com.vonlanplace.doacao.controller.MainController">
 
     <Label text="Sistema de Doacao V2"/>
-    <Button fx:id="myButton" onAction="#handleButtonClick" text="Cadastro Doacao"/>
-    <Button mnemonicParsing="false" text="Cadastro Visitante"/>
+    <Button fx:id="myButton" onAction="#handleCadastroDoacao" text="Cadastro Doacao"/>
+    <Button mnemonicParsing="false" onAction="#handleCadastroVisitante" text="Cadastro Visitante"/>
 </VBox>

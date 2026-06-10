@@ -9,9 +9,11 @@ public class CadastroPessoaController {
 
     @FXML
     public void cancelarCadastro(ActionEvent actionEvent) {
+        System.out.println("Cadastro Cancelado");
     }
 
     @FXML
     public void salvarCadastro(ActionEvent actionEvent) {
+        System.out.println("Cadastro Salvo");
     }
 }
