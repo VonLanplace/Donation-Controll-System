@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <VBox xmlns:fx="http://javafx.com/fxml/1" alignment="TOP_LEFT" spacing="20.0" prefWidth="400.0"
       prefHeight="450.0" xmlns="http://javafx.com/javafx/17"
-      fx:controller="com.vonlanplace.doacao.controller.CadastroProdutoDoacaoController">
+      fx:controller="com.vonlanplace.doacao.javafx.controller.CadastroProdutoDoacaoController">
 
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
