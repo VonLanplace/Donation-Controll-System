@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Lista de Produtos Cadastrados</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f9;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* Estilo da Janela / Card Centrado */
+        .window-card {
+            background-color: #ffffff;
+            width: 100%;
+            max-width: 900px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            border: 1px solid #e0e0e0;
+        }
+
+        .window-header {
+            background-color: #2c3e50;
+            color: #ffffff;
+            padding: 16px 24px;
+            font-size: 1.25rem;
+            font-weight: bold;
+        }
+
+        .window-body {
+            padding: 24px;
+        }
+
+        /* Estilo da Tabela */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 12px 16px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        th {
+            background-color: #f8f9fa;
+            color: #333333;
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background-color: #f1f5f9;
+        }
+
+        .empty-message {
+            text-align: center;
+            color: #777777;
+            padding: 20px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Janela de Listagem -->
+<div class="window-card">
+    <div class="window-header">
+        Produtos Cadastrados
+    </div>
+
+    <div class="window-body">
+        <!-- Exibe a tabela se a lista NÃO estiver vazia -->
+        <table th:if="${not #lists.isEmpty(produtos)}">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Preço</th>
+                <th>Ações</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- Iteração da lista de produtos -->
+            <tr th:each="produto : ${produtos}">
+                <td th:text="${produto.id}">1</td>
+                <td th:text="${produto.nome}">Produto Exemplo</td>
+                <td>
+                    <!-- Exemplo de botão de ação -->
+                    <a th:href="@{/produtos/editar/{id}(id=${produto.id})}">Editar</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <!-- Mensagem exibida apenas se a lista estiver vazia -->
+        <div class="empty-message" th:if="${#lists.isEmpty(produtos)}">
+            Nenhum produto cadastrado até o momento.
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
