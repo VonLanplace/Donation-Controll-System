@@ -4,13 +4,17 @@ import com.vonlanplace.doacao.cesta.Cesta;
 import com.vonlanplace.doacao.produto.marca.MarcaProduto;
 import com.vonlanplace.doacao.produto.tipo.TipoProduto;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
 import java.util.UUID;
 
 @Entity
 @Table(name = "produto")
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@RequiredArgsConstructor
 public class Produto {
 
     @Id

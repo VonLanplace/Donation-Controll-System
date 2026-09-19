@@ -1,7 +1,7 @@
 package com.vonlanplace.doacao.produto.marca;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
 import java.util.UUID;
 
@@ -9,7 +9,11 @@ import java.util.UUID;
 @Table(name = "marca_produto", uniqueConstraints = {
         @UniqueConstraint(name = "uk_marca_produto_nome", columnNames = "nome")
 })
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@RequiredArgsConstructor
 public class MarcaProduto {
 
     @Id
