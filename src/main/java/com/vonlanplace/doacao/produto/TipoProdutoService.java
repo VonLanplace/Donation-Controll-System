@@ -1,5 +1,7 @@
 package com.vonlanplace.doacao.produto;
 
+import com.vonlanplace.doacao.exception.DeleteFailureException;
+import com.vonlanplace.doacao.exception.LoadFailureException;
 import com.vonlanplace.doacao.exception.SaveFailureException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,11 +35,27 @@ public class TipoProdutoService {
         try {
             return tipoProdutoRepository.findByName(nome);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            return Optional.empty();
         }
     }
 
-    //TODO Update
+    public void update(TipoProduto tipoProduto){
+        if (tipoProdutoRepository.findById(tipoProduto.getId()).isPresent()) {
+            try {
+                tipoProdutoRepository.save(tipoProduto);
+            }catch(Exception e) {
+                throw new SaveFailureException();
+            }
+        } else {
+            throw new LoadFailureException();
+        }
+    }
 
-    //TODO Delete
+    public void delete(TipoProduto tipoProduto){
+        try {
+            tipoProdutoRepository.delete(tipoProduto);
+        } catch(Exception e) {
+            throw new DeleteFailureException();
+        }
+    }
 }
