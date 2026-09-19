@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title th:text="${titulo} ?: 'Meu Projeto'">Título padrão</title>
+
+    <!-- Importação dos estilos globais -->
+    <link rel="stylesheet" th:href="@{/css/cores.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/trail.css}">
+
+    <!-- Bloco para CSS específico de cada página -->
+    <th:block layout:fragment="page-css"></th:block>
+</head>
+<body style="display: flex; flex-direction: column; min-height: 100vh; margin: 0; background-color: var(--background-color); color: var(--text-color);">
+
+<!-- Header inserido via Thymeleaf -->
+<div th:replace="fragments/header :: header"></div>
+
+<!-- Conteúdo principal dinâmico das páginas -->
+<main style="flex: 1; padding: 2rem;">
+    <div layout:fragment="content">
+        <!-- O conteúdo da página filha será renderizado aqui -->
+        <p>Conteúdo padrão da página.</p>
+    </div>
+</main>
+
+<!-- Trail (Rodapé) inserido via Thymeleaf -->
+<div th:replace="fragments/trail :: trail"></div>
+
+<!-- Bloco para JS específico de cada página -->
+<th:block layout:fragment="page-js"></th:block>
+
+</body>
+</html>

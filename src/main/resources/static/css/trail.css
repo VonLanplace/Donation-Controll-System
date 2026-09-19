@@ -1,0 +1,15 @@
+@import url('colors.css');
+
+.site-trail {
+    background-color: var(--primary-color);
+    color: var(--surface-color);
+    text-align: center;
+    padding: 1.5rem;
+    font-size: 0.9rem;
+    border-top: 3px solid var(--secondary-color);
+    margin-top: auto;
+}
+
+.site-trail p {
+    margin: 0;
+}
