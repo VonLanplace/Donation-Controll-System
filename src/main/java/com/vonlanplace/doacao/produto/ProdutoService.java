@@ -33,14 +33,14 @@ public class ProdutoService {
     }
 
     @Transactional(readOnly = true)
-    public ProdutoResponseDTO findByCodigoBarras(String codigoBarras) {
+    public ProdutoResponseDTO findByCodigoBarras(String codigoBarras) throws EntityNotFoundException {
         return produtoMapper.toResponseDTO(
                 produtoRepository.findByCodigoBarras(codigoBarras).orElseThrow(
                         EntityNotFoundException::new));
     }
 
     @Transactional(readOnly = true)
-    public List<ProdutoResponseDTO> findByMarcaProduto(UUID marcaProdutoId) {
+    public List<ProdutoResponseDTO> findByMarcaProduto(UUID marcaProdutoId) throws EntityNotFoundException {
         MarcaProduto marcaProduto = marcaProdutoRepository.findById(marcaProdutoId)
                 .orElseThrow(() -> new EntityNotFoundException("Marca Produto not found"));
         return produtoRepository.findAllByMarcaProduto(marcaProduto)
@@ -49,7 +49,7 @@ public class ProdutoService {
     }
 
     @Transactional(readOnly = true)
-    public List<ProdutoResponseDTO> findByTipoProduto(UUID tipoProdutoId) {
+    public List<ProdutoResponseDTO> findByTipoProduto(UUID tipoProdutoId) throws EntityNotFoundException {
         TipoProduto tipoProduto = tipoProdutoRepository.findById(tipoProdutoId)
                 .orElseThrow(() -> new EntityNotFoundException("Marca Produto not found"));
         return produtoRepository.findAllByTipoProduto(tipoProduto)
