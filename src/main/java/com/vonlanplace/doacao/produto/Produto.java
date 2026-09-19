@@ -1,6 +1,8 @@
 package com.vonlanplace.doacao.produto;
 
 import com.vonlanplace.doacao.cesta.Cesta;
+import com.vonlanplace.doacao.produto.marca.MarcaProduto;
+import com.vonlanplace.doacao.produto.tipo.TipoProduto;
 import jakarta.persistence.*;
 import lombok.Data;
 

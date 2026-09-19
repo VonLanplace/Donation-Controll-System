@@ -4,6 +4,8 @@ import com.vonlanplace.doacao.exception.DeleteFailureException;
 import com.vonlanplace.doacao.exception.LoadFailureException;
 import com.vonlanplace.doacao.exception.ObjectNotFoundException;
 import com.vonlanplace.doacao.exception.SaveFailureException;
+import com.vonlanplace.doacao.produto.marca.MarcaProduto;
+import com.vonlanplace.doacao.produto.tipo.TipoProduto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

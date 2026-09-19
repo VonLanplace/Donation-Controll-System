@@ -1,4 +1,4 @@
-package com.vonlanplace.doacao.produto;
+package com.vonlanplace.doacao.produto.marca;
 
 import jakarta.persistence.*;
 import lombok.Data;
@@ -6,11 +6,11 @@ import lombok.Data;
 import java.util.UUID;
 
 @Entity
-@Table(name = "tipo_produto", uniqueConstraints = {
-        @UniqueConstraint(name = "uk_tipo_produto_nome", columnNames = "nome")
+@Table(name = "marca_produto", uniqueConstraints = {
+        @UniqueConstraint(name = "uk_marca_produto_nome", columnNames = "nome")
 })
 @Data
-public class TipoProduto {
+public class MarcaProduto {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

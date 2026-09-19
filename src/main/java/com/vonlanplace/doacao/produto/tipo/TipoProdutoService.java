@@ -1,4 +1,4 @@
-package com.vonlanplace.doacao.produto;
+package com.vonlanplace.doacao.produto.tipo;
 
 import com.vonlanplace.doacao.exception.DeleteFailureException;
 import com.vonlanplace.doacao.exception.LoadFailureException;
