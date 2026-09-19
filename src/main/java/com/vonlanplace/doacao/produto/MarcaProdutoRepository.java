@@ -8,5 +8,5 @@ import java.util.UUID;
 
 @Repository
 public interface MarcaProdutoRepository extends JpaRepository<MarcaProduto, UUID> {
-    Optional<MarcaProduto> findByName(String nome);
+    Optional<MarcaProduto> findByNome(String nome);
 }
