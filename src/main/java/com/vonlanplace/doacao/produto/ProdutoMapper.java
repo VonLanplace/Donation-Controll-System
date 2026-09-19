@@ -1,17 +1,29 @@
 package com.vonlanplace.doacao.produto;
 
-import org.mapstruct.Mapper;
+import com.vonlanplace.doacao.produto.marca.MarcaProdutoCreateDTO;
+import com.vonlanplace.doacao.produto.marca.MarcaProdutoMapper;
+import com.vonlanplace.doacao.produto.tipo.TipoProdutoMapper;
+import org.mapstruct.*;
 
-@Mapper(componentModel = "spring")
+@Mapper(
+        componentModel = "spring",
+        uses = {TipoProdutoMapper.class, MarcaProdutoMapper.class}
+)
 public interface ProdutoMapper {
-    // Converte Entity para DTO (para preencher formulário de edição)
-    //AtualizacaoCliente toAtualizacaoDto(Cliente cliente);
+    ProdutoResponseDTO toResponseDTO(Produto produto);
 
-    // Converte DTO para Entity (para criação NOVA - ignora ID)
-    //@Mapping(target = "id", ignore = true)
-    //Cliente toEntityFromAtualizacao(AtualizacaoCliente dto);
+    // Converte Entity para DTO (para preencher formulário de edição)
+    ProdutoUpdateDTO toUpdateDTO(Produto produto);
 
     // Atualiza Entity existente com dados do DTO
-    //@Mapping(target = "id", ignore = true) // Não atualiza ID
-    //void updateEntityFromDto(AtualizacaoCliente dto, @MappingTarget Cliente cliente);
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "cesta", ignore = true)
+    @Mapping(target = "marcaProduto.id", source = "marcaProdutoId")
+    @Mapping(target = "tipoProduto.id", source = "tipoProdutoId")
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    void updateEntityFromDTO(ProdutoUpdateDTO dto, @MappingTarget Produto produto);
+
+    // Converte DTO para Entity (para criação NOVA - ignora ID)
+    @Mapping(target = "id", ignore = true)
+    Produto toEntity(ProdutoCreateDTO dto);
 }
