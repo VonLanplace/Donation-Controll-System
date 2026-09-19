@@ -1,7 +1,10 @@
 package com.vonlanplace.doacao.produto.marca;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 import java.util.UUID;
 
@@ -12,7 +15,6 @@ import java.util.UUID;
 @Getter
 @Setter
 @AllArgsConstructor
-@NoArgsConstructor
 @RequiredArgsConstructor
 public class MarcaProduto {
 
