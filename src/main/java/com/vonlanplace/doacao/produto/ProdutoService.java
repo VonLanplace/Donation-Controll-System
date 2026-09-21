@@ -5,25 +5,32 @@ import com.vonlanplace.doacao.produto.marca.MarcaProdutoRepository;
 import com.vonlanplace.doacao.produto.tipo.TipoProduto;
 import com.vonlanplace.doacao.produto.tipo.TipoProdutoRepository;
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.UUID;
 
 @Service
 public class ProdutoService {
 
-    @Autowired
-    private ProdutoRepository produtoRepository;
-    @Autowired
-    private ProdutoMapper produtoMapper;
+    final private ProdutoRepository produtoRepository;
+    final private ProdutoMapper produtoMapper;
+    final private MarcaProdutoRepository marcaProdutoRepository;
+    final private TipoProdutoRepository tipoProdutoRepository;
 
-    @Autowired
-    private MarcaProdutoRepository marcaProdutoRepository;
-    @Autowired
-    private TipoProdutoRepository tipoProdutoRepository;
+    public ProdutoService(
+            ProdutoRepository produtoRepository,
+            ProdutoMapper produtoMapper,
+            MarcaProdutoRepository marcaProdutoRepository,
+            TipoProdutoRepository tipoProdutoRepository
+    ) {
+        this.produtoRepository = produtoRepository;
+        this.produtoMapper = produtoMapper;
+        this.marcaProdutoRepository = marcaProdutoRepository;
+        this.tipoProdutoRepository = tipoProdutoRepository;
+    }
 
     @Transactional(readOnly = true)
     public ProdutoResponseDTO findById(UUID id) throws EntityNotFoundException {
@@ -33,36 +40,40 @@ public class ProdutoService {
     }
 
     @Transactional(readOnly = true)
-    public ProdutoResponseDTO findByCodigoBarras(String codigoBarras) throws EntityNotFoundException {
-        return produtoMapper.toResponseDTO(
-                produtoRepository.findByCodigoBarras(codigoBarras).orElseThrow(
-                        EntityNotFoundException::new));
+    public Page<ProdutoResponseDTO> findByCodigoBarras(
+            String codigoBarras,
+            Pageable pageable
+    ) throws EntityNotFoundException {
+        return produtoRepository.findByCodigoBarras(codigoBarras, pageable)
+                .map(produtoMapper::toResponseDTO);
     }
 
     @Transactional(readOnly = true)
-    public List<ProdutoResponseDTO> findByMarcaProduto(UUID marcaProdutoId) throws EntityNotFoundException {
+    public Page<ProdutoResponseDTO> findByMarcaProduto(
+            UUID marcaProdutoId,
+            Pageable pageable
+    ) throws EntityNotFoundException {
         MarcaProduto marcaProduto = marcaProdutoRepository.findById(marcaProdutoId)
                 .orElseThrow(() -> new EntityNotFoundException("Marca Produto not found"));
-        return produtoRepository.findAllByMarcaProduto(marcaProduto)
-                .stream()
-                .map(produtoMapper::toResponseDTO).toList();
+        return produtoRepository.findAllByMarcaProduto(marcaProduto, pageable)
+                .map(produtoMapper::toResponseDTO);
     }
 
     @Transactional(readOnly = true)
-    public List<ProdutoResponseDTO> findByTipoProduto(UUID tipoProdutoId) throws EntityNotFoundException {
+    public Page<ProdutoResponseDTO> findByTipoProduto(
+            UUID tipoProdutoId,
+            Pageable pageable
+    ) throws EntityNotFoundException {
         TipoProduto tipoProduto = tipoProdutoRepository.findById(tipoProdutoId)
                 .orElseThrow(() -> new EntityNotFoundException("Marca Produto not found"));
-        return produtoRepository.findAllByTipoProduto(tipoProduto)
-                .stream()
-                .map(produtoMapper::toResponseDTO).toList();
+        return produtoRepository.findAllByTipoProduto(tipoProduto, pageable)
+                .map(produtoMapper::toResponseDTO);
     }
 
     @Transactional(readOnly = true)
-    public List<ProdutoResponseDTO> findAll() {
-        return produtoRepository.findAll()
-                .stream()
-                .map(produtoMapper::toResponseDTO)
-                .toList();
+    public Page<ProdutoResponseDTO> findAll(Pageable pageable) throws EntityNotFoundException {
+        return produtoRepository.findAll(pageable)
+                .map(produtoMapper::toResponseDTO);
     }
 
     @Transactional
