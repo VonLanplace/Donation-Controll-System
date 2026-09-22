@@ -1,7 +1,7 @@
 package com.vonlanplace.doacao.produto.tipo;
 
+import com.vonlanplace.doacao.produto.ProdutoRepository;
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,10 +11,19 @@ import java.util.UUID;
 @Service
 public class TipoProdutoService {
 
-    @Autowired
     private TipoProdutoRepository tipoProdutoRepository;
-    @Autowired
     private TipoProdutoMapper tipoProdutoMapper;
+    private ProdutoRepository produtoRepository;
+
+    TipoProdutoService(
+            TipoProdutoRepository tipoProdutoRepository,
+            TipoProdutoMapper tipoProdutoMapper,
+            ProdutoRepository produtoRepository
+    ) {
+        this.tipoProdutoRepository = tipoProdutoRepository;
+        this.tipoProdutoMapper = tipoProdutoMapper;
+        this.produtoRepository = produtoRepository;
+    }
 
     @Transactional(readOnly = true)
     public TipoProdutoResponseDTO findById(UUID id) throws EntityNotFoundException {
@@ -49,13 +58,26 @@ public class TipoProdutoService {
     public TipoProdutoResponseDTO update(TipoProdutoUpdateDTO updateDTO) throws EntityNotFoundException {
         TipoProduto tipoProduto = tipoProdutoRepository.findById(updateDTO.id())
                 .orElseThrow(() -> new EntityNotFoundException());
+        tipoProdutoRepository.findByNome(updateDTO.nome())
+                .filter(existing -> !existing.getId().equals(updateDTO.id()))
+                .ifPresent(existing -> {
+                    throw new IllegalStateException("Nome já em uso por outra marca");
+                });
+
         tipoProdutoMapper.updateEntityFromDTO(updateDTO, tipoProduto);
         TipoProduto tipoProdutoSaved = tipoProdutoRepository.save(tipoProduto);
         return tipoProdutoMapper.toResponseDTO(tipoProdutoSaved);
     }
 
     @Transactional
-    public void delete(TipoProduto tipoProduto) {
+    public void delete(UUID tipoProdutoId) throws EntityNotFoundException {
+        TipoProduto tipoProduto = tipoProdutoRepository.findById(tipoProdutoId)
+                .orElseThrow(() -> new EntityNotFoundException("Tipo Produto not found"));
+
+        if (!produtoRepository.existsByTipoProduto(tipoProduto)) {
+            throw new IllegalStateException("Não é possível excluir tipo com produtos vinculados");
+        }
+
         tipoProdutoRepository.delete(tipoProduto);
     }
 }
