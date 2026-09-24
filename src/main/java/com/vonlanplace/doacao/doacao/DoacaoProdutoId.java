@@ -1,16 +1,12 @@
 package com.vonlanplace.doacao.doacao;
 
 import jakarta.persistence.Column;
-import lombok.*;
+import lombok.Data;
 
 import java.io.Serializable;
 import java.util.UUID;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@EqualsAndHashCode
+@Data
 public class DoacaoProdutoId implements Serializable {
 
     private static final long serialVersionUID = 1L;

@@ -1,4 +1,4 @@
-package com.vonlanplace.doacao.recebedor;
+package com.vonlanplace.doacao.recebedor.residencia;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

@@ -1,4 +1,4 @@
-package com.vonlanplace.doacao.recebedor;
+package com.vonlanplace.doacao.recebedor.residencia;
 
 import jakarta.persistence.*;
 import lombok.Data;
