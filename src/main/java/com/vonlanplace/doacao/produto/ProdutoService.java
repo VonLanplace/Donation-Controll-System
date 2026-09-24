@@ -90,8 +90,8 @@ public class ProdutoService {
     }
 
     @Transactional
-    public ProdutoResponseDTO update(ProdutoUpdateDTO updateDTO) throws EntityNotFoundException {
-        Produto produto = produtoRepository.findById(updateDTO.id())
+    public ProdutoResponseDTO update(UUID id, ProdutoUpdateDTO updateDTO) throws EntityNotFoundException {
+        Produto produto = produtoRepository.findById(id)
                 .orElseThrow(EntityNotFoundException::new);
         produto.setMarcaProduto(
                 marcaProdutoRepository.findById(updateDTO.marcaProdutoId())
