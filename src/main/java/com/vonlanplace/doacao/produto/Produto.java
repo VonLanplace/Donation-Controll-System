@@ -4,19 +4,13 @@ import com.vonlanplace.doacao.cesta.Cesta;
 import com.vonlanplace.doacao.produto.marca.MarcaProduto;
 import com.vonlanplace.doacao.produto.tipo.TipoProduto;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
 
 import java.util.UUID;
 
 @Entity
 @Table(name = "produto")
-@Getter
-@Setter
-@AllArgsConstructor
-@RequiredArgsConstructor
+@Data
 public class Produto {
 
     @Id
@@ -27,26 +21,15 @@ public class Produto {
     @Column(name = "codigo_barras", length = 13)
     private String codigoBarras;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(
-            name = "marca_produto_id",
-            nullable = false,
-            foreignKey = @ForeignKey(name = "fk_produto_marca_produto")
-    )
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "marca_produto_id")
     private MarcaProduto marcaProduto;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(
-            name = "cesta_id",
-            foreignKey = @ForeignKey(name = "fk_produto_cesta")
-    )
+    @JoinColumn(name = "cesta_id")
     private Cesta cesta;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(
-            name = "tipo_produto_id",
-            nullable = false,
-            foreignKey = @ForeignKey(name = "fk_produto_tipo_produto")
-    )
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "tipo_produto_id")
     private TipoProduto tipoProduto;
 }

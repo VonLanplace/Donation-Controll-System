@@ -6,10 +6,10 @@ import lombok.Data;
 import java.util.UUID;
 
 @Entity
-@Table(name = "marca_produto", uniqueConstraints = {
-        @UniqueConstraint(name = "uk_marca_produto_nome", columnNames = "nome")
-})
+
 @Data
+@Table(name = "marca_produto")
+
 public class MarcaProduto {
 
     @Id
@@ -17,6 +17,6 @@ public class MarcaProduto {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
-    @Column(name = "nome", nullable = false, length = 100)
+    @Column(name = "nome", unique = true, nullable = false, length = 100)
     private String nome;
 }
