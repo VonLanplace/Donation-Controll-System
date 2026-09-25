@@ -21,4 +21,6 @@ public interface RecebedorRepository extends JpaRepository<Recebedor, UUID> {
     Page<Recebedor> findDataNascimento(LocalDate dataNascimento, Pageable pageable);
 
     Page<Recebedor> findByNomeCompleto(String cep, Pageable pageable);
+
+    Page<Recebedor> findByResidencia_Id(UUID residenciaId, Pageable pageable);
 }
