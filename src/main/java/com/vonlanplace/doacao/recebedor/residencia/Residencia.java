@@ -1,6 +1,7 @@
 package com.vonlanplace.doacao.recebedor.residencia;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.util.UUID;
@@ -37,10 +38,12 @@ public class Residencia {
     private Integer numTrabalhadores = 0;
 
     @Enumerated(EnumType.STRING)
+    @NotNull
     @Column(name = "tipo_ocupacao", nullable = false, length = 30)
     private TipoOcupacao tipoOcupacao;
 
     @Enumerated(EnumType.STRING)
+    @NotNull
     @Column(name = "tipo_residencia", nullable = false, length = 30)
     private TipoResidencia tipoResidencia;
 }

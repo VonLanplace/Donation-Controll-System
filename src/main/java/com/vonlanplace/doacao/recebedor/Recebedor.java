@@ -1,16 +1,14 @@
 package com.vonlanplace.doacao.recebedor;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.time.LocalDate;
 import java.util.UUID;
 
 @Entity
-@Table(name = "recebedor", uniqueConstraints = {
-        @UniqueConstraint(name = "uk_recebedor_cpf", columnNames = "cpf"),
-        @UniqueConstraint(name = "uk_recebedor_email", columnNames = "email")
-})
+@Table(name = "recebedor")
 @Data
 public class Recebedor {
 
@@ -22,7 +20,8 @@ public class Recebedor {
     @Column(name = "nome_completo", nullable = false, length = 150)
     private String nomeCompleto;
 
-    @Column(name = "cpf", length = 11)
+    @Column(name = "cpf", unique = true, length = 11)
+    @NotNull
     private String cpf;
 
     @Column(name = "rg_num", length = 20)
@@ -47,6 +46,6 @@ public class Recebedor {
     @Column(name = "email", length = 100)
     private String email;
 
-    @Column(name = "pix", length = 100)
+    @Column(name = "pix", unique = true, length = 100)
     private String pix;
 }
