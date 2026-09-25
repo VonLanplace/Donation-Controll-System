@@ -3,6 +3,8 @@ package com.vonlanplace.doacao.produto.tipo;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -17,4 +19,7 @@ public class TipoProduto {
 
     @Column(name = "nome", unique = true, nullable = false, length = 100)
     private String nome;
+
+    @OneToMany(mappedBy = "tipo_produto", fetch = FetchType.LAZY)
+    private List<TipoProduto> pessoas = new ArrayList<>();
 }
