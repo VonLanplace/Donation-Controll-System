@@ -1,9 +1,12 @@
 package com.vonlanplace.doacao.recebedor.residencia;
 
+import com.vonlanplace.doacao.recebedor.Recebedor;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -46,4 +49,7 @@ public class Residencia {
     @NotNull
     @Column(name = "tipo_residencia", nullable = false, length = 30)
     private TipoResidencia tipoResidencia;
+
+    @OneToMany(mappedBy = "residencia", fetch = FetchType.LAZY)
+    private List<Recebedor> pessoas = new ArrayList<>();
 }

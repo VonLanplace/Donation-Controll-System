@@ -1,5 +1,6 @@
 package com.vonlanplace.doacao.recebedor;
 
+import com.vonlanplace.doacao.recebedor.residencia.Residencia;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -48,4 +49,8 @@ public class Recebedor {
 
     @Column(name = "pix", unique = true, length = 100)
     private String pix;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "residencia_id", nullable = false)
+    private Residencia residencia;
 }
