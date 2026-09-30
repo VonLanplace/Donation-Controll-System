@@ -102,6 +102,14 @@ public class Recebedor {
     @Column(name = "necessita_psicologo", nullable = false)
     private boolean necessitaPsicologo;
 
+    /** Indica se a pessoa já recebeu a cesta básica. Obrigatório. */
+    @Column(name = "recebeu_cesta", nullable = false)
+    private boolean recebeuCesta;
+
+    /** Indica se a entrevista com o entrevistador ocorreu. Obrigatório. */
+    @Column(name = "parecer_entrevistador", nullable = false)
+    private boolean parecerEntrevistador;
+
     /** Observações da entrevista. Opcional. */
     @Column(name = "comentarios", length = 1000)
     private String comentarios;

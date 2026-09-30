@@ -43,6 +43,8 @@ public record RecebedorResponseDTO(
         String pix,
         boolean necessitaJuridico,
         boolean necessitaPsicologo,
+        boolean recebeuCesta,
+        boolean parecerEntrevistador,
         String comentarios,
         ResidenciaResponseDTO residencia
 ) {

@@ -66,8 +66,9 @@
 </div>
 
 <!-- Área de texto multilinha, para comentários. -->
-<div th:fragment="area(nome, rotulo, obrigatorio)"
-     th:classappend="${#fields.hasErrors(nome)} ? 'invalido'">
+<div th:fragment="area(nome, rotulo, obrigatorio, largo=${false})"
+     th:class="'campo' + (${largo} ? ' largo' : '')"
+     th:classappend="${#fields.hasErrors(nome)} ? ' invalido'">
   <label th:for="|f_${nome}|">
     <span th:text="${rotulo}">Rótulo</span>
     <span th:if="${obrigatorio}" class="obrigatorio" title="obrigatório">*</span>

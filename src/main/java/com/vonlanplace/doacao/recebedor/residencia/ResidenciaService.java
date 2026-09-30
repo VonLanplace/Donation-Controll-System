@@ -3,9 +3,11 @@ package com.vonlanplace.doacao.recebedor.residencia;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -65,6 +67,22 @@ public class ResidenciaService {
     public Page<ResidenciaResponseDTO> findAll(Pageable pageable) {
         return residenciaRepository.findAll(pageable)
                 .map(residenciaMapper::toResponseDTO);
+    }
+
+    /**
+     * Lista todas as residências, sem paginação.
+     *
+     * <p>Alimenta o {@code <select>} do formulário de recebedor, e precisa do
+     * conjunto inteiro pelo mesmo motivo de {@code listaNomes()} de marca e
+     * tipo: {@code max-page-size=100} truncaria em silêncio.</p>
+     *
+     * @return lista de residências ordenada por cidade
+     */
+    @Transactional(readOnly = true)
+    public List<ResidenciaResponseDTO> findAll() {
+        return residenciaRepository.findAll(Sort.by("cidade")).stream()
+                .map(residenciaMapper::toResponseDTO)
+                .toList();
     }
 
     /**

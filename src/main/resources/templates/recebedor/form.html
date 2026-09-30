@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('forms.css')}">
+  <title th:text="${titulo}">Recebedor</title>
+</head>
+<body class="default-layout">
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<main class="main-content">
+
+  <h1 class="pagina-titulo" th:text="${titulo}">Novo recebedor</h1>
+
+  <form method="post" th:object="${recebedorDTO}"
+        th:action="${id != null} ? @{/recebedor/editar/{id}(id=${id})} : @{/recebedor/create}">
+
+    <div class="card">
+      <div class="card-header">
+        <span>Dados pessoais e entrevista</span>
+      </div>
+      <div class="card-body">
+
+        <div th:replace="~{fragments/erros :: erros}"></div>
+
+        <div class="form-grade">
+
+          <div th:replace="~{fragments/campo :: texto('nomeCompleto', 'Nome completo', true)}"></div>
+          <div th:replace="~{fragments/campo :: campo('cpf', 'CPF', true, 'text')}"></div>
+          <div th:replace="~{fragments/campo :: texto('rgNum', 'Número do RG', false)}"></div>
+          <div th:replace="~{fragments/campo :: selecao('rgEmissor', 'Órgão emissor do RG', false, ${emissores})}"></div>
+          <div th:replace="~{fragments/campo :: campo('dataNascimento', 'Data de nascimento', true, 'date')}"></div>
+          <div th:replace="~{fragments/campo :: texto('telefonePessoal', 'Telefone pessoal', false)}"></div>
+          <div th:replace="~{fragments/campo :: texto('telefoneRecado', 'Telefone de recado', false)}"></div>
+          <div th:replace="~{fragments/campo :: campo('email', 'E-mail', false, 'email')}"></div>
+          <div th:replace="~{fragments/campo :: texto('pix', 'Chave PIX', false)}"></div>
+          <div th:replace="~{fragments/campo :: selecao('residenciaId', 'Residência', true, ${residencias})}"></div>
+
+          <div class="campo-grupo">
+            <div th:replace="~{fragments/campo :: caixa('leEscreve', 'Lê e escreve')}"></div>
+            <div th:replace="~{fragments/campo :: caixa('necessitaJuridico', 'Precisa de acompanhamento jurídico')}"></div>
+            <div th:replace="~{fragments/campo :: caixa('necessitaPsicologo', 'Precisa de acompanhamento psicológico')}"></div>
+          </div>
+
+          <!--
+            Os dois campos novos da entrevista. Não têm constraint de
+            validação além do boolean primitivo: "não" é o valor padrão até a
+            aula acontecer. A ausência de required é a regra.
+          -->
+          <div class="campo-grupo">
+            <div th:replace="~{fragments/campo :: caixa('recebeuCesta', 'Recebeu cesta')}"></div>
+            <div th:replace="~{fragments/campo :: caixa('parecerEntrevistador', 'Parecer do entrevistador')}"></div>
+          </div>
+
+          <div th:replace="~{fragments/campo :: area('comentarios', 'Comentários da entrevista', false, true)}"></div>
+
+        </div>
+
+        <div th:replace="~{fragments/campo :: acoes('Salvar', @{/recebedor/listar})}"></div>
+
+      </div>
+    </div>
+
+  </form>
+
+</main>
+
+<div th:replace="~{fragments/trail :: trail}"></div>
+
+</body>
+</html>

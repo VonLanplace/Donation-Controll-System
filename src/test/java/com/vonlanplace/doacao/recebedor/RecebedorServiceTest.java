@@ -98,7 +98,7 @@ class RecebedorServiceTest {
                 "João da Costa", "22222222222", "12345", OrgaoEmissorRG.SSP,
                 LocalDate.of(1990, 3, 10), "81999999999", null,
                 true, "joao@email.com", "joao@pix.com",
-                false, false, "observação", residencia.getId());
+                false, false, false, false, "observação", residencia.getId());
     }
 
     @Test
@@ -117,7 +117,7 @@ class RecebedorServiceTest {
         RecebedorCreateDTO dto = new RecebedorCreateDTO(
                 "Outro", "99988877766", null, null,
                 LocalDate.of(1990, 1, 1), null, null,
-                true, null, null, false, false, null, UUID.randomUUID());
+                true, null, null, false, false, false, false, null, UUID.randomUUID());
 
         assertThatThrownBy(() -> recebedorService.create(dto))
                 .isInstanceOf(EntityNotFoundException.class)
@@ -130,7 +130,7 @@ class RecebedorServiceTest {
         RecebedorCreateDTO duplicado = new RecebedorCreateDTO(
                 "Outra Pessoa", "11111111111", null, null,
                 LocalDate.of(1990, 1, 1), null, null,
-                true, null, null, false, false, null, residencia.getId());
+                true, null, null, false, false, false, false, null, residencia.getId());
 
         assertThatThrownBy(() -> recebedorService.create(duplicado))
                 .isInstanceOf(IllegalStateException.class)
@@ -143,7 +143,7 @@ class RecebedorServiceTest {
         RecebedorCreateDTO duplicado = new RecebedorCreateDTO(
                 "Outra Pessoa", "99988877766", null, null,
                 LocalDate.of(1990, 1, 1), null, null,
-                true, null, "maria@pix.com", false, false, null, residencia.getId());
+                true, null, "maria@pix.com", false, false, false, false, null, residencia.getId());
 
         assertThatThrownBy(() -> recebedorService.create(duplicado))
                 .isInstanceOf(IllegalStateException.class)
@@ -156,7 +156,7 @@ class RecebedorServiceTest {
         RecebedorResponseDTO criado = recebedorService.create(new RecebedorCreateDTO(
                 "Outra Pessoa", "99988877766", null, null,
                 LocalDate.of(1990, 1, 1), null, null,
-                true, null, "   ", false, false, null, residencia.getId()));
+                true, null, "   ", false, false, false, false, null, residencia.getId()));
 
         assertThat(criado.pix()).isEqualTo("   ");
     }
@@ -228,7 +228,7 @@ class RecebedorServiceTest {
                 new RecebedorUpdateDTO(
                         "Maria Souza", "11111111111", null, null,
                         LocalDate.of(1980, 5, 20), null, null,
-                        true, null, "nova@pix.com", false, false, null, residencia.getId()));
+                        true, null, "nova@pix.com", false, false, false, false, null, residencia.getId()));
 
         assertThat(atualizado.nomeCompleto()).isEqualTo("Maria Souza");
         assertThat(atualizado.pix()).isEqualTo("nova@pix.com");
@@ -250,7 +250,7 @@ class RecebedorServiceTest {
                 new RecebedorUpdateDTO(
                         "Maria Souza", "55566677788", null, null,
                         LocalDate.of(1980, 5, 20), null, null,
-                        true, null, null, false, false, null, residencia.getId())))
+                        true, null, null, false, false, false, false, null, residencia.getId())))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage("CPF já cadastrado para outro recebedor");
     }
@@ -272,7 +272,7 @@ class RecebedorServiceTest {
                 new RecebedorUpdateDTO(
                         "Maria Souza", "11111111111", null, null,
                         LocalDate.of(1980, 5, 20), null, null,
-                        true, null, "joao@pix.com", false, false, null, residencia.getId())))
+                        true, null, "joao@pix.com", false, false, false, false, null, residencia.getId())))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage("Chave PIX já cadastrada para outro recebedor");
     }
@@ -285,7 +285,7 @@ class RecebedorServiceTest {
                 new RecebedorUpdateDTO(
                         "Fantasma", "00000000000", null, null,
                         LocalDate.of(1980, 1, 1), null, null,
-                        true, null, null, false, false, null, residencia.getId())))
+                        true, null, null, false, false, false, false, null, residencia.getId())))
                 .isInstanceOf(EntityNotFoundException.class);
     }
 

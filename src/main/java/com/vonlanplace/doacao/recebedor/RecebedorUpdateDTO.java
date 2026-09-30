@@ -56,6 +56,8 @@ public record RecebedorUpdateDTO(
         String pix,
         boolean necessitaJuridico,
         boolean necessitaPsicologo,
+        boolean recebeuCesta,
+        boolean parecerEntrevistador,
         @Size(max = 1000, message = "Os comentários devem ter no máximo 1000 caracteres")
         String comentarios,
         @NotNull(message = "A residência é obrigatória")

@@ -52,6 +52,30 @@
     grid-column: 1 / -1;
 }
 
+/* Bloco de campos: agrupa vários dentro de uma célula da grade. */
+.campo-grupo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+/* Caixa de marcação do fragmento caixa. Essa especificidade é necessária:
+   .campo label é 0,1,1 e venceria .campo-caixa por causa do elemento label. */
+.campo .campo-caixa {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.6rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--text-color);
+}
+
+.campo .campo-caixa input {
+    width: auto;
+    flex-shrink: 0;
+}
+
 .campo .erro {
     color: var(--accent-color);
     font-size: 0.82rem;
