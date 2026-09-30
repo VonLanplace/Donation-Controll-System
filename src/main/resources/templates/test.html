@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head(null)}">
+  <title>Teste</title>
+</head>
+<body class="default-layout">
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<main class="main-content">
+  <!--
+    Andaime: existe só para confirmar que o Tomcat subiu e que o MVC resolveu
+    view e controller. Não fala com nenhum serviço.
+
+    Passou a usar os mesmos fragmentos das demais páginas, em vez de repetir o
+    shell à mão. A versão anterior referenciava /css/cores.css, arquivo que não
+    existe — o nome real é colors.css — e declarava xmlns:layout sem ter o
+    thymeleaf-layout-dialect no build.gradle, então os atributos layout:fragment
+    eram inertes e a página renderizava por acaso, não por funcionar.
+  -->
+  <div class="card">
+    <div class="card-body">
+      <p>Conteúdo padrão da página.</p>
+    </div>
+  </div>
+</main>
+
+<div th:replace="~{fragments/trail :: trail}"></div>
+
+</body>
+</html>

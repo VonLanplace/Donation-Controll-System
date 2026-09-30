@@ -1,62 +1,66 @@
 <!DOCTYPE html>
-<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title th:text="${titulo} ?: 'Meu Projeto'">Título padrão</title>
-
-    <!-- Importação dos estilos globais -->
-    <link rel="stylesheet" th:href="@{/css/cores.css}">
-    <link rel="stylesheet" th:href="@{/css/header.css}">
-    <link rel="stylesheet" th:href="@{/css/trail.css}">
-    <link rel="stylesheet" th:href="@{/css/listar.css}">
-
-    <!-- Bloco para CSS específico de cada página -->
-    <th:block layout:fragment="page-css"></th:block>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head(null)}">
+  <title>Produtos</title>
 </head>
-<body style="display: flex; flex-direction: column; min-height: 100vh; margin: 0; background-color: var(--background-color); color: var(--text-color);">
+<body class="default-layout">
 
-<!-- Header inserido via Thymeleaf -->
-<div th:replace="fragments/header :: header"></div>
+<div th:replace="~{fragments/header :: header}"></div>
 
-<!-- Conteúdo principal dinâmico das páginas -->
-<main style="flex: 1; padding: 2rem;">
-    <div layout:fragment="content">
-        <table th:if="${not #lists.isEmpty(produtos)}">
-            <thead>
-            <tr>
-                <th>ID</th>
-                <th>Nome</th>
-                <th>Preço</th>
-                <th>Ações</th>
-            </tr>
-            </thead>
-            <tbody>
-            <!-- Iteração da lista de produtos -->
-            <tr th:each="produto : ${produtos}">
-                <td th:text="${produto.id}">1</td>
-                <td th:text="${produto.nome}">Produto Exemplo</td>
-                <td>
-                    <!-- Exemplo de botão de ação -->
-                    <a th:href="@{/produtos/editar/{id}(id=${produto.id})}">Editar</a>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+<main class="main-content">
 
-        <!-- Mensagem exibida apenas se a lista estiver vazia -->
-        <div class="empty-message" th:if="${#lists.isEmpty(produtos)}">
-            Nenhum produto cadastrado até o momento.
-        </div>
+  <h1 class="pagina-titulo">Produtos</h1>
+
+  <div class="card">
+    <div class="card-header">
+      <span>Produtos cadastrados</span>
     </div>
+    <div class="card-body">
+
+      <table class="tabela">
+        <thead>
+        <tr>
+          <th>Código de barras</th>
+          <th>Marca</th>
+          <th>Tipo</th>
+          <th class="acoes">Ações</th>
+        </tr>
+        </thead>
+        <!--
+          th:each sobre page.content, e não sobre a Page inteira.
+          A versão anterior usava #lists.isEmpty(produtos) com uma Page<DTO> no
+          modelo: Page não é List, o SpEL estoura na conversão de tipo e a página
+          devolvia 500 antes mesmo de chegar no ${produto.nome}, que também não
+          existe no DTO.
+        -->
+        <tbody>
+        <tr th:each="p : ${page.content}">
+          <td th:text="${p.codigoBarras} ?: '—'">7891000100103</td>
+          <td th:text="${p.marcaProduto?.nome} ?: '—'">Nike</td>
+          <td th:text="${p.tipoProduto?.nome} ?: '—'">BEBIDA</td>
+          <td class="acoes">
+            <!--
+              .botao-primario, e não .botao: a classe neutra pinta o fundo de
+              --surface-color, que é exatamente a cor do .card-body embaixo. O
+              botão ficava branco sobre branco e só a borda o separava da linha.
+              Conferido por pixel: 5332 pixels #ffffff na faixa do botão.
+            -->
+            <a class="botao botao-primario" th:href="@{/produto/detalhe/{id}(id=${p.id})}">Ver</a>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+
+      <p class="vazio" th:if="${page.empty}">Nenhum produto cadastrado até o momento.</p>
+
+    </div>
+  </div>
+
+  <div th:replace="~{fragments/pagination :: pagination(@{/produto}, ${page}, ${ordenacao})}"></div>
+
 </main>
 
-<!-- Trail (Rodapé) inserido via Thymeleaf -->
-<div th:replace="fragments/trail :: trail"></div>
-
-<!-- Bloco para JS específico de cada página -->
-<th:block layout:fragment="page-js"></th:block>
+<div th:replace="~{fragments/trail :: trail}"></div>
 
 </body>
 </html>
