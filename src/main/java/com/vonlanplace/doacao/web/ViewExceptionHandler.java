@@ -3,6 +3,7 @@ package com.vonlanplace.doacao.web;
 import com.vonlanplace.doacao.produto.controller.ProdutoViewController;
 import com.vonlanplace.doacao.produto.marca.controller.MarcaProdutoViewController;
 import com.vonlanplace.doacao.cesta.controller.CestaViewController;
+import com.vonlanplace.doacao.doacao.controller.DoacaoViewController;
 import com.vonlanplace.doacao.produto.tipo.controller.TipoProdutoViewController;
 import com.vonlanplace.doacao.recebedor.controller.RecebedorViewController;
 import com.vonlanplace.doacao.entrevistador.controller.EntrevistadorViewController;
@@ -49,10 +50,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
         MarcaProdutoViewController.class,
         TipoProdutoViewController.class,
         ResidenciaViewController.class,
-EntrevistadorViewController.class,
-          RecebedorViewController.class,
-          CestaViewController.class
-  })
+        EntrevistadorViewController.class,
+        RecebedorViewController.class,
+        CestaViewController.class,
+        DoacaoViewController.class
+})
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class ViewExceptionHandler {
 

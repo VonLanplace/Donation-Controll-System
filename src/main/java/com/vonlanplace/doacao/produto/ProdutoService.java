@@ -7,9 +7,11 @@ import com.vonlanplace.doacao.produto.tipo.TipoProdutoRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -152,6 +154,27 @@ public class ProdutoService {
     public Page<ProdutoResponseDTO> findAll(Pageable pageable) {
         return produtoRepository.findAll(pageable)
                 .map(produtoMapper::toResponseDTO);
+    }
+
+    /**
+     * Lista todo o catálogo de produtos, sem paginação, ordenado pelo código de
+     * barras.
+     *
+     * <p><strong>Não paginado de propósito.</strong> O select da doação
+     * precisa do catálogo inteiro, e o {@code max-page-size=100} do
+     * {@code application.properties} cortaria a lista em silêncio se
+     * passássemos um {@code Pageable} — quem só olhasse a primeira página do
+     * select não notaria que produtos sumiram. Mesmo raciocínio de
+     * {@code ResidenciaService.findAll()}, {@code RecebedorService.findAll()} e
+     * {@code EntrevistadorService.findAll()}.</p>
+     *
+     * @return lista de produtos ordenada pelo código de barras
+     */
+    @Transactional(readOnly = true)
+    public List<ProdutoResponseDTO> findAll() {
+        return produtoRepository.findAll(Sort.by("codigoBarras")).stream()
+                .map(produtoMapper::toResponseDTO)
+                .toList();
     }
 
     /**

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('forms.css')}">
+    <title>Doação</title>
+</head>
+<body class="default-layout">
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<main class="main-content">
+
+<h1 class="pagina-titulo" th:text="${titulo}">Nova doação</h1>
+
+<form method="post" th:object="${rascunho}" th:action="@{/doacao/form}">
+
+    <div class="card">
+        <div class="card-header">
+            <span>Doação</span>
+        </div>
+        <div class="card-body">
+
+            <div th:replace="~{fragments/erros :: erros}"></div>
+
+            <div class="form-grade">
+                <div th:replace="~{fragments/campo :: campo('data', 'Data da doação', true, 'date')}"></div>
+                <div th:replace="~{fragments/campo :: texto('nomeDoador', 'Nome do doador', false)}"></div>
+                <div th:replace="~{fragments/campo :: selecao('recebedorId', 'Recebedor', false, ${recebedores})}"></div>
+                <div th:replace="~{fragments/campo :: selecao('entrevistadorId', 'Entrevistador', false, ${entrevistadores})}"></div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <span>Itens da doação</span>
+        </div>
+        <div class="card-body">
+
+            <table>
+                <thead>
+                <tr>
+                    <th>Produto</th>
+                    <th>Quantidade</th>
+                    <th>Validade</th>
+                    <th class="coluna-acoes">Ações</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${#lists.isEmpty(rascunho.linhas)}">
+                    <td colspan="4" class="sem-dados">Nenhum item adicionado ainda.</td>
+                </tr>
+                <tr th:each="linha, iter : ${rascunho.linhas}">
+                    <td th:text="${rotulosProduto[linha.produtoId]}">7891000100103 · Marca</td>
+                    <td th:text="${linha.quantidade}">2</td>
+                    <td th:text="${#temporals.format(linha.dataValidade, 'dd/MM/yyyy')}">01/03/2026</td>
+                    <td class="coluna-acoes">
+                        <form class="form-linha" method="post"
+                              th:action="@{/doacao/linha/{indice}/remover(indice=${iter.index})}">
+                            <button type="submit" class="botao-acao perigo">Remover</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <div class="form-linha">
+                <div class="campo">
+                    <label for="f_linhaProdutoId"><span>Produto</span></label>
+                    <select id="f_linhaProdutoId" name="linhaProdutoId">
+                        <option value="">Selecione…</option>
+                        <option th:each="opcao : ${produtos}"
+                                th:value="${opcao.valor}"
+                                th:text="${opcao.rotulo}">7891000100103</option>
+                    </select>
+                </div>
+                <div class="campo">
+                    <label for="f_linhaQuantidade"><span>Quantidade</span></label>
+                    <input id="f_linhaQuantidade" type="number" min="1" name="linhaQuantidade">
+                </div>
+                <div class="campo">
+                    <label for="f_linhaDataValidade"><span>Validade</span></label>
+                    <input id="f_linhaDataValidade" type="date" name="linhaDataValidade">
+                </div>
+                <div class="campo form-linha-acoes">
+                    <button class="botao" type="submit" name="acao" value="adicionar">Adicionar produto</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="pagina-acoes">
+        <a class="botao" th:href="@{/doacao/listar}">Cancelar</a>
+        <button class="botao botao-primario" type="submit" name="acao" value="salvar">Salvar doação</button>
+    </div>
+
+</form>
+
+</main>
+
+</body>
+</html>
