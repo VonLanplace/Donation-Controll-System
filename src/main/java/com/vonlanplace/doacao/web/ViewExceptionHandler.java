@@ -3,6 +3,8 @@ package com.vonlanplace.doacao.web;
 import com.vonlanplace.doacao.produto.controller.ProdutoViewController;
 import com.vonlanplace.doacao.produto.marca.controller.MarcaProdutoViewController;
 import com.vonlanplace.doacao.produto.tipo.controller.TipoProdutoViewController;
+import com.vonlanplace.doacao.entrevistador.controller.EntrevistadorViewController;
+import com.vonlanplace.doacao.recebedor.residencia.controller.ResidenciaViewController;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -43,7 +45,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
         HomeController.class,
         ProdutoViewController.class,
         MarcaProdutoViewController.class,
-        TipoProdutoViewController.class
+        TipoProdutoViewController.class,
+        ResidenciaViewController.class,
+        EntrevistadorViewController.class
 })
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class ViewExceptionHandler {

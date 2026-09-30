@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('forms.css')}">
+  <title>Residências</title>
+</head>
+<body class="default-layout">
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<main class="main-content">
+
+  <h1 class="pagina-titulo">Residências</h1>
+
+  <div th:replace="~{fragments/flash :: flash}"></div>
+
+  <!-- forms.css entra porque a página tem a caixa de busca, não por causa de
+       tabela: é a mesma camada para as duas coisas. -->
+  <form class="form-busca" method="get" th:action="@{/residencia/listar}">
+    <input type="hidden" name="sort" th:value="${ordenacao}">
+    <input type="text" name="busca" th:value="${busca}"
+           placeholder="Cidade" aria-label="Buscar por cidade">
+    <button class="botao botao-primario" type="submit">Buscar</button>
+    <a class="botao" th:if="${!#strings.isEmpty(busca)}" th:href="@{/residencia/listar}">Limpar</a>
+  </form>
+
+  <div class="card">
+    <div class="card-header">
+      <span>Residências cadastradas</span>
+    </div>
+    <div class="card-body">
+
+      <table class="tabela">
+        <thead>
+        <tr>
+          <th>Logradouro</th>
+          <th>Cidade</th>
+          <th>Bairro</th>
+          <th>Moradores</th>
+          <th class="acoes">Ações</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="r : ${page.content}">
+          <td>
+            <span th:text="${r.logradouro}">Rua das Flores</span>
+            <span th:text="' , ' + ${r.numero}">, 100</span>
+          </td>
+          <td th:text="${r.cidade}">São Paulo</td>
+          <td th:text="${r.bairro}">Centro</td>
+          <td th:text="${r.numMoradores}">4</td>
+          <td class="acoes">
+            <a class="botao botao-primario" th:href="@{/residencia/detalhe/{id}(id=${r.id})}">Ver</a>
+            <a class="botao botao-pequeno" th:href="@{/residencia/editar/{id}(id=${r.id})}">Editar</a>
+            <form class="form-linha" method="post"
+                  th:action="@{/residencia/apagar/{id}(id=${r.id})}">
+              <button class="botao botao-pequeno botao-perigo" type="submit">Apagar</button>
+            </form>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+
+      <p class="vazio" th:if="${page.empty}">Nenhuma residência cadastrada até o momento.</p>
+
+      <div class="pagina-acoes">
+        <a class="botao botao-primario" th:href="@{/residencia/create}">Nova residência</a>
+      </div>
+
+    </div>
+  </div>
+
+  <div th:replace="~{fragments/pagination :: pagination(@{/residencia}, ${page}, ${ordenacao})}"></div>
+
+</main>
+
+<div th:replace="~{fragments/trail :: trail}"></div>
+
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('forms.css')}">
+  <title th:text="${titulo}">Entrevistador</title>
+</head>
+<body class="default-layout">
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<main class="main-content">
+
+  <h1 class="pagina-titulo" th:text="${titulo}">Novo entrevistador</h1>
+
+  <form method="post" th:object="${entrevistadorDTO}"
+        th:action="${id != null} ? @{/entrevistador/editar/{id}(id=${id})} : @{/entrevistador/create}">
+
+    <div class="card">
+      <div class="card-header">
+        <span th:text="${id != null} ? 'Dados do entrevistador' : 'Dados do novo entrevistador'">Dados</span>
+      </div>
+      <div class="card-body">
+
+        <div th:replace="~{fragments/erros :: erros}"></div>
+
+        <div class="form-grade">
+
+          <div th:replace="~{fragments/campo :: texto('nome', 'Nome', true)}"></div>
+          <div th:replace="~{fragments/campo :: campo('email', 'E-mail', true, 'email')}"></div>
+
+          <!--
+            Em edição o campo é opcional e o rótulo muda: campo vazio significa
+            "não mexer na senha". O required e o minlength ficam fora de propósito
+            nesse caso, porque um input vazio com required impede o envio do
+            formulário inteiro, e o usuário ficaria preso na tela.
+          -->
+          <div class="campo" th:classappend="${#fields.hasErrors('senha')} ? 'invalido'">
+            <label for="f_senha">
+              <span th:text="${id != null} ? 'Nova senha (deixe em branco para manter)' : 'Senha'">Senha</span>
+              <span th:if="${id == null}" class="obrigatorio" title="obrigatório">*</span>
+            </label>
+            <input id="f_senha" type="password" th:field="*{senha}"
+                   th:required="${id == null}"
+                   th:minlength="${id == null} ? 8 : null"
+                   autocomplete="new-password">
+            <span class="erro" th:if="${#fields.hasErrors('senha')}" th:errors="*{senha}">erro</span>
+          </div>
+
+        </div>
+
+        <div th:replace="~{fragments/campo :: acoes('Salvar', @{/entrevistador/listar})}"></div>
+
+      </div>
+    </div>
+
+  </form>
+
+</main>
+
+<div th:replace="~{fragments/trail :: trail}"></div>
+
+</body>
+</html>

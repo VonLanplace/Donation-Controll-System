@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head(null)}">
+  <title>Entrevistador</title>
+</head>
+<body class="default-layout">
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<main class="main-content">
+
+  <h1 class="pagina-titulo">Entrevistador</h1>
+
+  <div class="card">
+    <div class="card-header">
+      <span>Cadastro</span>
+    </div>
+    <div class="card-body">
+
+      <dl class="descricao">
+        <dt>Nome</dt>
+        <dd th:text="${entrevistador.nome}">Ana Souza</dd>
+
+        <dt>E-mail</dt>
+        <dd th:text="${entrevistador.email}">ana@exemplo.org</dd>
+      </dl>
+
+      <div class="pagina-acoes">
+        <a class="botao" th:href="@{/entrevistador/listar}">Voltar</a>
+        <a class="botao botao-primario" th:href="@{/entrevistador/editar/{id}(id=${entrevistador.id})}">Editar</a>
+      </div>
+
+    </div>
+  </div>
+
+</main>
+
+<div th:replace="~{fragments/trail :: trail}"></div>
+
+</body>
+</html>

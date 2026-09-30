@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head(null)}">
+  <title>Entrevistadores</title>
+</head>
+<body class="default-layout">
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<main class="main-content">
+
+  <h1 class="pagina-titulo">Entrevistadores</h1>
+
+  <div th:replace="~{fragments/flash :: flash}"></div>
+
+  <div class="card">
+    <div class="card-header">
+      <span>Entrevistadores cadastrados</span>
+    </div>
+    <div class="card-body">
+
+      <table class="tabela">
+        <thead>
+        <tr>
+          <th>Nome</th>
+          <th>E-mail</th>
+          <th class="acoes">Ações</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="e : ${page.content}">
+          <td th:text="${e.nome}">Ana Souza</td>
+          <td th:text="${e.email}">ana@exemplo.org</td>
+          <td class="acoes">
+            <a class="botao botao-primario" th:href="@{/entrevistador/detalhe/{id}(id=${e.id})}">Ver</a>
+            <a class="botao botao-pequeno" th:href="@{/entrevistador/editar/{id}(id=${e.id})}">Editar</a>
+            <form class="form-linha" method="post"
+                  th:action="@{/entrevistador/apagar/{id}(id=${e.id})}">
+              <button class="botao botao-pequeno botao-perigo" type="submit">Apagar</button>
+            </form>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+
+      <p class="vazio" th:if="${page.empty}">Nenhum entrevistador cadastrado até o momento.</p>
+
+      <div class="pagina-acoes">
+        <a class="botao botao-primario" th:href="@{/entrevistador/create}">Novo entrevistador</a>
+      </div>
+
+    </div>
+  </div>
+
+  <div th:replace="~{fragments/pagination :: pagination(@{/entrevistador}, ${page}, ${ordenacao})}"></div>
+
+</main>
+
+<div th:replace="~{fragments/trail :: trail}"></div>
+
+</body>
+</html>

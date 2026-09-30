@@ -1,6 +1,8 @@
 package com.vonlanplace.doacao.entrevistador;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 
 /**
  * Conversor de leitura de {@link Entrevistador} para
@@ -23,4 +25,34 @@ public interface EntrevistadorMapper {
      * @return DTO de resposta preenchido
      */
     EntrevistadorResponseDTO toResponseDTO(Entrevistador entrevistador);
+
+    /**
+     * Converte o DTO de cadastro em entidade, sem a senha.
+     *
+     * <p>{@code senha} é ignorado de propósito, e o {@code ignore} é explícito
+     * porque aqui os dois lados têm nomes diferentes: a entidade tem
+     * {@code senhaHash} e o DTO tem {@code senha}. Sem o {@code ignore} o
+     * MapStructtentaria preencher {@code senhaHash} com {@code senha}, que é
+     * exatamente o que este mapper não deve fazer — a codificação é do
+     * service.</p>
+     *
+     * @param createDTO DTO de cadastro
+     * @return entidade nova, sem hash preenchido
+     */
+    @Mapping(target = "senhaHash", ignore = true)
+    @Mapping(target = "id", ignore = true)
+    Entrevistador toEntity(EntrevistadorCreateDTO createDTO);
+
+    /**
+     * Atualiza a entidade com os dados do DTO de edição.
+     *
+     * <p>Mesma razão do {@link #toEntity}: {@code senha} não pode virar
+     * {@code senhaHash}. O service decide, depois, se toca no hash.</p>
+     *
+     * @param updateDTO     DTO de edição
+     * @param entrevistador entidade de destino, já carregada pelo service
+     */
+    @Mapping(target = "senhaHash", ignore = true)
+    @Mapping(target = "id", ignore = true)
+    void updateEntityFromDTO(EntrevistadorUpdateDTO updateDTO, @MappingTarget Entrevistador entrevistador);
 }
