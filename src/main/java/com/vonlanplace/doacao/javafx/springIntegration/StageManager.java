@@ -1,4 +1,4 @@
-package com.vonlanplace.doacao.javafx.controller.springIntegration;
+package com.vonlanplace.doacao.javafx.springIntegration;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -11,23 +11,62 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
+/**
+ * Central de troca de telas e abertura de modais do JavaFX.
+ *
+ * <p><strong>Guarda a janela principal, não as telas.</strong> Só a {@code primaryStage}
+ * é mantida em campo; cada navegação recria a {@code Scene}. Isso significa que estado de
+ * tela anterior não sobrevive à troca — os controllers FXML são beans do singletão do
+ * Spring e, por isso, mantêm estado entre navegações, mas a árvore visual não.</p>
+ *
+ * <p><strong>{@link #loadView(String)} é onde a integração acontece.</strong> O
+ * {@code FXMLLoader.setControllerFactory(springContext::getBean)} faz o FXML pedir seus
+ * controllers ao container em vez de instanciá-los. Por isso os controllers FXML são
+ * {@code @Component} com construtor package-private: sem isso, o loader tentaria
+ * chamá-los por construtor vazio e a injeção falharia.</p>
+ *
+ * <p><strong>Construtor público</strong>, ao contrário dos controllers FXML: aqui quem
+ * instancia é o Spring, não o {@code FXMLLoader}.</p>
+ */
 @Component
 public class StageManager {
 
+    /** Contexto Spring usado como fábrica de controllers para o {@code FXMLLoader}. */
     private final ConfigurableApplicationContext springContext;
-    private Stage primaryStage; // Guarda a janela principal
 
+    /** Janela principal, registrada por {@link PrimaryStageInitializer} antes do primeiro uso. */
+    private Stage primaryStage;
+
+    /**
+     * Construtor com injeção de dependências.
+     *
+     * @param springContext contexto Spring, usado como fábrica de controllers FXML
+     */
     public StageManager(ConfigurableApplicationContext springContext) {
         this.springContext = springContext;
     }
 
-    // Define qual é a janela principal (chamado no início)
+    /**
+     * Define qual é a janela principal. Chamado uma vez, antes de qualquer troca de
+     * tela.
+     *
+     * @param primaryStage janela principal do JavaFX
+     */
     public void setPrimaryStage(Stage primaryStage) {
         this.primaryStage = primaryStage;
     }
 
     /**
-     * Método 1: Substitui o conteúdo da janela principal (Troca de tela)
+     * Substitui o conteúdo da janela principal.
+     *
+     * <p>Chamar antes de {@link #setPrimaryStage(Stage)} estoura um
+     * {@code NullPointerException} em {@code primaryStage.setTitle}: a referência ainda
+     * é {@code null}.</p>
+     *
+     * @param fxmlPath caminho do FXML no classpath, com barra inicial
+     * @param title    título da janela
+     * @throws RuntimeException se o FXML não existir ou estiver malformado; a
+     *                          {@link IOException} original fica como causa
      */
     public void switchScene(String fxmlPath, String title) throws RuntimeException {
         try {
@@ -41,7 +80,16 @@ public class StageManager {
     }
 
     /**
-     * Método 2: Abre uma NOVA janela separada (Pop-up/Modal)
+     * Abre uma janela nova, separada, sobre a principal.
+     *
+     * <p>Usa {@link Modality#WINDOW_MODAL}: a janela de trás continua desenhada mas não
+     * recebe entrada, e a principal é ligada como dona. Fechar o modal devolve o
+     * controle à principal sem que o estado visual dela seja recarregado.</p>
+     *
+     * @param fxmlPath caminho do FXML no classpath, com barra inicial
+     * @param title    título da janela modal
+     * @throws RuntimeException se o FXML não existir ou estiver malformado; a
+     *                          {@link IOException} original fica como causa
      */
     public void openModal(String fxmlPath, String title) throws RuntimeException {
         try {
@@ -50,7 +98,6 @@ public class StageManager {
             modalStage.setTitle(title);
             modalStage.setScene(new Scene(view));
 
-            // Bloqueia a janela de trás até que o pop-up seja fechado (opcional)
             modalStage.initModality(Modality.WINDOW_MODAL);
             modalStage.initOwner(primaryStage);
 
@@ -60,11 +107,17 @@ public class StageManager {
         }
     }
 
-    // Carrega o FXML integrando o Spring à nova tela
+    /**
+     * Carrega um FXML resolvendo os controllers no container Spring.
+     *
+     * @param fxmlPath caminho do FXML no classpath, com barra inicial
+     * @return raiz visual da tela carregada
+     * @throws IOException se o recurso não existir ou o FXML não puder ser processado
+     */
     private Parent loadView(String fxmlPath) throws IOException {
         ClassPathResource fxmlResource = new ClassPathResource(fxmlPath);
         FXMLLoader loader = new FXMLLoader(fxmlResource.getURL());
-        loader.setControllerFactory(springContext::getBean); // O segredo da integração!
+        loader.setControllerFactory(springContext::getBean);
         return loader.load();
     }
 }
