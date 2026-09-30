@@ -7,10 +7,12 @@ import com.vonlanplace.doacao.recebedor.residencia.ResidenciaRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -129,6 +131,25 @@ public class RecebedorService {
     public Page<RecebedorResponseDTO> findAll(Pageable pageable) {
         return recebedorRepository.findAll(pageable)
                 .map(recebedorMapper::toResponseDTO);
+    }
+
+    /**
+     * Lista todos os recebedores, sem paginação, ordenados por nome.
+     *
+     * <p><strong>Não paginado de propósito.</strong> O select de recebedor e o
+     * perfil de uma residência precisam do conjunto inteiro, e o
+     * {@code max-page-size=100} do {@code application.properties} cortaria a
+     * lista em silêncio se passássemos um {@code Pageable} por aqui — quem não
+     * olhasse a última página do select não notaria que recebedores sumiram. O
+     * mesmo raciocínio já valeu para {@code ResidenciaService.findAll()}.</p>
+     *
+     * @return lista de recebedores ordenada por nome
+     */
+    @Transactional(readOnly = true)
+    public List<RecebedorResponseDTO> findAll() {
+        return recebedorRepository.findAll(Sort.by("nomeCompleto")).stream()
+                .map(recebedorMapper::toResponseDTO)
+                .toList();
     }
 
     /**

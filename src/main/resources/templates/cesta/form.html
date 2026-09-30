@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('forms.css')}">
+    <title>Cesta</title>
+</head>
+<body class="default-layout">
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<main class="main-content">
+
+    <h1 class="pagina-titulo" th:text="${titulo}">Nova cesta</h1>
+
+    <form method="post" th:object="${cestaDTO}"
+          th:action="${id != null} ? @{/cesta/editar/{id}(id=${id})} : @{/cesta/create}">
+
+        <div th:replace="~{fragments/erros :: erros}"></div>
+
+        <div class="form-linha">
+            <div th:replace="~{fragments/campo :: campo('dataEntrega', 'Data de entrega', false, 'date')}"></div>
+        </div>
+
+        <div class="form-linha">
+            <div th:replace="~{fragments/campo :: selecao('recebedorId', 'Recebedor', false, ${recebedores})}"></div>
+        </div>
+
+        <div th:replace="~{fragments/campo :: acoes('Salvar', '/cesta/listar')}"></div>
+
+    </form>
+
+</main>
+
+</body>
+</html>
