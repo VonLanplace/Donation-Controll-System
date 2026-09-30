@@ -37,7 +37,7 @@ class ResidenciaEntrevistadorPaginasTest {
     @Test
     @DisplayName("a listagem de residência renderiza")
     void listarResidencia() throws Exception {
-        mockMvc.perform(get("/residencia/listar"))
+        mockMvc.perform(get("/residencia/listar").session(SessaoAutenticacao.logada()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("residencia/listar"))
                 .andExpect(content().string(containsString("Nenhuma residência cadastrada")));
@@ -46,7 +46,7 @@ class ResidenciaEntrevistadorPaginasTest {
     @Test
     @DisplayName("o formulário de residência mostra os dois selects de enum")
     void formResidencia() throws Exception {
-        mockMvc.perform(get("/residencia/create"))
+        mockMvc.perform(get("/residencia/create").session(SessaoAutenticacao.logada()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("residencia/form"))
                 .andExpect(content().string(containsString("Tipo de ocupação")))
@@ -57,7 +57,7 @@ class ResidenciaEntrevistadorPaginasTest {
     @Test
     @DisplayName("os enums de residência viram opções com a descrição em português")
     void enumsViramOpcoes() throws Exception {
-        mockMvc.perform(get("/residencia/create"))
+        mockMvc.perform(get("/residencia/create").session(SessaoAutenticacao.logada()))
                 .andExpect(status().isOk())
                 // name() é o valor gravado; a descrição é o texto exibido.
                 // TipoOcupacao grava PROPRIEDADE e mostra "Propriedade", e
@@ -70,7 +70,7 @@ class ResidenciaEntrevistadorPaginasTest {
     @Test
     @DisplayName("a listagem de entrevistador renderiza")
     void listarEntrevistador() throws Exception {
-        mockMvc.perform(get("/entrevistador/listar"))
+        mockMvc.perform(get("/entrevistador/listar").session(SessaoAutenticacao.logada()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("entrevistador/listar"))
                 .andExpect(content().string(containsString("Nenhum entrevistador cadastrado")));
@@ -79,7 +79,7 @@ class ResidenciaEntrevistadorPaginasTest {
     @Test
     @DisplayName("o formulário de cadastro de entrevistador marca a senha como obrigatória")
     void formEntrevistadorCreate() throws Exception {
-        mockMvc.perform(get("/entrevistador/create"))
+        mockMvc.perform(get("/entrevistador/create").session(SessaoAutenticacao.logada()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("entrevistador/form"))
                 .andExpect(content().string(containsString("type=\"password\"")));
@@ -88,7 +88,7 @@ class ResidenciaEntrevistadorPaginasTest {
     @Test
     @DisplayName("resolução de entrevistador inexistente responde 404 HTML")
     void entrevistadorInexistente() throws Exception {
-        mockMvc.perform(get("/entrevistador/detalhe/00000000-0000-0000-0000-000000000000"))
+        mockMvc.perform(get("/entrevistador/detalhe/00000000-0000-0000-0000-000000000000").session(SessaoAutenticacao.logada()))
                 .andExpect(status().isNotFound())
                 .andExpect(view().name("erro/404"))
                 .andExpect(content().string(not(containsString("problem+json"))));
@@ -97,7 +97,7 @@ class ResidenciaEntrevistadorPaginasTest {
     @Test
     @DisplayName("resolução de residência inexistente responde 404 HTML")
     void residenciaInexistente() throws Exception {
-        mockMvc.perform(get("/residencia/detalhe/00000000-0000-0000-0000-000000000000"))
+        mockMvc.perform(get("/residencia/detalhe/00000000-0000-0000-0000-000000000000").session(SessaoAutenticacao.logada()))
                 .andExpect(status().isNotFound())
                 .andExpect(view().name("erro/404"));
     }

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('forms.css')}">
+  <title th:text="${titulo}">Entrar</title>
+</head>
+<body class="default-layout pagina-login">
+
+<main class="main-content">
+
+  <div class="card cartao-login">
+    <div class="card-header">
+      <span>Sistema de Doação</span>
+    </div>
+    <div class="card-body">
+
+      <!--
+        Erro de credenciais: mensagem única para e-mail inexistente e senha
+        errada. O AutenticacaoService levanta a mesma exceção nos dois casos,
+        para o formulário não virar enumerador de contas.
+      -->
+      <p class="erro" th:if="${erro}" th:text="${erro}">E-mail ou senha inválidos.</p>
+
+      <form method="post" th:action="@{/login}" th:object="${credenciaisDTO}">
+
+        <div class="form-grade">
+
+          <div th:replace="~{fragments/campo :: campo('email', 'E-mail', true, 'email')}"></div>
+          <div th:replace="~{fragments/campo :: campo('senha', 'Senha', true, 'password')}"></div>
+
+        </div>
+
+        <div class="form-acoes">
+          <button class="botao botao-primario" type="submit" th:text="Entrar">Entrar</button>
+        </div>
+
+      </form>
+
+      <!--
+        Bootstrap: sem nenhum entrevistador, o login ganha o caminho de saída.
+        O interceptor só libera /entrevistador/create enquanto count() == 0, e
+        este link some no instante em que o primeiro usuário existe.
+      -->
+      <p class="link-bootstrap" th:if="${podeCriarPrimeiro}">
+        Primeiro acesso?
+        <a th:href="@{/entrevistador/create}">Crie o primeiro entrevistador</a>.
+      </p>
+
+    </div>
+  </div>
+
+</main>
+
+</body>
+</html>

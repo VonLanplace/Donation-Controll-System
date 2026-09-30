@@ -31,7 +31,7 @@ class RecebedorPaginasTest {
     @Test
     @DisplayName("a listagem de recebedor renderiza")
     void listarRecebedores() throws Exception {
-        mockMvc.perform(get("/recebedor/listar"))
+        mockMvc.perform(get("/recebedor/listar").session(SessaoAutenticacao.logada()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("recebedor/listar"))
                 .andExpect(content().string(containsString("Nenhum recebedor cadastrado")));
@@ -40,7 +40,7 @@ class RecebedorPaginasTest {
     @Test
     @DisplayName("o formulário de cadastro expõe os dois campos novos da entrevista")
     void formHasNovosCampos() throws Exception {
-        mockMvc.perform(get("/recebedor/create"))
+        mockMvc.perform(get("/recebedor/create").session(SessaoAutenticacao.logada()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("recebedor/form"))
                 .andExpect(content().string(containsString("Recebeu cesta")))
@@ -51,7 +51,7 @@ class RecebedorPaginasTest {
     @Test
     @DisplayName("o formulário de cadastro traz o select de residências")
     void formHasResidencias() throws Exception {
-        mockMvc.perform(get("/recebedor/create"))
+        mockMvc.perform(get("/recebedor/create").session(SessaoAutenticacao.logada()))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Residência")));
     }
@@ -59,7 +59,7 @@ class RecebedorPaginasTest {
     @Test
     @DisplayName("recebedor inexistente responde 404 em HTML")
     void recebedorInexistente() throws Exception {
-        mockMvc.perform(get("/recebedor/detalhe/00000000-0000-0000-0000-000000000000"))
+        mockMvc.perform(get("/recebedor/detalhe/00000000-0000-0000-0000-000000000000").session(SessaoAutenticacao.logada()))
                 .andExpect(status().isNotFound())
                 .andExpect(view().name("erro/404"))
                 .andExpect(content().string(not(containsString("problem+json"))));

@@ -103,7 +103,7 @@ class FilhosRecebedorPaginasTest {
     @Test
     @DisplayName("a listagem de dependente renderiza")
     void listarDependente() throws Exception {
-        mockMvc.perform(get("/dependente/listar"))
+        mockMvc.perform(get("/dependente/listar").session(SessaoAutenticacao.logada()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("dependente/listar"))
                 .andExpect(content().string(containsString("Nenhum dependente cadastrado")));
@@ -112,7 +112,7 @@ class FilhosRecebedorPaginasTest {
     @Test
     @DisplayName("o formulário de dependente mostra o select de recebedor")
     void formDependente() throws Exception {
-        mockMvc.perform(get("/dependente/create"))
+        mockMvc.perform(get("/dependente/create").session(SessaoAutenticacao.logada()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("dependente/form"))
                 .andExpect(content().string(containsString("Recebedor")))
@@ -122,7 +122,7 @@ class FilhosRecebedorPaginasTest {
     @Test
     @DisplayName("a listagem de despesa renderiza com as despesas do cenário")
     void listarDespesa() throws Exception {
-        mockMvc.perform(get("/despesa/listar"))
+        mockMvc.perform(get("/despesa/listar").session(SessaoAutenticacao.logada()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("despesa/listar"))
                 .andExpect(content().string(containsString("Despesas cadastradas")))
@@ -132,7 +132,7 @@ class FilhosRecebedorPaginasTest {
     @Test
     @DisplayName("o formulário de despesa mostra o select de residência")
     void formDespesa() throws Exception {
-        mockMvc.perform(get("/despesa/create"))
+        mockMvc.perform(get("/despesa/create").session(SessaoAutenticacao.logada()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("despesa/form"))
                 .andExpect(content().string(containsString("Residência")))
@@ -142,7 +142,7 @@ class FilhosRecebedorPaginasTest {
     @Test
     @DisplayName("a listagem de auxílio renderiza com os auxílios do cenário")
     void listarAuxilio() throws Exception {
-        mockMvc.perform(get("/auxilio/listar"))
+        mockMvc.perform(get("/auxilio/listar").session(SessaoAutenticacao.logada()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("auxilio/listar"))
                 .andExpect(content().string(containsString("Auxílios cadastrados")))
@@ -152,7 +152,7 @@ class FilhosRecebedorPaginasTest {
     @Test
     @DisplayName("o formulário de auxílio mostra o select de recebedor")
     void formAuxilio() throws Exception {
-        mockMvc.perform(get("/auxilio/create"))
+        mockMvc.perform(get("/auxilio/create").session(SessaoAutenticacao.logada()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("auxilio/form"))
                 .andExpect(content().string(containsString("Recebedor")))
@@ -162,7 +162,7 @@ class FilhosRecebedorPaginasTest {
     @Test
     @DisplayName("o detalhe do recebedor mostra a somatória de despesas e auxílios")
     void detalheRecebedorComSomatoria() throws Exception {
-        mockMvc.perform(get("/recebedor/detalhe/{id}", recebedor.getId()))
+        mockMvc.perform(get("/recebedor/detalhe/{id}", recebedor.getId()).session(SessaoAutenticacao.logada()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("recebedor/detalhe"))
                 .andExpect(content().string(containsString("R$ 300,00")))
@@ -173,7 +173,7 @@ class FilhosRecebedorPaginasTest {
     @Test
     @DisplayName("resolução de dependente inexistente responde 404 HTML")
     void dependenteInexistente() throws Exception {
-        mockMvc.perform(get("/dependente/editar/00000000-0000-0000-0000-000000000000"))
+        mockMvc.perform(get("/dependente/editar/00000000-0000-0000-0000-000000000000").session(SessaoAutenticacao.logada()))
                 .andExpect(status().isNotFound())
                 .andExpect(view().name("erro/404"))
                 .andExpect(content().string(not(containsString("problem+json"))));

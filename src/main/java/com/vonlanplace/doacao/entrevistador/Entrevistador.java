@@ -12,10 +12,11 @@ import java.util.UUID;
  * Usuário da equipe que conduz a entrevista do recebedor.
  *
  * <p><strong>Único usuário do sistema, e o único com senha.</strong> A API não tem
- * autenticação: o campo existe e é gravado em {@code senha_hash}, mas o
- * {@code PasswordEncoder} de {@code config.PasswordConfig} não tem consumidor, porque
- * não existe {@code EntrevistadorService} chamando {@code encode(...)}. Ou seja, o
- * fluxo de criação de entrevistador ainda não foi escrito.</p>
+ * autenticação: o campo existe, gravado em {@code senha_hash}, e duas classes o
+ * consomem. {@code EntrevistadorService} grava o hash com {@code encode(...)} no
+ * cadastro e na mudança de senha; {@code AutenticacaoService} compara com
+ * {@code matches(...)} no login web. A senha em claro nunca persiste e nunca
+ * vira resposta.</p>
  *
  * <p><strong>{@code senhaHash} não é exposto em nenhuma resposta.</strong> O
  * {@link EntrevistadorMapper} converte para {@link EntrevistadorResponseDTO}, que não
@@ -25,7 +26,7 @@ import java.util.UUID;
  *
  * <p><strong>Identificação de negócio é o e-mail, não o id.</strong> O índice
  * {@code uk_entrevistador_email} existe para isso, e {@code findByEmail} é a consulta
- * prevista para login.</p>
+ * usada no login, tanto no cadastro quanto na comparação de credenciais.</p>
  */
 @Getter
 @Setter

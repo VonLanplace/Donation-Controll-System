@@ -40,7 +40,7 @@ class MarcaTipoPaginasTest {
     @Test
     @DisplayName("a listagem de marca renderiza e não estoura no Page")
     void listarMarca() throws Exception {
-        mockMvc.perform(get("/marca/listar"))
+        mockMvc.perform(get("/marca/listar").session(SessaoAutenticacao.logada()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("marca/listar"))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Nenhuma marca cadastrada")));
@@ -49,7 +49,7 @@ class MarcaTipoPaginasTest {
     @Test
     @DisplayName("a listagem de tipo renderiza")
     void listarTipo() throws Exception {
-        mockMvc.perform(get("/tipo/listar"))
+        mockMvc.perform(get("/tipo/listar").session(SessaoAutenticacao.logada()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("tipo/listar"));
     }
@@ -57,7 +57,7 @@ class MarcaTipoPaginasTest {
     @Test
     @DisplayName("o formulário de cadastro de marca abre")
     void formMarcaCreate() throws Exception {
-        mockMvc.perform(get("/marca/create"))
+        mockMvc.perform(get("/marca/create").session(SessaoAutenticacao.logada()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("marca/form"))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Nome da marca")));
@@ -66,7 +66,7 @@ class MarcaTipoPaginasTest {
     @Test
     @DisplayName("o formulário de cadastro de tipo abre")
     void formTipoCreate() throws Exception {
-        mockMvc.perform(get("/tipo/create"))
+        mockMvc.perform(get("/tipo/create").session(SessaoAutenticacao.logada()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("tipo/form"));
     }
@@ -74,7 +74,7 @@ class MarcaTipoPaginasTest {
     @Test
     @DisplayName("editar marca inexistente responde 404 em HTML, não em JSON")
     void editarMarcaInexistente() throws Exception {
-        mockMvc.perform(get("/marca/editar/nao-existe"))
+        mockMvc.perform(get("/marca/editar/nao-existe").session(SessaoAutenticacao.logada()))
                 .andExpect(status().isNotFound())
                 .andExpect(view().name("erro/404"))
                 .andExpect(content().string(
@@ -85,7 +85,7 @@ class MarcaTipoPaginasTest {
     @Test
     @DisplayName("o formulário de produto abre com os selects de marca e tipo")
     void formProduto() throws Exception {
-        mockMvc.perform(get("/produto/create"))
+        mockMvc.perform(get("/produto/create").session(SessaoAutenticacao.logada()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("produto/form"))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Código de barras")));

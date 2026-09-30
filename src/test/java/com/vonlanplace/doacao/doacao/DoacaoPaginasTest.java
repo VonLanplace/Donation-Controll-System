@@ -12,6 +12,7 @@ import com.vonlanplace.doacao.recebedor.residencia.ResidenciaCreateDTO;
 import com.vonlanplace.doacao.recebedor.residencia.ResidenciaService;
 import com.vonlanplace.doacao.recebedor.residencia.TipoOcupacao;
 import com.vonlanplace.doacao.recebedor.residencia.TipoResidencia;
+import com.vonlanplace.doacao.web.SessaoAutenticacao;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -94,7 +95,7 @@ class DoacaoPaginasTest {
     @Test
     @DisplayName("a listagem de doações renderiza")
     void listar() throws Exception {
-        mockMvc.perform(get("/doacao/listar"))
+        mockMvc.perform(get("/doacao/listar").session(SessaoAutenticacao.logada()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("doacao/listar"))
                 .andExpect(content().string(containsString("Nenhuma doação cadastrada")));
@@ -103,7 +104,7 @@ class DoacaoPaginasTest {
     @Test
     @DisplayName("o formulário novo começa sem itens e com os dois botões")
     void formNovo() throws Exception {
-        mockMvc.perform(get("/doacao/create"))
+        mockMvc.perform(get("/doacao/create").session(SessaoAutenticacao.logada()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("doacao/form"))
                 .andExpect(content().string(containsString("Nenhum item adicionado ainda.")))
@@ -114,7 +115,7 @@ class DoacaoPaginasTest {
     @Test
     @DisplayName("Adicionar produto acumula a linha no rascunho de sessão")
     void adicionarLinhaAcumula() throws Exception {
-        MockHttpSession sessao = new MockHttpSession();
+        MockHttpSession sessao = SessaoAutenticacao.logada();
         mockMvc.perform(post("/doacao/form")
                         .session(sessao)
                         .param("acao", "adicionar")
@@ -144,7 +145,7 @@ class DoacaoPaginasTest {
     @Test
     @DisplayName("Remover linha tira a linha do rascunho")
     void removerLinha() throws Exception {
-        MockHttpSession sessao = new MockHttpSession();
+        MockHttpSession sessao = SessaoAutenticacao.logada();
         mockMvc.perform(post("/doacao/form")
                         .session(sessao)
                         .param("acao", "adicionar")
@@ -163,6 +164,7 @@ class DoacaoPaginasTest {
     @DisplayName("validação rejeita linha com quantidade zero")
     void linhaInvalida() throws Exception {
         mockMvc.perform(post("/doacao/form")
+                        .session(SessaoAutenticacao.logada())
                         .param("acao", "adicionar")
                         .param("linhaProdutoId", produtoId.toString())
                         .param("linhaQuantidade", "0")
@@ -176,6 +178,7 @@ class DoacaoPaginasTest {
     @DisplayName("Salvar sem data devolve o formulário com o erro de data")
     void salvarSemData() throws Exception {
         mockMvc.perform(post("/doacao/form")
+                        .session(SessaoAutenticacao.logada())
                         .param("acao", "salvar")
                         .param("linhaProdutoId", produtoId.toString())
                         .param("linhaQuantidade", "1")
@@ -188,7 +191,7 @@ class DoacaoPaginasTest {
     @Test
     @DisplayName("o fluxo inteiro salva e redireciona para a listagem")
     void fluxoCompleto() throws Exception {
-        MockHttpSession sessao = new MockHttpSession();
+        MockHttpSession sessao = SessaoAutenticacao.logada();
         mockMvc.perform(post("/doacao/form")
                         .session(sessao)
                         .param("acao", "adicionar")

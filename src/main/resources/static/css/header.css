@@ -34,3 +34,23 @@
 .site-header .nav-links a:hover {
     color: var(--secondary-color);
 }
+
+/* O "Sair" é um botão dentro de um form, mas deve ler como mais um link do
+   nav: sem borda, sem fundo, mesma tipografia e mesma cor de hover. */
+.site-header .nav-links .nav-sair {
+    margin: 0;
+}
+
+.site-header .nav-links .nav-sair button {
+    background: none;
+    border: none;
+    color: var(--surface-color);
+    cursor: pointer;
+    font: inherit;
+    padding: 0;
+    transition: color 0.2s;
+}
+
+.site-header .nav-links .nav-sair button:hover {
+    color: var(--secondary-color);
+}

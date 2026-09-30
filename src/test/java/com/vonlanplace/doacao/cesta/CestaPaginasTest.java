@@ -1,5 +1,6 @@
 package com.vonlanplace.doacao.cesta;
 
+import com.vonlanplace.doacao.web.SessaoAutenticacao;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +34,7 @@ class CestaPaginasTest {
     @Test
     @DisplayName("a listagem de cestas renderiza")
     void listar() throws Exception {
-        mockMvc.perform(get("/cesta/listar"))
+        mockMvc.perform(get("/cesta/listar").session(SessaoAutenticacao.logada()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("cesta/listar"))
                 .andExpect(content().string(containsString("Nenhuma cesta cadastrada")));
@@ -42,7 +43,7 @@ class CestaPaginasTest {
     @Test
     @DisplayName("o formulário de cadastro tem data e select de recebedor")
     void formCreate() throws Exception {
-        mockMvc.perform(get("/cesta/create"))
+        mockMvc.perform(get("/cesta/create").session(SessaoAutenticacao.logada()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("cesta/form"))
                 .andExpect(content().string(containsString("Data de entrega")))
@@ -54,7 +55,7 @@ class CestaPaginasTest {
     @Test
     @DisplayName("cesta inexistente responde 404 em HTML")
     void cestaInexistente() throws Exception {
-        mockMvc.perform(get("/cesta/detalhe/00000000-0000-0000-0000-000000000000"))
+        mockMvc.perform(get("/cesta/detalhe/00000000-0000-0000-0000-000000000000").session(SessaoAutenticacao.logada()))
                 .andExpect(status().isNotFound())
                 .andExpect(view().name("erro/404"))
                 .andExpect(content().string(not(containsString("problem+json"))));
