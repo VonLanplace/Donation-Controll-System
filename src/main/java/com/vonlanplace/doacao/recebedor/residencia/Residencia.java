@@ -1,6 +1,7 @@
 package com.vonlanplace.doacao.recebedor.residencia;
 
 import com.vonlanplace.doacao.recebedor.Recebedor;
+import com.vonlanplace.doacao.recebedor.residencia.despesa.Despesa;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.EqualsAndHashCode;
@@ -97,4 +98,9 @@ public class Residencia {
     /** Moradores deste endereço. Lado inverso de {@code Recebedor.residencia}. */
     @OneToMany(mappedBy = "residencia", fetch = FetchType.LAZY)
     private List<Recebedor> recebedores = new ArrayList<>();
+
+    /** Despesas registradas da residência. Lado dono: a despesa morre com a residência. */
+    @OneToMany(mappedBy = "residencia", fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Despesa> despesas = new ArrayList<>();
 }

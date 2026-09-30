@@ -34,14 +34,15 @@ public interface ResidenciaMapper {
     ResidenciaUpdateDTO toUpdateDTO(Residencia residencia);
 
     /**
-     * Aplica o DTO sobre a entidade já carregada, sem tocar em {@code id} nem na
-     * coleção de moradores.
+     * Aplica o DTO sobre a entidade já carregada, sem tocar em {@code id}, na
+     * coleção de moradores nem na de despesas.
      *
      * @param dto        DTO de origem
      * @param residencia entidade de destino
      */
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "recebedores", ignore = true)
+    @Mapping(target = "despesas", ignore = true)
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updateEntityFromDTO(ResidenciaUpdateDTO dto, @MappingTarget Residencia residencia);
 
@@ -49,9 +50,10 @@ public interface ResidenciaMapper {
      * Cria uma entidade nova a partir do DTO.
      *
      * @param dto DTO de origem
-     * @return entidade nova, ainda sem id e sem moradores
+     * @return entidade nova, ainda sem id, sem moradores e sem despesas
      */
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "recebedores", ignore = true)
+    @Mapping(target = "despesas", ignore = true)
     Residencia toEntity(ResidenciaCreateDTO dto);
 }

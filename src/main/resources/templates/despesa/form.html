@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('forms.css')}">
+  <title th:text="${titulo}">Despesa</title>
+</head>
+<body class="default-layout">
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<main class="main-content">
+
+  <h1 class="pagina-titulo" th:text="${titulo}">Nova despesa</h1>
+
+  <form method="post" th:object="${despesaDTO}"
+        th:action="${id != null} ? @{/despesa/editar/{id}(id=${id})} : @{/despesa/create}">
+
+    <div class="card">
+      <div class="card-header">
+        <span th:text="${id != null} ? 'Dados da despesa' : 'Dados da nova despesa'">Dados</span>
+      </div>
+      <div class="card-body">
+
+        <div th:replace="~{fragments/erros :: erros}"></div>
+
+        <div class="form-grade">
+
+          <!--
+            valor é BigDecimal no DTO, com @DecimalMin("0.01"). O input type=number
+            aceita casas decimais; a validação do servidor é a garantia de valor
+            positivo, e a do navegador apenas adianta o feedback.
+          -->
+          <div th:replace="~{fragments/campo :: campo('valor', 'Valor mensal', true, 'number')}"></div>
+          <div th:replace="~{fragments/campo :: texto('fonte', 'Fonte', true)}"></div>
+          <div th:replace="~{fragments/campo :: area('descricao', 'Descrição', false, true)}"></div>
+          <div th:replace="~{fragments/campo :: selecao('residenciaId', 'Residência', true, ${residencias})}"></div>
+
+        </div>
+
+        <div th:replace="~{fragments/campo :: acoes('Salvar', @{/despesa/listar})}"></div>
+
+      </div>
+    </div>
+
+  </form>
+
+</main>
+
+<div th:replace="~{fragments/trail :: trail}"></div>
+
+</body>
+</html>

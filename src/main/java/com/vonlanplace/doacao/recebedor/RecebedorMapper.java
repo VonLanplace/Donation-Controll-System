@@ -40,7 +40,7 @@ public interface RecebedorMapper {
 
     /**
      * Aplica o DTO sobre a entidade já carregada, sem tocar em {@code id},
-     * {@code residencia} nem {@code doacoes}.
+     * {@code residencia}, {@code doacoes}, {@code dependentes} nem {@code auxilios}.
      *
      * @param dto       DTO de origem
      * @param recebedor entidade de destino
@@ -48,6 +48,8 @@ public interface RecebedorMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "residencia", ignore = true)
     @Mapping(target = "doacoes", ignore = true)
+    @Mapping(target = "dependentes", ignore = true)
+    @Mapping(target = "auxilios", ignore = true)
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updateEntityFromDTO(RecebedorUpdateDTO dto, @MappingTarget Recebedor recebedor);
 
@@ -60,5 +62,7 @@ public interface RecebedorMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "residencia", ignore = true)
     @Mapping(target = "doacoes", ignore = true)
+    @Mapping(target = "dependentes", ignore = true)
+    @Mapping(target = "auxilios", ignore = true)
     Recebedor toEntity(RecebedorCreateDTO dto);
 }

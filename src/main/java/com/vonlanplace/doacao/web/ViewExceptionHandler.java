@@ -8,6 +8,9 @@ import com.vonlanplace.doacao.produto.tipo.controller.TipoProdutoViewController;
 import com.vonlanplace.doacao.recebedor.controller.RecebedorViewController;
 import com.vonlanplace.doacao.entrevistador.controller.EntrevistadorViewController;
 import com.vonlanplace.doacao.recebedor.residencia.controller.ResidenciaViewController;
+import com.vonlanplace.doacao.recebedor.auxilio.controller.AuxilioViewController;
+import com.vonlanplace.doacao.recebedor.dependente.controller.DependenteViewController;
+import com.vonlanplace.doacao.recebedor.residencia.despesa.controller.DespesaViewController;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -53,7 +56,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
         EntrevistadorViewController.class,
         RecebedorViewController.class,
         CestaViewController.class,
-        DoacaoViewController.class
+        DoacaoViewController.class,
+        DependenteViewController.class,
+        DespesaViewController.class,
+        AuxilioViewController.class
 })
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class ViewExceptionHandler {

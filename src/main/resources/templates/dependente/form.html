@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('forms.css')}">
+  <title th:text="${titulo}">Dependente</title>
+</head>
+<body class="default-layout">
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<main class="main-content">
+
+  <h1 class="pagina-titulo" th:text="${titulo}">Novo dependente</h1>
+
+  <form method="post" th:object="${dependenteDTO}"
+        th:action="${id != null} ? @{/dependente/editar/{id}(id=${id})} : @{/dependente/create}">
+
+    <div class="card">
+      <div class="card-header">
+        <span th:text="${id != null} ? 'Dados do dependente' : 'Dados do novo dependente'">Dados</span>
+      </div>
+      <div class="card-body">
+
+        <div th:replace="~{fragments/erros :: erros}"></div>
+
+        <div class="form-grade">
+
+          <div th:replace="~{fragments/campo :: texto('nome', 'Nome completo', true)}"></div>
+          <div th:replace="~{fragments/campo :: campo('idade', 'Idade', false, 'number')}"></div>
+          <div th:replace="~{fragments/campo :: campo('dataNascimento', 'Data de nascimento', false, 'date')}"></div>
+          <div th:replace="~{fragments/campo :: selecao('recebedorId', 'Recebedor', true, ${recebedores})}"></div>
+
+        </div>
+
+        <div th:replace="~{fragments/campo :: acoes('Salvar', @{/dependente/listar})}"></div>
+
+      </div>
+    </div>
+
+  </form>
+
+</main>
+
+<div th:replace="~{fragments/trail :: trail}"></div>
+
+</body>
+</html>

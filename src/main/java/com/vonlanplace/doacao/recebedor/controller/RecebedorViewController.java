@@ -5,7 +5,10 @@ import com.vonlanplace.doacao.recebedor.RecebedorCreateDTO;
 import com.vonlanplace.doacao.recebedor.RecebedorResponseDTO;
 import com.vonlanplace.doacao.recebedor.RecebedorService;
 import com.vonlanplace.doacao.recebedor.RecebedorUpdateDTO;
+import com.vonlanplace.doacao.recebedor.auxilio.AuxilioService;
+import com.vonlanplace.doacao.recebedor.dependente.DependenteService;
 import com.vonlanplace.doacao.recebedor.residencia.ResidenciaService;
+import com.vonlanplace.doacao.recebedor.residencia.despesa.DespesaService;
 import com.vonlanplace.doacao.web.Flash;
 import com.vonlanplace.doacao.web.Opcoes;
 import com.vonlanplace.doacao.web.PaginaView;
@@ -57,19 +60,31 @@ public class RecebedorViewController {
 
     private final RecebedorService recebedorService;
     private final ResidenciaService residenciaService;
+    private final DependenteService dependenteService;
+    private final DespesaService despesaService;
+    private final AuxilioService auxilioService;
 
     /**
      * Construtor com injeção de dependências.
      *
      * @param recebedorService  serviço de recebedores
      * @param residenciaService serviço de residências, para o select do formulário
+     * @param dependenteService serviço de dependentes, para o perfil da família
+     * @param despesaService    serviço de despesas, para a somatória da residência
+     * @param auxilioService    serviço de auxílios, para a somatória da renda assistencial
      */
     public RecebedorViewController(
             RecebedorService recebedorService,
-            ResidenciaService residenciaService
+            ResidenciaService residenciaService,
+            DependenteService dependenteService,
+            DespesaService despesaService,
+            AuxilioService auxilioService
     ) {
         this.recebedorService = recebedorService;
         this.residenciaService = residenciaService;
+        this.dependenteService = dependenteService;
+        this.despesaService = despesaService;
+        this.auxilioService = auxilioService;
     }
 
     /**
@@ -107,8 +122,13 @@ public class RecebedorViewController {
      */
     @GetMapping("/detalhe/{id}")
     public String detalhe(@PathVariable UUID id, Model model) {
+        RecebedorResponseDTO recebedor = recebedorService.findById(id);
+
         model.addAttribute("titulo", "Recebedor");
-        model.addAttribute("recebedor", recebedorService.findById(id));
+        model.addAttribute("recebedor", recebedor);
+        model.addAttribute("dependentes", dependenteService.findByRecebedor(id));
+        model.addAttribute("totalDespesas", despesaService.somaPorResidencia(recebedor.residencia().id()));
+        model.addAttribute("totalAuxilios", auxilioService.somaPorRecebedor(id));
         return "recebedor/detalhe";
     }
 
