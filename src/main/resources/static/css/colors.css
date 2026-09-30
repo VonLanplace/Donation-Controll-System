@@ -1,10 +1,62 @@
+/*
+ * Paleta base — ColorHunt 00797924b1b1ffe2afe37434
+ * https://colorhunt.co/palette/00797924b1b1ffe2afe37434
+ *
+ * Quatro cores, nenhuma delas neutra. Isso é o problema central deste arquivo:
+ * a paleta traz 2 teal, 1 creme e 1 laranja, e não traz nenhum cinza, nem um
+ * branco de superfície, nem uma cor de texto. O resto do CSS consome apenas as
+ * 8 variáveis de papel do bloco de baixo, então é aqui que a paleta vira tokens
+ * utilizáveis. Trocar de paleta = reescrever só este arquivo.
+ */
 :root {
-    --primary-color: #2c3e50;
-    --secondary-color: #3498db;
-    --accent-color: #e74c3c;
-    --background-color: #f8f9fa;
+    /* ---- Paleta crua, guardada para rastreabilidade ---- */
+    --palette-teal-escuro: #007979;
+    --palette-teal-medio: #24b1b1;
+    --palette-cream: #ffe2af;
+    --palette-laranja: #e37434;
+}
+
+/*
+ * ---- Papéis ----
+ *
+ * Dois teal e o laranja da paleta não servem para texto sobre branco, e nenhum
+ * serve como fundo de botão com rótulo branco. Medido contra #ffffff:
+ *
+ *   #24b1b1 sobre branco ........... 2,63:1  reprova texto normal (mín. 4,5:1)
+ *   #e37434 sobre branco ........... 3,06:1  reprova texto normal
+ *   #007979 sob texto branco ....... 5,24:1  aprova
+ *   #ffe2af sob #2b2b2b ........... 12,6:1  aprova com folga
+ *
+ * Então: o teal escuro e o creme entram direto, e os outros dois viram
+ * variantes escurecidas nos papéis de texto/fundo. A versão original da paleta
+ * continua exposta acima e é usada só onde é contraste puramente decorativo
+ * (foco, borda de rodapé), que não tem mínimo de contraste de texto.
+ */
+:root {
+    /* Fundo do rodapé, do cabeçalho e do título de card. Texto branco: 5,24:1. */
+    --primary-color: #007979;
+
+    /* Teal médio escurecido. Links e fundo de botão primário: 4,86:1. */
+    --secondary-color: #177e7e;
+
+    /* Laranja escurecido. Erro, botão de exclusão, asterisco obrigatório: 4,55:1. */
+    --accent-color: #c2551c;
+
+    /* Creme da paleta. Cabeçalho de tabela, linha selecionada, fundo de realce. */
+    --highlight-color: #ffe2af;
+
+    /* O mesmo creme, diluído. Usado onde o creme cheio competiria com texto
+       de baixo peso, como o realce de linha sob o mouse. */
+    --highlight-suave: #fdf3e0;
+
+    /* Neutros derivados, aquecidos na direção do creme para não brigar com ele. */
+    --background-color: #fdf8f0;
     --surface-color: #ffffff;
-    --text-color: #333333;
-    --text-muted: #7f8c8d;
-    --border-color: #e0e0e0;
+    --text-color: #2b2b2b;
+    --text-muted: #6f6a63;
+    --border-color: #e8dcc6;
+
+    /* Teal claro da paleta, só para elemento gráfico. Nunca para texto. */
+    --decorative-teal: #24b1b1;
+    --focus-ring: rgba(36, 177, 177, 0.30);
 }

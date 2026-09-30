@@ -1,0 +1,53 @@
+@import url('colors.css');
+
+/* Barra de mensagens: sucesso, erro e informação. */
+.flash {
+    padding: 0.9rem 1.2rem;
+    border-radius: 6px;
+    border: 1px solid transparent;
+    margin-bottom: 1.5rem;
+}
+
+.flash p {
+    margin: 0;
+}
+
+/*
+ * As regras .flash-* saíram daqui junto com o fragmento flash.html: nenhum
+ * template o inclui e nenhum controller define `mensagem`/`tipo`, então era CSS
+ * morto esperando um controller que não existe. Quando houver formulário com
+ * escrita, o fragmento volta com o RedirectAttributes que o alimenta.
+ */
+
+/* Paginação de listagens. */
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+/*
+  Fundo transparente de propósito. Sobre o fundo da página (#fdf8f0) um botão
+  branco ficava quase do mesmo tom, e a borda neutra (#e8dcc6) sumia no creme.
+  Transparente deixa a página aparecer, e a borda teal marca o alvo sem competir
+  com a ação primária da linha.
+*/
+.pagination a {
+    color: var(--secondary-color);
+    text-decoration: none;
+    padding: 0.4rem 0.8rem;
+    border: 1px solid var(--secondary-color);
+    border-radius: 4px;
+    background-color: transparent;
+}
+
+.pagination a:hover {
+    background-color: var(--highlight-suave);
+}
+
+.pagination-info {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}

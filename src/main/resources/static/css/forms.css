@@ -1,0 +1,106 @@
+@import url('colors.css');
+
+/*
+  Estilos de formulário.
+  Nasce agora, antes dos formulários existirem, porque os campos de recebedor e
+  os <select> de marca e tipo já têm regras de validação conhecidas — deixar para
+  quando a primeira tela de escrita aparecer significa remendo na hora.
+*/
+.form-grade {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem 1.5rem;
+}
+
+.campo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.campo label {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--text-color);
+}
+
+.campo input,
+.campo select,
+.campo textarea {
+    padding: 0.55rem 0.7rem;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font: inherit;
+    font-size: 0.95rem;
+    background-color: var(--surface-color);
+    color: var(--text-color);
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.campo input:focus,
+.campo select:focus,
+.campo textarea:focus {
+    outline: none;
+    border-color: var(--secondary-color);
+    box-shadow: 0 0 0 3px var(--focus-ring);
+}
+
+/* Campo ocupa a linha inteira da grade. */
+.campo.largo {
+    grid-column: 1 / -1;
+}
+
+.campo .erro {
+    color: var(--accent-color);
+    font-size: 0.82rem;
+}
+
+/* Marcação dos campos obrigatórios com asterisk. */
+.obrigatorio {
+    color: var(--accent-color);
+}
+
+.form-acoes {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+}
+
+.botao {
+    display: inline-block;
+    padding: 0.55rem 1.2rem;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background-color: var(--surface-color);
+    color: var(--text-color);
+    font: inherit;
+    font-size: 0.95rem;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.botao:hover {
+    background-color: var(--background-color);
+}
+
+.botao-primario {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+    color: var(--surface-color);
+}
+
+.botao-primario:hover {
+    filter: brightness(0.93);
+}
+
+.botao-perigo {
+    background-color: var(--accent-color);
+    border-color: var(--accent-color);
+    color: var(--surface-color);
+}
+
+.botao-perigo:hover {
+    filter: brightness(0.93);
+}
