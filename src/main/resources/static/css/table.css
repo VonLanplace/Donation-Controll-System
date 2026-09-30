@@ -36,6 +36,25 @@
     text-align: right;
 }
 
+/*
+  Botões na coluna de ação ficam lado a lado, e o formulário de apagar é
+  inline: um <form> é block por padrão, então sem display:inline-flex cada
+  botão cai numa linha e a coluna de ação ganha a altura da tabela.
+  Gap dá o espaçamento, que margin não daria entre elementos inline-flex.
+*/
+.tabela td.acoes > * {
+    margin-left: 0.4rem;
+}
+
+.tabela td.acoes > *:first-child {
+    margin-left: 0;
+}
+
+.form-linha {
+    display: inline-flex;
+    margin: 0;
+}
+
 .vazio {
     text-align: center;
     color: var(--text-muted);

@@ -11,6 +11,21 @@
 
   <h1 class="pagina-titulo">Produtos</h1>
 
+  <div th:replace="~{fragments/flash :: flash}"></div>
+
+  <!--
+    Busca por código de barras. GET e não POST porque é consulta, e o resultado
+    fica na URL: o usuário pode marcar, mandar e voltar. O hidden de ordenação
+    carrega o ?sort= corrente, senão a busca volta com a ordenação padrão.
+  -->
+  <form class="form-busca" method="get" th:action="@{/produto/listar}">
+    <input type="hidden" name="sort" th:value="${ordenacao}">
+    <input type="text" name="busca" th:value="${busca}"
+           placeholder="Código de barras" aria-label="Buscar por código de barras">
+    <button class="botao botao-primario" type="submit">Buscar</button>
+    <a class="botao" th:if="${!#strings.isEmpty(busca)}" th:href="@{/produto/listar}">Limpar</a>
+  </form>
+
   <div class="card">
     <div class="card-header">
       <span>Produtos cadastrados</span>
@@ -46,12 +61,26 @@
               Conferido por pixel: 5332 pixels #ffffff na faixa do botão.
             -->
             <a class="botao botao-primario" th:href="@{/produto/detalhe/{id}(id=${p.id})}">Ver</a>
+            <a class="botao botao-pequeno" th:href="@{/produto/editar/{id}(id=${p.id})}">Editar</a>
+            <form class="form-linha" method="post"
+                  th:action="@{/produto/apagar/{id}(id=${p.id})}">
+              <button class="botao botao-pequeno botao-perigo" type="submit">Apagar</button>
+            </form>
           </td>
         </tr>
         </tbody>
       </table>
 
       <p class="vazio" th:if="${page.empty}">Nenhum produto cadastrado até o momento.</p>
+
+      <!--
+        Botão de cadastro fica fora do card: é ação de página, não linha de
+        tabela. Dentro do card-body ele herdaria o padding e pareceria mais um
+        registro.
+      -->
+      <div class="pagina-acoes">
+        <a class="botao botao-primario" th:href="@{/produto/create}">Novo produto</a>
+      </div>
 
     </div>
   </div>

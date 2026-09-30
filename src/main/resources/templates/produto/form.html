@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('forms.css')}">
+  <title th:text="${titulo}">Produto</title>
+</head>
+<body class="default-layout">
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<main class="main-content">
+
+  <h1 class="pagina-titulo" th:text="${titulo}">Novo produto</h1>
+
+  <!--
+    Mesma view para cadastro e edição. Em edição o id viaja na URL; o
+    produtoDTO é do tipo ProdutoUpdateDTO em vez de ProdutoCreateDTO, e os dois
+    records têm os mesmos três campos, então o th:field serve igual.
+  -->
+  <form method="post" th:object="${produtoDTO}"
+        th:action="${id != null} ? @{/produto/editar/{id}(id=${id})} : @{/produto/create}">
+
+    <div class="card">
+      <div class="card-header">
+        <span th:text="${id != null} ? 'Dados do produto' : 'Dados do novo produto'">Dados</span>
+      </div>
+      <div class="card-body">
+
+        <div th:replace="~{fragments/erros :: erros}"></div>
+
+        <div class="form-grade">
+
+          <div th:replace="~{fragments/campo :: campo('codigoBarras', 'Código de barras', false, 'text')}"></div>
+
+          <!--
+            Marca e tipo são selects de nome, não de id. É o mesmo contrato do
+            DTO: String marcaProduto, String tipoProduto. As opções vêm de
+            listaNomes(), que não pagina — com size=100 o formulário pararia de
+            oferecer as marcas acima da centésima, sem avisar.
+          -->
+          <div th:replace="~{fragments/campo :: selecao('marcaProduto', 'Marca', true, ${marcas})}"></div>
+
+          <div th:replace="~{fragments/campo :: selecao('tipoProduto', 'Tipo', true, ${tipos})}"></div>
+
+        </div>
+
+        <div th:replace="~{fragments/campo :: acoes('Salvar', @{/produto/listar})}"></div>
+
+      </div>
+    </div>
+
+  </form>
+
+</main>
+
+<div th:replace="~{fragments/trail :: trail}"></div>
+
+</body>
+</html>

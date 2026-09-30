@@ -1,6 +1,8 @@
 package com.vonlanplace.doacao.web;
 
 import com.vonlanplace.doacao.produto.controller.ProdutoViewController;
+import com.vonlanplace.doacao.produto.marca.controller.MarcaProdutoViewController;
+import com.vonlanplace.doacao.produto.tipo.controller.TipoProdutoViewController;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -37,7 +39,12 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  * consultado primeiro; como ele só se declara aplicável a view controllers, toda
  * chamada de {@code /api/*} cai por exclusividade no do REST e segue em JSON.</p>
  */
-@ControllerAdvice(assignableTypes = {HomeController.class, ProdutoViewController.class})
+@ControllerAdvice(assignableTypes = {
+        HomeController.class,
+        ProdutoViewController.class,
+        MarcaProdutoViewController.class,
+        TipoProdutoViewController.class
+})
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class ViewExceptionHandler {
 

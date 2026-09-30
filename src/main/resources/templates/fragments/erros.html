@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<body>
+<!--
+  Caixa de erros do formulário.
+
+  th:errors="*{global}" do BindingResult: pega tudo que não foi atribuído a um
+  campo específico — constraint de classe, conversão de tipo falha, e o
+  EntityNotFoundException de uma relação que o usuário informou. Sem isso, um
+  erro que não pertence a nenhum input aparece como página em branco.
+-->
+<div th:fragment="erros" th:if="${#fields != null and #fields.hasGlobalErrors()}"
+     class="erros-formulario">
+  <h2>Não foi possível salvar</h2>
+  <ul>
+    <li th:each="erro : ${#fields.globalErrors()}" th:text="${erro}">Mensagem de erro.</li>
+  </ul>
+</div>
+</body>
+</html>

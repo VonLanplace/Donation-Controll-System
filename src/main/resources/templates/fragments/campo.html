@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<body>
+<!--
+  Fragmentos de campo de formulário.
+
+  Todos os formulários do projeto usam estes três, para que uma correção de
+  acessibilidade ou de estado inválido seja feita uma vez e valha para as onze
+  telas.
+
+  O `id` do input e o `for` do label são o mesmo caminho, derivado do nome do
+  campo. Sem isso o clique no rótulo não foca o campo e o leitor de tela não
+  consegue associar os dois.
+
+  Estado inválido: a classe .invalido entra por th:classappend lendo
+  #fields.hasErrors('nome'), e não pelo th:errors. Assim o campo fica marcado
+  mesmo se a mensagem não renderizar, e o fragmento não depende de o BindingResult
+  ter erro naquele campo específico.
+-->
+
+<!-- Rótulo e campo de texto, com option de tipo para email, date, number, password. -->
+<div th:fragment="campo(nome, rotulo, obrigatorio, tipo)" th:classappend="${#fields.hasErrors(nome)} ? 'invalido'">
+  <label th:for="|f_${nome}|">
+    <span th:text="${rotulo}">Rótulo</span>
+    <span th:if="${obrigatorio}" class="obrigatorio" title="obrigatório">*</span>
+  </label>
+  <input th:id="|f_${nome}|"
+         th:type="${tipo}"
+         th:field="*{__${nome}__}"
+         th:placeholder="${rotulo}">
+  <span class="erro" th:if="${#fields.hasErrors(nome)}" th:errors="*{__${nome}__}">erro</span>
+</div>
+
+<!--
+  Campo de texto simples. Os argumentos defaults evitam repetir "false, text" em
+  toda linha do template que não tem nada de especial.
+-->
+<div th:fragment="texto(nome, rotulo, obrigatorio)"
+     th:classappend="${#fields.hasErrors(nome)} ? 'invalido'">
+  <label th:for="|f_${nome}|">
+    <span th:text="${rotulo}">Rótulo</span>
+    <span th:if="${obrigatorio}" class="obrigatorio" title="obrigatório">*</span>
+  </label>
+  <input th:id="|f_${nome}|" type="text" th:field="*{__${nome}__}" th:placeholder="${rotulo}">
+  <span class="erro" th:if="${#fields.hasErrors(nome)}" th:errors="*{__${nome}__}">erro</span>
+</div>
+
+<!--
+  Select. `opcoes` é uma lista de Option; o value vai no value e o texto no
+  corpo. O primeiro item é sempre um valor vazio, para que "não escolhido" seja
+  uma escolha explícita e não uma SelectionEvent que ninguém pediu.
+-->
+<div th:fragment="selecao(nome, rotulo, obrigatorio, opcoes)"
+     th:classappend="${#fields.hasErrors(nome)} ? 'invalido'">
+  <label th:for="|f_${nome}|">
+    <span th:text="${rotulo}">Rótulo</span>
+    <span th:if="${obrigatorio}" class="obrigatorio" title="obrigatório">*</span>
+  </label>
+  <select th:id="|f_${nome}|" th:field="*{__${nome}__}">
+    <option value="">Selecione…</option>
+    <option th:each="opcao : ${opcoes}"
+            th:value="${opcao.valor}"
+            th:text="${opcao.rotulo}">Opção</option>
+  </select>
+  <span class="erro" th:if="${#fields.hasErrors(nome)}" th:errors="*{__${nome}__}">erro</span>
+</div>
+
+<!-- Área de texto multilinha, para comentários. -->
+<div th:fragment="area(nome, rotulo, obrigatorio)"
+     th:classappend="${#fields.hasErrors(nome)} ? 'invalido'">
+  <label th:for="|f_${nome}|">
+    <span th:text="${rotulo}">Rótulo</span>
+    <span th:if="${obrigatorio}" class="obrigatorio" title="obrigatório">*</span>
+  </label>
+  <textarea th:id="|f_${nome}|" rows="4" th:field="*{__${nome}__}" th:placeholder="${rotulo}"></textarea>
+  <span class="erro" th:if="${#fields.hasErrors(nome)}" th:errors="*{__${nome}__}">erro</span>
+</div>
+
+<!--
+  Caixas de marcação. O campo é boolean primitivo, e o BindingResult devolve
+  "requerido" só se a constraint exigir, o que é raro aqui.
+-->
+<div th:fragment="caixa(nome, rotulo)" th:classappend="${#fields.hasErrors(nome)} ? 'invalido'">
+  <label class="campo-caixa">
+    <input th:id="|f_${nome}|" type="checkbox" th:field="*{__${nome}__}">
+    <span th:text="${rotulo}">Rótulo</span>
+  </label>
+  <span class="erro" th:if="${#fields.hasErrors(nome)}" th:errors="*{__${nome}__}">erro</span>
+</div>
+
+<!-- Bloco de ações do formulário: cancelar e salvar. -->
+<div th:fragment="acoes(textoSalvar, urlCancelar)">
+  <div class="form-acoes">
+    <a class="botao" th:href="${urlCancelar}">Cancelar</a>
+    <button class="botao botao-primario" type="submit" th:text="${textoSalvar}">Salvar</button>
+  </div>
+</div>
+
+</body>
+</html>

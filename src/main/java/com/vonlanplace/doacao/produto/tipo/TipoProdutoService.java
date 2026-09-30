@@ -7,6 +7,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /**
  * Regras de negócio de {@link TipoProduto}.
  *
@@ -62,6 +64,26 @@ public class TipoProdutoService {
     public Page<TipoProdutoResponseDTO> findAll(Pageable pageable) {
         return tipoProdutoRepository.findAll(pageable)
                 .map(tipoProdutoMapper::toResponseDTO);
+    }
+
+    /**
+     * Lista os nomes de todos os tipos, sem paginação.
+     *
+     * <p>Alimenta o {@code <select>} do formulário de produto, que precisa do
+     * conjunto inteiro. Reaproveitar o {@code findAll(Pageable)} truncaria em
+     * silêncio a partir da centésima primeira entrada, por causa do
+     * {@code max-page-size=100}, e o usuário veria um tipo que existe como se
+     * não existisse.</p>
+     *
+     * @return lista de nomes de tipo em ordem alfabética
+     */
+    @Transactional(readOnly = true)
+    public List<String> listaNomes() {
+        return tipoProdutoRepository.findAll()
+                .stream()
+                .map(TipoProduto::getNome)
+                .sorted()
+                .toList();
     }
 
     /**

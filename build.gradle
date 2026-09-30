@@ -50,6 +50,12 @@ dependencies {
 
     // Test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    // Boot 4 modularizou o spring-boot-test-autoconfigure e criou um test starter
+    // por starter. Sem este, spring-test está no classpath mas MockMvc e
+    // @AutoConfigureMockMvc não: o import do annotation nem compila. E sem o
+    // MockMvc não existe teste de renderização, que é o único que pega template
+    // quebrado — o build passa com th:replace apontando para fragmento inexistente.
+    testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
     //testImplementation 'org.springframework.boot:spring-boot-starter-security-test'
     testCompileOnly 'org.projectlombok:lombok'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'

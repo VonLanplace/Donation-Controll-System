@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<body>
+<!--
+  Fragmento de barra de mensagem pós-redirect.
+
+  Só aparece depois de um redirect: o controller usa RedirectAttributes com
+  addFlashAttribute, e o redirect consome a mensagem uma vez só. Se a página
+  recarregar com F5, a faixa some — que é o comportamento correto, evita
+  reenviar o formulário e evita a mensagem duplicada.
+-->
+<div th:fragment="flash" th:if="${mensagem}" th:class="'flash flash-' + ${tipo}">
+  <p th:text="${mensagem}">Mensagem.</p>
+</div>
+</body>
+</html>

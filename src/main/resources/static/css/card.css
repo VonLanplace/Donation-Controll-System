@@ -32,3 +32,15 @@
     font-size: 1.5rem;
     color: var(--text-color);
 }
+
+/*
+  Ações do nível da página: cadastro, voltar, filtro. Alinhado à direita para
+  ficar na altura do card-header, que é onde a mão vai depois de ler o título.
+*/
+.pagina-acoes {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 1.25rem;
+}

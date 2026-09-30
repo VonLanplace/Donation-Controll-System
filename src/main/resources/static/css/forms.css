@@ -1,11 +1,12 @@
 @import url('colors.css');
 
 /*
-  Estilos de formulário.
-  Nasce agora, antes dos formulários existirem, porque os campos de recebedor e
-  os <select> de marca e tipo já têm regras de validação conhecidas — deixar para
-  quando a primeira tela de escrita aparecer significa remendo na hora.
-*/
+ * Estilos de formulário.
+ *
+ * Só o que é exclusivo de página com formulário. Botão mora em components.css
+ * porque a listagem também tem ação por linha, e a base do head(css) não
+ * carrega este arquivo.
+ */
 .form-grade {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -56,6 +57,19 @@
     font-size: 0.82rem;
 }
 
+/*
+ * Campo que não passou na validação. A classe .invalido entra pelo
+ * th:classappend do fragmento campo, olhando #fields.hasErrors('nome'),
+ * e não pelo th:errors — assim o campo fica marcado mesmo se o texto da
+ * mensagem não renderizar.
+ */
+.campo.invalido input,
+.campo.invalido select,
+.campo.invalido textarea {
+    border-color: var(--accent-color);
+    background-color: #fdf0e6;
+}
+
 /* Marcação dos campos obrigatórios com asterisk. */
 .obrigatorio {
     color: var(--accent-color);
@@ -68,39 +82,53 @@
     margin-top: 1.5rem;
 }
 
-.botao {
-    display: inline-block;
-    padding: 0.55rem 1.2rem;
+/* Caixa de avisos com a lista de todos os erros do formulário. */
+.erros-formulario {
+    background-color: #fdf0e6;
+    border: 1px solid var(--palette-laranja);
+    border-radius: 6px;
+    padding: 1rem 1.2rem;
+    margin-bottom: 1.5rem;
+    color: #a4511a;
+}
+
+.erros-formulario h2 {
+    font-size: 1rem;
+    margin: 0 0 0.5rem 0;
+}
+
+.erros-formulario ul {
+    margin: 0;
+    padding-left: 1.2rem;
+}
+
+.erros-formulario li {
+    margin-bottom: 0.25rem;
+    font-size: 0.9rem;
+}
+
+/* Caixa de busca acima da tabela. */
+.form-busca {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 1.25rem;
+}
+
+.form-busca input[type="text"] {
+    flex: 1;
+    max-width: 22rem;
+    padding: 0.55rem 0.7rem;
     border: 1px solid var(--border-color);
     border-radius: 4px;
-    background-color: var(--surface-color);
-    color: var(--text-color);
     font: inherit;
     font-size: 0.95rem;
-    text-decoration: none;
-    cursor: pointer;
+    background-color: var(--surface-color);
+    color: var(--text-color);
 }
 
-.botao:hover {
-    background-color: var(--background-color);
-}
-
-.botao-primario {
-    background-color: var(--secondary-color);
+.form-busca input[type="text"]:focus {
+    outline: none;
     border-color: var(--secondary-color);
-    color: var(--surface-color);
-}
-
-.botao-primario:hover {
-    filter: brightness(0.93);
-}
-
-.botao-perigo {
-    background-color: var(--accent-color);
-    border-color: var(--accent-color);
-    color: var(--surface-color);
-}
-
-.botao-perigo:hover {
-    filter: brightness(0.93);
+    box-shadow: 0 0 0 3px var(--focus-ring);
 }

@@ -7,6 +7,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /**
  * Regras de negócio de {@link MarcaProduto}.
  *
@@ -67,6 +69,26 @@ public class MarcaProdutoService {
     public Page<MarcaProdutoResponseDTO> findAll(Pageable pageable) {
         return marcaProdutoRepository.findAll(pageable)
                 .map(marcaProdutoMapper::toResponseDTO);
+    }
+
+    /**
+     * Lista os nomes de todas as marcas, sem paginação.
+     *
+     * <p>Existe para alimentar o {@code <select>} do formulário de produto, que
+     * precisa do conjunto inteiro. Passar pelo {@code findAll(Pageable)} seria um
+     * erro silencioso: com {@code max-page-size=100}, a partir da centésima
+     * primeira marca o formulário deixaria de oferecer as que sobraram, sem
+     * nenhuma mensagem, e o usuário concluiria que a marca não existe.</p>
+     *
+     * @return lista de nomes de marca em ordem alfabética
+     */
+    @Transactional(readOnly = true)
+    public List<String> listaNomes() {
+        return marcaProdutoRepository.findAll()
+                .stream()
+                .map(MarcaProduto::getNome)
+                .sorted()
+                .toList();
     }
 
     /**
