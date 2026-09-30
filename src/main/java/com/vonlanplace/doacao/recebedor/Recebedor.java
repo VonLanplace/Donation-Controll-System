@@ -1,56 +1,121 @@
 package com.vonlanplace.doacao.recebedor;
 
+import com.vonlanplace.doacao.doacao.Doacao;
 import com.vonlanplace.doacao.recebedor.residencia.Residencia;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
+/**
+ * Pessoa que recebe as doações.
+ *
+ * <p><strong>Identificação de negócio é o {@code cpf}, não o {@code id}.</strong> Os
+ * índices {@code uk_recebedor_cpf} e {@code uk_recebedor_pix} refletem as duas chaves
+ * alternativas usadas pelo serviço para localizar uma pessoa.</p>
+ *
+ * <p><strong>Senha não existe aqui.</strong> O recebedor é identificado por documento e
+ * contato, e não é usuário do sistema; a autenticação pertence a
+ * {@code Entrevistador}.</p>
+ *
+ * <p>As relações com {@link Residencia} e {@link Doacao} formam pares bidirecionais.
+ * Por isso {@code @Data} é proibido — o {@code toString} gerado recursaria entre
+ * recebedor, residência e doação até estourar a pilha. A classe usa
+ * {@code @ToString} e {@code @EqualsAndHashCode} restritos a campos marcados com
+ * {@code Include}.</p>
+ */
+@Getter
+@Setter
+@ToString(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
-@Table(name = "recebedor")
-@Data
+@Table(
+        name = "recebedor",
+        uniqueConstraints = {
+                @UniqueConstraint(name = "uk_recebedor_cpf", columnNames = "cpf"),
+                @UniqueConstraint(name = "uk_recebedor_pix", columnNames = "pix")
+        }
+)
 public class Recebedor {
 
+    /** Identificador do recebedor, gerado pelo banco no formato UUID. */
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", updatable = false, nullable = false)
+    @EqualsAndHashCode.Include
+    @ToString.Include
     private UUID id;
 
+    /** Nome completo da pessoa. Obrigatório. */
     @Column(name = "nome_completo", nullable = false, length = 150)
+    @ToString.Include
     private String nomeCompleto;
 
-    @Column(name = "cpf", unique = true, length = 11)
-    @NotNull
+    /** CPF da pessoa, sem pontos nem traços. Obrigatório e único. */
+    @Column(name = "cpf", nullable = false, length = 11)
     private String cpf;
 
+    /** Número do RG. Opcional. */
     @Column(name = "rg_num", length = 20)
     private String rgNum;
 
+    /** Órgão emissor do RG. Opcional, gravado como texto. */
     @Enumerated(EnumType.STRING)
     @Column(name = "rg_emissor", length = 20)
     private OrgaoEmissorRG rgEmissor;
 
+    /** Data de nascimento. Obrigatória. */
     @Column(name = "data_nascimento", nullable = false)
     private LocalDate dataNascimento;
 
+    /** Telefone pessoal, com DDD. Opcional. */
     @Column(name = "telefone_pessoal", length = 15)
     private String telefonePessoal;
 
+    /** Telefone de recado. Opcional. */
     @Column(name = "telefone_recado", length = 15)
     private String telefoneRecado;
 
+    /** Indica se a pessoa sabe ler e escrever. Obrigatório. */
     @Column(name = "le_escreve", nullable = false)
-    private Boolean leEscreve = false;
+    private boolean leEscreve;
 
+    /** E-mail. Opcional. */
     @Column(name = "email", length = 100)
     private String email;
 
-    @Column(name = "pix", unique = true, length = 100)
+    /** Chave PIX de recebimento. Opcional, mas única quando informada. */
+    @Column(name = "pix", length = 100)
     private String pix;
 
+    /** Indica necessidade de acompanhamento jurídico. Obrigatório. */
+    @Column(name = "necessita_juridico", nullable = false)
+    private boolean necessitaJuridico;
+
+    /** Indica necessidade de acompanhamento psicológico. Obrigatório. */
+    @Column(name = "necessita_psicologo", nullable = false)
+    private boolean necessitaPsicologo;
+
+    /** Observações da entrevista. Opcional. */
+    @Column(name = "comentarios", length = 1000)
+    private String comentarios;
+
+    /** Residência da pessoa. Obrigatória; o lado dono é {@code Residencia.recebedores}. */
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "residencia_id", nullable = false)
+    @JoinColumn(
+            name = "residencia_id",
+            nullable = false,
+            foreignKey = @ForeignKey(name = "fk_recebedor_residencia")
+    )
     private Residencia residencia;
+
+    /** Doações recebidas por esta pessoa. Lado inverso de {@code Doacao.recebedor}. */
+    @OneToMany(mappedBy = "recebedor", fetch = FetchType.LAZY)
+    private List<Doacao> doacoes = new ArrayList<>();
 }
