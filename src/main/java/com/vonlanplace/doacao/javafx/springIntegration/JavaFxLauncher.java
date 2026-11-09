@@ -61,6 +61,11 @@ public class JavaFxLauncher {
             Platform.startup(this::montarJanelaPrincipal);
         } catch (IllegalStateException jaIniciado) {
             log.debug("Toolkit JavaFX já estava iniciado", jaIniciado);
+            try {
+                Platform.runLater(this::montarJanelaPrincipal);
+            } catch (Throwable falha) {
+                log.warn("Falha ao montar a janela JavaFX já iniciada; a aplicação web segue normalmente", falha);
+            }
         } catch (Throwable falha) {
             log.warn("Falha ao iniciar o JavaFX; a aplicação web segue normalmente", falha);
         }
@@ -70,9 +75,16 @@ public class JavaFxLauncher {
      * Monta a janela principal na thread do JavaFX.
      */
     private void montarJanelaPrincipal() {
-        Stage stage = new Stage();
-        stageManager.setPrimaryStage(stage);
-        stageManager.switchScene("/main.fxml", "Sistema de Doação - Principal");
+        try {
+            Stage stage = new Stage();
+            stageManager.setPrimaryStage(stage);
+            stageManager.switchScene(
+                    "/recebedor-qrcode.fxml",
+                    "Sistema de Doação - Cadastro de Recebedor"
+            );
+        } catch (Throwable falha) {
+            log.error("Falha ao montar a tela JavaFX de cadastro de recebedor", falha);
+        }
     }
 
     /**

@@ -12,6 +12,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * {@code javafx.springIntegration.JavaFxLauncher} — e só se houver ambiente
  * gráfico. Fechar a janela do JavaFX não derruba a aplicação web.</p>
  *
+ * <p><strong>Headless desligado de propósito.</strong> O Spring Boot liga
+ * {@code java.awt.headless=true} por padrão, o que faria o JavaFX e o botão de
+ * abrir navegador desistirem. {@link SpringApplication#setHeadless(boolean)} é
+ * chamado antes do {@code run} para preservar o modo desktop.</p>
+ *
  * <p>Esta classe também é a fonte de Component Scanning: sem {@code scanBasePackages},
  * o Spring usa o pacote desta classe, {@code com.vonlanplace.doacao}, como raiz, o que
  * alcança todos os subpacotes de domínio.</p>
@@ -25,6 +30,8 @@ public class DoacaoApplication {
      * @param args argumentos repassados ao Spring Boot
      */
     public static void main(String[] args) {
-        SpringApplication.run(DoacaoApplication.class, args);
+        SpringApplication application = new SpringApplication(DoacaoApplication.class);
+        application.setHeadless(false);
+        application.run(args);
     }
 }
