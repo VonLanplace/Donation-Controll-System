@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -49,6 +50,18 @@ public interface RecebedorRepository extends JpaRepository<Recebedor, UUID> {
      * @return o recebedor, ou vazio se não existir
      */
     Optional<Recebedor> findByRgNumAndRgEmissor(String rgNum, OrgaoEmissorRG rgEmissor);
+
+    /**
+     * Busca pelo número do RG, ignorando maiúsculas e minúsculas.
+     *
+     * <p>O RG não é único no cadastro, por isso a consulta devolve lista. A tela de
+     * consulta usa o resultado para pedir a escolha do recebedor quando houver mais de
+     * um.</p>
+     *
+     * @param rgNum número do RG
+     * @return recebedores com o RG informado
+     */
+    List<Recebedor> findByRgNumIgnoreCase(String rgNum);
 
     /**
      * Busca por data de nascimento exata.

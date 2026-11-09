@@ -1,5 +1,7 @@
 package com.vonlanplace.doacao.recebedor;
 
+import com.vonlanplace.doacao.recebedor.cesta.RecebimentoCestaService;
+import com.vonlanplace.doacao.recebedor.cesta.StatusRecebimento;
 import com.vonlanplace.doacao.recebedor.residencia.ResidenciaCreateDTO;
 import com.vonlanplace.doacao.recebedor.residencia.ResidenciaResponseDTO;
 import com.vonlanplace.doacao.recebedor.residencia.ResidenciaService;
@@ -12,20 +14,18 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * Confere a ida e volta dos dois campos novos da entrevista.
+ * Confere a ida e volta do status da cesta e do parecer do entrevistador.
  *
  * <p><strong>Estes são os testes que impedem o mapeamento silencioso.</strong>
- * Os campos entraram na entidade, nos DTOs e no mapper, mas nada garante que a
- * cadeia funcione antes do primeiro formulário: um {@code @Mapping} esquecido,
- * um nome divergente ou um campo morto no DTO passaria por qualquer teste que
- * não salva e relê. Aqui o recebedor é criado, relido da base, atualizado e
- * relido de novo, e os dois booleans têm que chegar idênticos nas duas
- * pontas.</p>
+ * O status saiu do recebedor e passou a viver no histórico mensal. Aqui o
+ * recebedor é criado, relido da base, atualizado e relido de novo, e o status
+ * do mês tem que chegar idêntico nas duas pontas.</p>
  */
 @SpringBootTest
 @Transactional
@@ -36,10 +36,13 @@ class RecebedorCamposNovosTest {
     private RecebedorService recebedorService;
 
     @Autowired
+    private RecebimentoCestaService recebimentoCestaService;
+
+    @Autowired
     private ResidenciaService residenciaService;
 
     @Test
-    @DisplayName("recebeuCesta e parecerEntrevistador sobrevivem ao create e ao update")
+    @DisplayName("statusCesta e parecerEntrevistador sobrevivem ao create e ao update")
     void camposSobrevivemAoPersistir() {
         ResidenciaResponseDTO residencia = residenciaService.create(
                 new ResidenciaCreateDTO(
@@ -51,15 +54,16 @@ class RecebedorCamposNovosTest {
                 "Ana Souza", "11122233344", "123456", null,
                 LocalDate.of(1990, 1, 1), "11900000000", "11988888888",
                 true, "ana@exemplo.org", "11122233344",
-                false, true, true, false, "Primeira visita.", residencia.id());
+                false, true, StatusRecebimento.RECEBEU, false, "Primeira visita.", residencia.id());
 
         RecebedorResponseDTO criado = recebedorService.create(createDTO);
 
-        assertThat(criado.recebeuCesta()).as("o create perdeu recebeuCesta").isTrue();
+        assertThat(recebimentoCestaService.statusAtual(criado.id(), YearMonth.now()))
+                .as("o create perdeu statusCesta")
+                .isEqualTo(StatusRecebimento.RECEBEU);
         assertThat(criado.parecerEntrevistador()).as("o create perdeu parecerEntrevistador").isFalse();
 
         RecebedorResponseDTO relido = recebedorService.findById(criado.id());
-        assertThat(relido.recebeuCesta()).isTrue();
         assertThat(relido.parecerEntrevistador()).isFalse();
 
         RecebedorUpdateDTO updateDTO = new RecebedorUpdateDTO(
@@ -67,11 +71,13 @@ class RecebedorCamposNovosTest {
                 createDTO.dataNascimento(), createDTO.telefonePessoal(), createDTO.telefoneRecado(),
                 createDTO.leEscreve(), createDTO.email(), createDTO.pix(),
                 createDTO.necessitaJuridico(), createDTO.necessitaPsicologo(),
-                false, true, createDTO.comentarios(), residencia.id());
+                StatusRecebimento.RECUSOU, true, createDTO.comentarios(), residencia.id());
 
         RecebedorResponseDTO atualizado = recebedorService.update(criado.id(), updateDTO);
 
-        assertThat(atualizado.recebeuCesta()).as("o update não trocou recebeuCesta").isFalse();
+        assertThat(recebimentoCestaService.statusAtual(atualizado.id(), YearMonth.now()))
+                .as("o update não trocou statusCesta")
+                .isEqualTo(StatusRecebimento.RECUSOU);
         assertThat(atualizado.parecerEntrevistador()).as("o update não trocou parecerEntrevistador").isTrue();
     }
 
@@ -102,6 +108,6 @@ class RecebedorCamposNovosTest {
         return new RecebedorCreateDTO(
                 "Bruno Lima", "55566677788", "", null,
                 LocalDate.of(1985, 6, 15), "", "", false, "", "",
-                false, false, false, false, "", residenciaId);
+                false, false, null, false, "", residenciaId);
     }
 }

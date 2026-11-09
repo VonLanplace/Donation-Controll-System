@@ -54,8 +54,8 @@
         <dt>Precisa de acompanhamento psicológico</dt>
         <dd th:text="${recebedor.necessitaPsicologo} ? 'Sim' : 'Não'">Não</dd>
 
-        <dt>Recebeu cesta</dt>
-        <dd th:text="${recebedor.recebeuCesta} ? 'Sim' : 'Não'">Não</dd>
+        <dt>Cesta do mês</dt>
+        <dd th:text="${statusCestaAtual?.descricao} ?: 'Não informado'">Não informado</dd>
 
         <dt>Parecer do entrevistador</dt>
         <dd th:text="${recebedor.parecerEntrevistador} ? 'Sim' : 'Não'">Não</dd>
@@ -65,8 +65,9 @@
 
         <dt>Residência</dt>
         <dd>
-          <a th:href="@{/residencia/detalhe/{id}(id=${recebedor.residencia.id})}"
-             th:text="${recebedor.residencia.logradouro} + ', ' + ${recebedor.residencia.numero} + ' — ' + ${recebedor.residencia.cidade}">Rua das Flores, 100 — São Paulo</a>
+          <span th:text="${recebedor.residencia.logradouro} + ', ' + ${recebedor.residencia.numero}
+                  + ' — ' + ${recebedor.residencia.bairro} + ', ' + ${recebedor.residencia.cidade}
+                  + ' — CEP ' + ${recebedor.residencia.cep}">Rua das Flores, 100 — Centro, São Paulo — CEP 01001000</span>
         </dd>
       </dl>
 
@@ -97,17 +98,54 @@
         <dd th:text="|R$ ${#numbers.formatDecimal(totalAuxilios, 1, 2, 'COMMA')}|">R$ 0,00</dd>
       </dl>
 
-      <div class="pagina-acoes">
-        <a class="botao" th:href="@{/despesa/listar}">Ver despesas</a>
-        <a class="botao" th:href="@{/auxilio/listar}">Ver auxílios</a>
-      </div>
+      <h2 class="subtitulo-secao">Despesas da residência</h2>
+
+      <table class="tabela" th:if="${!#lists.isEmpty(despesas)}">
+        <thead>
+        <tr>
+          <th>Valor mensal</th>
+          <th>Fonte</th>
+          <th>Descrição</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="d : ${despesas}">
+          <td th:text="|R$ ${#numbers.formatDecimal(d.valor, 1, 2, 'COMMA')}|">R$ 0,00</td>
+          <td th:text="${d.fonte}">Aluguel</td>
+          <td th:text="${d.descricao} ?: '—'">—</td>
+        </tr>
+        </tbody>
+      </table>
+
+      <p class="vazio" th:if="${#lists.isEmpty(despesas)}">Nenhuma despesa cadastrada.</p>
+
+      <h2 class="subtitulo-secao">Auxílios recebidos</h2>
+
+      <table class="tabela" th:if="${!#lists.isEmpty(auxilios)}">
+        <thead>
+        <tr>
+          <th>Valor mensal</th>
+          <th>Fonte</th>
+          <th>Descrição</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="a : ${auxilios}">
+          <td th:text="|R$ ${#numbers.formatDecimal(a.valor, 1, 2, 'COMMA')}|">R$ 0,00</td>
+          <td th:text="${a.fonte}">Bolsa Família</td>
+          <td th:text="${a.descricao} ?: '—'">—</td>
+        </tr>
+        </tbody>
+      </table>
+
+      <p class="vazio" th:if="${#lists.isEmpty(auxilios)}">Nenhum auxílio cadastrado.</p>
 
     </div>
   </div>
 
   <!--
     Família: a lista de dependentes é curta por natureza, então vem toda de uma
-    vez, sem paginação, com o cadastro novo em destaque.
+    vez, sem paginação. A edição é feita no cadastro completo do recebedor.
   -->
   <div class="card">
     <div class="card-header">
@@ -120,28 +158,62 @@
         <tr>
           <th>Nome</th>
           <th>Idade</th>
-          <th class="acoes">Ações</th>
+          <th>Data de nascimento</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="d : ${dependentes}">
           <td th:text="${d.nome}">Maria dos Santos</td>
           <td th:text="${d.idade}">7</td>
-          <td class="acoes">
-            <a class="botao botao-pequeno" th:href="@{/dependente/editar/{id}(id=${d.id})}">Editar</a>
-            <form class="form-linha" method="post"
-                  th:action="@{/dependente/apagar/{id}(id=${d.id})}">
-              <button class="botao botao-pequeno botao-perigo" type="submit">Apagar</button>
-            </form>
-          </td>
+          <td th:text="${d.dataNascimento != null} ? ${#temporals.format(d.dataNascimento, 'dd/MM/yyyy')} : '—'">—</td>
         </tr>
         </tbody>
       </table>
 
       <p class="vazio" th:unless="${!#lists.isEmpty(dependentes)}">Nenhum dependente cadastrado para este recebedor.</p>
 
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <span>Histórico de cestas</span>
+    </div>
+    <div class="card-body">
+
+      <div class="aviso" th:if="${!elegibilidadeCesta.elegivel}">
+        <span th:text="${elegibilidadeCesta.motivo}">Limite de cestas atingido.</span>
+      </div>
+
+      <table class="tabela" th:if="${!#lists.isEmpty(historicoCestas)}">
+        <thead>
+        <tr>
+          <th>Mês</th>
+          <th>Status</th>
+          <th>Entrega</th>
+          <th>Observação</th>
+          <th class="acoes">Ações</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="h : ${historicoCestas}">
+          <td th:text="${#temporals.format(h.dataReferencia, 'MM/yyyy')}">01/2026</td>
+          <td th:text="${h.status.descricao}">Recebeu</td>
+          <td th:text="${h.dataEntrega != null} ? ${#temporals.format(h.dataEntrega, 'dd/MM/yyyy')} : '—'">—</td>
+          <td th:text="${h.observacao} ?: '—'">—</td>
+          <td class="acoes">
+            <a class="botao botao-pequeno"
+               th:if="${h.status == T(com.vonlanplace.doacao.recebedor.cesta.StatusRecebimento).RECEBEU}"
+               th:href="@{/recebedor/cesta/pdf/{id}(id=${h.id})}">Recibo PDF</a>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+
+      <p class="vazio" th:if="${#lists.isEmpty(historicoCestas)}">Nenhuma cesta registrada.</p>
+
       <div class="pagina-acoes">
-        <a class="botao botao-primario" th:href="@{/dependente/create}">Novo dependente</a>
+        <a class="botao botao-primario" th:href="@{/recebedor/editar/{id}(id=${recebedor.id})}">Registrar cesta do mês</a>
       </div>
 
     </div>

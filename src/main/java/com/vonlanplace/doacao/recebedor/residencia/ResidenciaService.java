@@ -19,9 +19,8 @@ import java.util.UUID;
  * <p><strong>A exclusão não é validada aqui.</strong> Se a residência tiver moradores, a
  * remoção violaria a FK de {@code Recebedor.residencia} e o cliente receberia 409 com a
  * mensagem genérica "Conflito de Dados", vindo do
- * {@code GlobalExceptionHandler}. Outros serviços, como
- * {@code MarcaProdutoService} e {@code RecebedorService}, checam a dependência antes e
- * dão mensagem específica; aqui a checagem não existe.</p>
+ * {@code GlobalExceptionHandler}. Outros serviços, como {@code RecebedorService},
+ * checam a dependência antes e dão mensagem específica; aqui a checagem não existe.</p>
  */
 @Service
 public class ResidenciaService {

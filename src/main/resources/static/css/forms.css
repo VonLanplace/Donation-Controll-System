@@ -156,3 +156,128 @@
     border-color: var(--secondary-color);
     box-shadow: 0 0 0 3px var(--focus-ring);
 }
+
+/* ---------------------------------------------------------------- Abas -- */
+
+.abas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 1.5rem;
+}
+
+.aba {
+    padding: 0.65rem 1rem;
+    border: 0;
+    border-bottom: 3px solid transparent;
+    background-color: transparent;
+    color: var(--text-muted);
+    font: inherit;
+    font-size: 0.95rem;
+    cursor: pointer;
+}
+
+.aba:hover {
+    color: var(--secondary-color);
+    background-color: var(--highlight-suave);
+}
+
+.aba.ativa {
+    color: var(--secondary-color);
+    border-bottom-color: var(--secondary-color);
+    font-weight: 600;
+}
+
+.aba-conteudo {
+    display: none;
+}
+
+.aba-conteudo.ativa {
+    display: block;
+}
+
+.subtitulo-secao {
+    margin: 1.5rem 0 0.75rem 0;
+    font-size: 1.05rem;
+    color: var(--text-color);
+}
+
+.subtitulo-secao:first-child {
+    margin-top: 0;
+}
+
+/* ------------------------------------------------- Tabelas de formulário -- */
+
+.tabela-form-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.tabela-form {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.tabela-form th,
+.tabela-form td {
+    padding: 0.45rem;
+    border-bottom: 1px solid var(--border-color);
+    text-align: left;
+    vertical-align: top;
+}
+
+.tabela-form th {
+    background-color: var(--highlight-suave);
+    color: var(--text-color);
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.tabela-form td {
+    min-width: 8rem;
+}
+
+.tabela-form td.acoes,
+.tabela-form th.acoes {
+    width: 1%;
+    white-space: nowrap;
+    text-align: right;
+}
+
+.tabela-form input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.45rem 0.55rem;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font: inherit;
+    font-size: 0.9rem;
+    background-color: var(--surface-color);
+    color: var(--text-color);
+}
+
+.tabela-form input:focus {
+    outline: none;
+    border-color: var(--secondary-color);
+    box-shadow: 0 0 0 3px var(--focus-ring);
+}
+
+.tabela-form input.invalido {
+    border-color: var(--accent-color);
+    background-color: #fdf0e6;
+}
+
+.tabela-form .erro {
+    display: block;
+    margin-top: 0.2rem;
+    color: var(--accent-color);
+    font-size: 0.78rem;
+}
+
+.tabela-form .linha-vazia td {
+    padding: 1rem;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}

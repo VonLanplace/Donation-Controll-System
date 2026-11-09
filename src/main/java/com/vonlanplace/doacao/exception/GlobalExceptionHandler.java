@@ -40,8 +40,8 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
  * produzirem resposta, e não exceção solta.</p>
  *
  * <p><strong>Nada de autenticação.</strong> A aplicação não tem Spring Security
- * configurado, apesar de o bean {@code PasswordEncoder} existir: qualquer chamada às
- * rotas da API é aceita, sem token e sem verificação de papel.</p>
+ * configurado: qualquer chamada às rotas da API é aceita, sem token e sem verificação
+ * de papel.</p>
  */
 @RestControllerAdvice
 public class GlobalExceptionHandler

@@ -1,13 +1,18 @@
 package com.vonlanplace.doacao.recebedor.controller;
 
 import com.vonlanplace.doacao.recebedor.OrgaoEmissorRG;
-import com.vonlanplace.doacao.recebedor.RecebedorCreateDTO;
 import com.vonlanplace.doacao.recebedor.RecebedorResponseDTO;
 import com.vonlanplace.doacao.recebedor.RecebedorService;
-import com.vonlanplace.doacao.recebedor.RecebedorUpdateDTO;
 import com.vonlanplace.doacao.recebedor.auxilio.AuxilioService;
+import com.vonlanplace.doacao.recebedor.cesta.RecebedorCestaCsvService;
+import com.vonlanplace.doacao.recebedor.cesta.RecebimentoCestaService;
+import com.vonlanplace.doacao.recebedor.cesta.StatusRecebimento;
 import com.vonlanplace.doacao.recebedor.dependente.DependenteService;
-import com.vonlanplace.doacao.recebedor.residencia.ResidenciaService;
+import com.vonlanplace.doacao.recebedor.form.RecebedorFormDTO;
+import com.vonlanplace.doacao.recebedor.form.RecebedorFormService;
+import com.vonlanplace.doacao.recebedor.form.RecebedorFormValidator;
+import com.vonlanplace.doacao.recebedor.residencia.TipoOcupacao;
+import com.vonlanplace.doacao.recebedor.residencia.TipoResidencia;
 import com.vonlanplace.doacao.recebedor.residencia.despesa.DespesaService;
 import com.vonlanplace.doacao.web.Flash;
 import com.vonlanplace.doacao.web.Opcoes;
@@ -17,10 +22,16 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,21 +39,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.time.LocalDate;
+import java.beans.PropertyEditorSupport;
+import java.time.YearMonth;
+import java.time.format.DateTimeParseException;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
  * Controller Thymeleaf de recebedores, prefixo {@code /recebedor}.
  *
- * <p><strong>O formulário mais longo do sistema.</strong> Dezessete campos,
- * quatro deles booleanos, um por residência e um pela data. É também a
- * entidade central: produto não referencia recebedor, mas recebedor referencia
- * residência, doação referencia recebedor, e cesta referencia recebedor.</p>
- *
- * <p><strong>CPF é chave de negócio.</strong> O recebedor não tem um "identificador
- * público" no padrão da marca, mas o CPF é o que a tela de busca recebe e o que
- * {@code findByCpf} resolve. O id UUID continua sendo a chave das rotas, porque
- * CPF não existe antes do cadastro e é editável (ainda que quase nunca mude).</p>
+ * <p><strong>O cadastro é um formulário único.</strong> Dados pessoais,
+ * residência, dependentes, auxílios e despesas são enviados juntos para
+ * {@link RecebedorFormService}, que grava tudo na mesma transação. As antigas
+ * telas independentes de residência, dependente, auxílio e despesa foram
+ * removidas do recurso web; os endpoints REST continuam existindo.</p>
  */
 @Controller
 @RequestMapping("/recebedor")
@@ -59,32 +70,60 @@ public class RecebedorViewController {
     private static final String LISTAGEM = "/recebedor/listar";
 
     private final RecebedorService recebedorService;
-    private final ResidenciaService residenciaService;
     private final DependenteService dependenteService;
     private final DespesaService despesaService;
     private final AuxilioService auxilioService;
+    private final RecebimentoCestaService recebimentoCestaService;
+    private final RecebedorCestaCsvService recebedorCestaCsvService;
+    private final RecebedorFormService recebedorFormService;
+    private final RecebedorFormValidator recebedorFormValidator;
 
     /**
      * Construtor com injeção de dependências.
      *
-     * @param recebedorService  serviço de recebedores
-     * @param residenciaService serviço de residências, para o select do formulário
-     * @param dependenteService serviço de dependentes, para o perfil da família
-     * @param despesaService    serviço de despesas, para a somatória da residência
-     * @param auxilioService    serviço de auxílios, para a somatória da renda assistencial
+     * @param recebedorService          serviço de recebedores
+     * @param dependenteService         serviço de dependentes, para o detalhe
+     * @param despesaService            serviço de despesas, para o detalhe
+     * @param auxilioService            serviço de auxílios, para o detalhe
+     * @param recebimentoCestaService   serviço do histórico de cestas
+     * @param recebedorCestaCsvService  serviço de exportação CSV
+     * @param recebedorFormService      serviço do formulário unificado
+     * @param recebedorFormValidator    validador das linhas dinâmicas
      */
     public RecebedorViewController(
             RecebedorService recebedorService,
-            ResidenciaService residenciaService,
             DependenteService dependenteService,
             DespesaService despesaService,
-            AuxilioService auxilioService
+            AuxilioService auxilioService,
+            RecebimentoCestaService recebimentoCestaService,
+            RecebedorCestaCsvService recebedorCestaCsvService,
+            RecebedorFormService recebedorFormService,
+            RecebedorFormValidator recebedorFormValidator
     ) {
         this.recebedorService = recebedorService;
-        this.residenciaService = residenciaService;
         this.dependenteService = dependenteService;
         this.despesaService = despesaService;
         this.auxilioService = auxilioService;
+        this.recebimentoCestaService = recebimentoCestaService;
+        this.recebedorCestaCsvService = recebedorCestaCsvService;
+        this.recebedorFormService = recebedorFormService;
+        this.recebedorFormValidator = recebedorFormValidator;
+    }
+
+    /**
+     * Registra o validador das linhas dinâmicas do formulário.
+     *
+     * @param binder binder do formulário
+     */
+    @InitBinder("recebedorForm")
+    public void initBinder(WebDataBinder binder) {
+        binder.addValidators(recebedorFormValidator);
+        binder.registerCustomEditor(int.class, new PropertyEditorSupport() {
+            @Override
+            public void setAsText(String text) {
+                setValue(text == null || text.isBlank() ? 0 : Integer.parseInt(text.trim()));
+            }
+        });
     }
 
     /**
@@ -106,11 +145,104 @@ public class RecebedorViewController {
                 ? recebedorService.findAll(pageable)
                 : recebedorService.findByNomeCompleto(busca, pageable);
 
+        Map<UUID, StatusRecebimento> statusCestas = recebimentoCestaService.statusDoMes(
+                pagina.getContent().stream().map(RecebedorResponseDTO::id).toList(),
+                YearMonth.now()
+        );
+
         model.addAttribute("titulo", "Recebedores");
         model.addAttribute("page", pagina);
         model.addAttribute("ordenacao", PaginaView.sortComoQuery(pageable));
         model.addAttribute("busca", busca == null ? "" : busca);
+        model.addAttribute("statusCestas", statusCestas);
+        model.addAttribute("mesAtual", YearMonth.now());
         return "recebedor/listar";
+    }
+
+    /**
+     * Consulta um recebedor por CPF ou RG.
+     *
+     * @param documento CPF ou RG informado
+     * @param redirectAttributes atributos do redirect
+     * @param model modelo da view de seleção
+     * @return redirect para o detalhe, ou a view {@code recebedor/selecao} quando houver
+     *         mais de um RG com o mesmo número
+     */
+    @GetMapping("/consultar")
+    public String consultar(
+            @RequestParam(name = "documento", required = false) String documento,
+            RedirectAttributes redirectAttributes,
+            Model model
+    ) {
+        List<RecebedorResponseDTO> encontrados = recebedorService.findByDocumento(documento);
+        if (encontrados.isEmpty()) {
+            return Flash.erro(redirectAttributes, LISTAGEM, "Nenhum recebedor encontrado para o documento informado.");
+        }
+        if (encontrados.size() == 1) {
+            return "redirect:/recebedor/detalhe/" + encontrados.get(0).id();
+        }
+
+        model.addAttribute("titulo", "Selecionar recebedor");
+        model.addAttribute("documento", documento);
+        model.addAttribute("recebedores", encontrados);
+        return "recebedor/selecao";
+    }
+
+    /**
+     * Exporta o relatório de cestas em CSV.
+     *
+     * @param inicio mês inicial no formato {@code AAAA-MM}
+     * @param fim    mês final no formato {@code AAAA-MM}
+     * @return arquivo CSV anexado à resposta
+     */
+    @GetMapping("/exportar.csv")
+    public ResponseEntity<byte[]> exportarCsv(
+            @RequestParam(name = "inicio", required = false) String inicio,
+            @RequestParam(name = "fim", required = false) String fim
+    ) {
+        YearMonth mesInicio = parseMes(inicio);
+        YearMonth mesFim = parseMes(fim);
+        if (mesInicio == null || mesFim == null || mesInicio.isAfter(mesFim)) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        byte[] csv = recebedorCestaCsvService.exportar(mesInicio, mesFim);
+        ContentDisposition disposicao = ContentDisposition.attachment()
+                .filename("cestas-" + mesInicio + "-a-" + mesFim + ".csv")
+                .build();
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, disposicao.toString())
+                .contentType(new MediaType("text", "csv"))
+                .body(csv);
+    }
+
+    /**
+     * Gera o recibo em PDF de um recebimento de cesta.
+     *
+     * @param id identificador do recebimento
+     * @return PDF anexado à resposta
+     */
+    @GetMapping("/cesta/pdf/{id}")
+    public ResponseEntity<byte[]> reciboPdf(@PathVariable UUID id) {
+        byte[] pdf = recebimentoCestaService.gerarReciboPdf(id);
+        ContentDisposition disposicao = ContentDisposition.attachment()
+                .filename("recibo-cesta-" + id + ".pdf")
+                .build();
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, disposicao.toString())
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(pdf);
+    }
+
+    private YearMonth parseMes(String valor) {
+        if (valor == null || valor.isBlank()) {
+            return null;
+        }
+        try {
+            return YearMonth.parse(valor);
+        } catch (DateTimeParseException ex) {
+            return null;
+        }
     }
 
     /**
@@ -127,8 +259,13 @@ public class RecebedorViewController {
         model.addAttribute("titulo", "Recebedor");
         model.addAttribute("recebedor", recebedor);
         model.addAttribute("dependentes", dependenteService.findByRecebedor(id));
+        model.addAttribute("auxilios", auxilioService.findByRecebedor(id));
+        model.addAttribute("despesas", despesaService.findByResidencia(recebedor.residencia().id()));
         model.addAttribute("totalDespesas", despesaService.somaPorResidencia(recebedor.residencia().id()));
         model.addAttribute("totalAuxilios", auxilioService.somaPorRecebedor(id));
+        model.addAttribute("historicoCestas", recebimentoCestaService.historico(id));
+        model.addAttribute("statusCestaAtual", recebimentoCestaService.statusAtual(id, YearMonth.now()));
+        model.addAttribute("elegibilidadeCesta", recebimentoCestaService.verificarElegibilidade(id, YearMonth.now()));
         return "recebedor/detalhe";
     }
 
@@ -141,26 +278,23 @@ public class RecebedorViewController {
     @GetMapping("/create")
     public String create(Model model) {
         model.addAttribute("titulo", "Novo recebedor");
-        model.addAttribute("recebedorDTO", new RecebedorCreateDTO(
-                "", "", "", null, null, "", "", false, "", "", false, false,
-                false, false, "", null
-        ));
+        model.addAttribute("recebedorForm", new RecebedorFormDTO());
         popularOpcoes(model);
         return "recebedor/form";
     }
 
     /**
-     * Cadastra um recebedor.
+     * Cadastra um recebedor e todos os seus dados em uma única transação.
      *
-     * @param recebedorDTO       dados do formulário
-     * @param resultado         erros de validação e de binding
+     * @param recebedorForm      dados do formulário
+     * @param resultado          erros de validação e de binding
      * @param redirectAttributes atributos do redirect
-     * @param model             modelo da view, para repopular os selects em caso de erro
-     * @return redirect para a listagem, ou a própria view em caso de erro
+     * @param model              modelo da view, para repopular os selects em caso de erro
+     * @return redirect para o detalhe, ou a própria view em caso de erro
      */
     @PostMapping("/create")
     public String criar(
-            @Valid @ModelAttribute("recebedorDTO") RecebedorCreateDTO recebedorDTO,
+            @Valid @ModelAttribute("recebedorForm") RecebedorFormDTO recebedorForm,
             BindingResult resultado,
             RedirectAttributes redirectAttributes,
             Model model
@@ -170,12 +304,19 @@ public class RecebedorViewController {
             return "recebedor/form";
         }
 
-        recebedorService.create(recebedorDTO);
-        return Flash.sucesso(redirectAttributes, LISTAGEM, "Recebedor cadastrado com sucesso.");
+        try {
+            RecebedorResponseDTO recebedor = recebedorFormService.criar(recebedorForm);
+            return Flash.sucesso(redirectAttributes,
+                    "/recebedor/detalhe/" + recebedor.id(),
+                    "Recebedor cadastrado com sucesso.");
+        } catch (IllegalArgumentException | IllegalStateException ex) {
+            resultado.reject("erro.negocio", ex.getMessage());
+            return "recebedor/form";
+        }
     }
 
     /**
-     * Abre o formulário de edição.
+     * Abre o formulário de edição com todos os dados do recebedor.
      *
      * @param id    identificador do recebedor
      * @param model modelo da view
@@ -183,46 +324,29 @@ public class RecebedorViewController {
      */
     @GetMapping("/editar/{id}")
     public String editar(@PathVariable UUID id, Model model) {
-        RecebedorResponseDTO recebedor = recebedorService.findById(id);
-
         model.addAttribute("titulo", "Editar recebedor");
-        model.addAttribute("recebedorDTO", new RecebedorUpdateDTO(
-                recebedor.nomeCompleto(),
-                recebedor.cpf(),
-                recebedor.rgNum(),
-                recebedor.rgEmissor(),
-                recebedor.dataNascimento(),
-                recebedor.telefonePessoal(),
-                recebedor.telefoneRecado(),
-                recebedor.leEscreve(),
-                recebedor.email(),
-                recebedor.pix(),
-                recebedor.necessitaJuridico(),
-                recebedor.necessitaPsicologo(),
-                recebedor.recebeuCesta(),
-                recebedor.parecerEntrevistador(),
-                recebedor.comentarios(),
-                recebedor.residencia().id()
-        ));
-        model.addAttribute("id", recebedor.id());
+        model.addAttribute("recebedorForm", recebedorFormService.carregarFormulario(id));
+        model.addAttribute("id", id);
+        model.addAttribute("elegibilidadeCesta",
+                recebimentoCestaService.verificarElegibilidade(id, YearMonth.now()));
         popularOpcoes(model);
         return "recebedor/form";
     }
 
     /**
-     * Atualiza um recebedor.
+     * Atualiza o recebedor e sincroniza residência, dependentes, auxílios e despesas.
      *
-     * @param id                identificador do recebedor
-     * @param recebedorDTO       dados do formulário
-     * @param resultado         erros de validação e de binding
+     * @param id                 identificador do recebedor
+     * @param recebedorForm      dados do formulário
+     * @param resultado          erros de validação e de binding
      * @param redirectAttributes atributos do redirect
-     * @param model             modelo da view, para repopular os selects em caso de erro
-     * @return redirect para a listagem, ou a própria view em caso de erro
+     * @param model              modelo da view, para repopular os selects em caso de erro
+     * @return redirect para o detalhe, ou a própria view em caso de erro
      */
     @PostMapping("/editar/{id}")
     public String atualizar(
             @PathVariable UUID id,
-            @Valid @ModelAttribute("recebedorDTO") RecebedorUpdateDTO recebedorDTO,
+            @Valid @ModelAttribute("recebedorForm") RecebedorFormDTO recebedorForm,
             BindingResult resultado,
             RedirectAttributes redirectAttributes,
             Model model
@@ -233,8 +357,15 @@ public class RecebedorViewController {
             return "recebedor/form";
         }
 
-        recebedorService.update(id, recebedorDTO);
-        return Flash.sucesso(redirectAttributes, LISTAGEM, "Recebedor atualizado com sucesso.");
+        try {
+            recebedorFormService.atualizar(id, recebedorForm);
+            return Flash.sucesso(redirectAttributes,
+                    "/recebedor/detalhe/" + id,
+                    "Recebedor atualizado com sucesso.");
+        } catch (IllegalArgumentException | IllegalStateException ex) {
+            resultado.reject("erro.negocio", ex.getMessage());
+            return "recebedor/form";
+        }
     }
 
     /**
@@ -259,19 +390,12 @@ public class RecebedorViewController {
     /**
      * Coloca no modelo as opções dos selects.
      *
-     * <p>A lista de residências se apresenta como "{cidade} — {logradouro},
-     * {numero}", porque o id de uma residência é um UUID que não significa nada
-     * para o usuário e o logradouro sozinho não desambigua duas casas na mesma
-     * rua.</p>
-     *
      * @param model modelo da view
      */
     private void popularOpcoes(Model model) {
         model.addAttribute("emissores", Opcoes.deEnum(OrgaoEmissorRG.class));
-        model.addAttribute("residencias", Opcoes.deItens(
-                residenciaService.findAll(),
-                r -> r.id().toString(),
-                r -> r.cidade() + " — " + r.logradouro() + ", " + r.numero()
-        ));
+        model.addAttribute("statusOpcoes", Opcoes.deEnum(StatusRecebimento.class));
+        model.addAttribute("tiposOcupacao", Opcoes.deEnum(TipoOcupacao.class));
+        model.addAttribute("tiposResidencia", Opcoes.deEnum(TipoResidencia.class));
     }
 }

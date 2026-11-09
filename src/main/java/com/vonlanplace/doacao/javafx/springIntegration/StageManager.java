@@ -34,7 +34,7 @@ public class StageManager {
     /** Contexto Spring usado como fábrica de controllers para o {@code FXMLLoader}. */
     private final ConfigurableApplicationContext springContext;
 
-    /** Janela principal, registrada por {@link PrimaryStageInitializer} antes do primeiro uso. */
+    /** Janela principal, registrada por {@link JavaFxLauncher} antes do primeiro uso. */
     private Stage primaryStage;
 
     /**

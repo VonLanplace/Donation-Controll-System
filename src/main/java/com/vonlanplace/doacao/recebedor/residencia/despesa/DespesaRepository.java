@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -24,4 +25,12 @@ public interface DespesaRepository extends JpaRepository<Despesa, UUID> {
      * @return página de despesas
      */
     Page<Despesa> findByResidencia_Id(UUID residenciaId, Pageable pageable);
+
+    /**
+     * Lista todas as despesas de uma residência, na ordem em que foram cadastradas.
+     *
+     * @param residenciaId identificador da residência
+     * @return lista de despesas
+     */
+    List<Despesa> findByResidencia_Id(UUID residenciaId);
 }

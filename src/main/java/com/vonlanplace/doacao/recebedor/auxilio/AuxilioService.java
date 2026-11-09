@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -99,6 +100,25 @@ public class AuxilioService {
             throws EntityNotFoundException {
         return auxilioRepository.findByRecebedor_Id(resolveRecebedor(recebedorId).getId(), pageable)
                 .map(auxilioMapper::toResponseDTO);
+    }
+
+    /**
+     * Lista os auxílios de um recebedor, sem paginação.
+     *
+     * <p>Alimenta a aba econômica do formulário unificado, onde a quantidade de
+     * linhas é pequena e a edição precisa do conjunto inteiro.</p>
+     *
+     * @param recebedorId identificador do recebedor
+     * @return lista de DTOs dos auxílios
+     * @throws EntityNotFoundException se o recebedor não existir
+     */
+    @Transactional(readOnly = true)
+    public List<AuxilioResponseDTO> findByRecebedor(UUID recebedorId)
+            throws EntityNotFoundException {
+        resolveRecebedor(recebedorId);
+        return auxilioRepository.findByRecebedor_Id(recebedorId).stream()
+                .map(auxilioMapper::toResponseDTO)
+                .toList();
     }
 
     /**

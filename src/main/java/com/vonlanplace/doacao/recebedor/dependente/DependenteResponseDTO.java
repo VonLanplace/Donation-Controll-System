@@ -8,7 +8,8 @@ import java.util.UUID;
 /**
  * Representação de saída de um {@link Dependente}.
  *
- * <p>Aninha o recebedor inteiro, seguindo o mesmo desenho de {@code CestaResponseDTO}.</p>
+ * <p>Aninha o recebedor inteiro, para que a página do dependente não precise de
+ * outra consulta.</p>
  *
  * @param id             identificador do dependente
  * @param nome           nome do dependente

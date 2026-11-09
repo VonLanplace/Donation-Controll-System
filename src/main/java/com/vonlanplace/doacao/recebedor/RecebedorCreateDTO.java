@@ -1,5 +1,6 @@
 package com.vonlanplace.doacao.recebedor;
 
+import com.vonlanplace.doacao.recebedor.cesta.StatusRecebimento;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -28,6 +29,7 @@ import java.util.UUID;
  * @param pix              chave PIX, opcional
  * @param necessitaJuridico se precisa de acompanhamento jurídico
  * @param necessitaPsicologo se precisa de acompanhamento psicológico
+ * @param statusCesta      status da cesta no mês corrente, opcional
  * @param comentarios      observações da entrevista, opcional
  * @param residenciaId     identificador da residência, obrigatório
  */
@@ -56,7 +58,7 @@ public record RecebedorCreateDTO(
         String pix,
         boolean necessitaJuridico,
         boolean necessitaPsicologo,
-        boolean recebeuCesta,
+        StatusRecebimento statusCesta,
         boolean parecerEntrevistador,
         @Size(max = 1000, message = "Os comentários devem ter no máximo 1000 caracteres")
         String comentarios,

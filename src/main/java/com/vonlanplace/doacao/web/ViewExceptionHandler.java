@@ -1,16 +1,6 @@
 package com.vonlanplace.doacao.web;
 
-import com.vonlanplace.doacao.produto.controller.ProdutoViewController;
-import com.vonlanplace.doacao.produto.marca.controller.MarcaProdutoViewController;
-import com.vonlanplace.doacao.cesta.controller.CestaViewController;
-import com.vonlanplace.doacao.doacao.controller.DoacaoViewController;
-import com.vonlanplace.doacao.produto.tipo.controller.TipoProdutoViewController;
 import com.vonlanplace.doacao.recebedor.controller.RecebedorViewController;
-import com.vonlanplace.doacao.entrevistador.controller.EntrevistadorViewController;
-import com.vonlanplace.doacao.recebedor.residencia.controller.ResidenciaViewController;
-import com.vonlanplace.doacao.recebedor.auxilio.controller.AuxilioViewController;
-import com.vonlanplace.doacao.recebedor.dependente.controller.DependenteViewController;
-import com.vonlanplace.doacao.recebedor.residencia.despesa.controller.DespesaViewController;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -42,24 +32,14 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  * <em>não</em> limita nada a controllers REST: {@code @RestControllerAdvice} é
  * meta-anotado com {@code @ControllerAdvice}, logo ele também alcança um
  * {@code @Controller} de view. Os dois tratam {@code EntityNotFoundException}, e sem
- * ordem definida o do REST vencia — a página de produto respondia 404 com o corpo
+ * ordem definida o do REST vencia — a página de recurso respondia 404 com o corpo
  * {@code problem+json} em vez do HTML. Com esta precedência, o advice de view é
  * consultado primeiro; como ele só se declara aplicável a view controllers, toda
  * chamada de {@code /api/*} cai por exclusividade no do REST e segue em JSON.</p>
  */
 @ControllerAdvice(assignableTypes = {
         HomeController.class,
-        ProdutoViewController.class,
-        MarcaProdutoViewController.class,
-        TipoProdutoViewController.class,
-        ResidenciaViewController.class,
-        EntrevistadorViewController.class,
-        RecebedorViewController.class,
-        CestaViewController.class,
-        DoacaoViewController.class,
-        DependenteViewController.class,
-        DespesaViewController.class,
-        AuxilioViewController.class
+        RecebedorViewController.class
 })
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class ViewExceptionHandler {
@@ -67,7 +47,7 @@ public class ViewExceptionHandler {
     /**
      * Devolve 404 com página própria quando o registro não existe.
      *
-     * <p>Sem isto a página de detalhe de produto responderia 500: o
+     * <p>Sem isto a página de detalhe responderia 500: o
      * {@code EntityNotFoundException} é levantado pela lógica de negócio, não é
      * declarado no {@code throws} de nenhum controller, e nada o traduz.</p>
      *

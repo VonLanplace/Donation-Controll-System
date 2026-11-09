@@ -1,7 +1,7 @@
 package com.vonlanplace.doacao.recebedor;
 
-import com.vonlanplace.doacao.cesta.CestaRepository;
-import com.vonlanplace.doacao.doacao.DoacaoRepository;
+import com.vonlanplace.doacao.recebedor.cesta.RecebimentoCestaService;
+import com.vonlanplace.doacao.recebedor.cesta.StatusRecebimento;
 import com.vonlanplace.doacao.recebedor.residencia.Residencia;
 import com.vonlanplace.doacao.recebedor.residencia.ResidenciaRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -13,6 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Locale;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -28,8 +30,8 @@ import java.util.UUID;
  * desconsiderar para que a atualização de um recebedor não entre em conflito consigo
  * mesmo.</p>
  *
- * <p><strong>A exclusão é manual, não cascade.</strong> Doações e cestas referenciam o
- * recebedor; a remoção é recusada com 409 enquanto houver qualquer um dos dois.</p>
+ * <p><strong>A exclusão remove os filhos em cascata.</strong> Dependentes e auxílios
+ * pertencem ao recebedor e são apagados junto; a residência é preservada.</p>
  */
 @Service
 public class RecebedorService {
@@ -37,30 +39,26 @@ public class RecebedorService {
     final private RecebedorRepository recebedorRepository;
     final private RecebedorMapper recebedorMapper;
     final private ResidenciaRepository residenciaRepository;
-    final private DoacaoRepository doacaoRepository;
-    final private CestaRepository cestaRepository;
+    final private RecebimentoCestaService recebimentoCestaService;
 
     /**
      * Construtor com injeção de dependências.
      *
-     * @param recebedorRepository repositório de recebedores
-     * @param recebedorMapper     conversor entidade/DTO
-     * @param residenciaRepository repositório de residências
-     * @param doacaoRepository    repositório de doações, usado na trava de exclusão
-     * @param cestaRepository     repositório de cestas, usado na trava de exclusão
+     * @param recebedorRepository     repositório de recebedores
+     * @param recebedorMapper         conversor entidade/DTO
+     * @param residenciaRepository    repositório de residências
+     * @param recebimentoCestaService serviço de histórico de cestas
      */
     public RecebedorService(
             RecebedorRepository recebedorRepository,
             RecebedorMapper recebedorMapper,
             ResidenciaRepository residenciaRepository,
-            DoacaoRepository doacaoRepository,
-            CestaRepository cestaRepository
+            RecebimentoCestaService recebimentoCestaService
     ) {
         this.recebedorRepository = recebedorRepository;
         this.recebedorMapper = recebedorMapper;
         this.residenciaRepository = residenciaRepository;
-        this.doacaoRepository = doacaoRepository;
-        this.cestaRepository = cestaRepository;
+        this.recebimentoCestaService = recebimentoCestaService;
     }
 
     /**
@@ -181,6 +179,38 @@ public class RecebedorService {
     }
 
     /**
+     * Consulta recebedores por CPF ou RG.
+     *
+     * <p>A entrada é normalizada removendo pontuação. Com 11 dígitos a busca é feita
+     * pelo CPF; nos demais casos, pelo número do RG. Como o RG não é único, o retorno é
+     * uma lista — a tela decide entre abrir o detalhe ou pedir a escolha.</p>
+     *
+     * @param documento CPF ou RG informado pelo usuário
+     * @return lista de recebedores encontrados, possivelmente vazia
+     */
+    @Transactional(readOnly = true)
+    public List<RecebedorResponseDTO> findByDocumento(String documento) {
+        if (documento == null || documento.isBlank()) {
+            return List.of();
+        }
+
+        String normalizado = documento.replaceAll("[^0-9A-Za-z]", "").toUpperCase(Locale.ROOT);
+        if (normalizado.isEmpty()) {
+            return List.of();
+        }
+
+        if (normalizado.matches("\\d{11}")) {
+            return recebedorRepository.findByCpf(normalizado).stream()
+                    .map(recebedorMapper::toResponseDTO)
+                    .toList();
+        }
+
+        return recebedorRepository.findByRgNumIgnoreCase(normalizado).stream()
+                .map(recebedorMapper::toResponseDTO)
+                .toList();
+    }
+
+    /**
      * Busca recebedores pelo nome completo exato.
      *
      * @param nomeCompleto nome completo
@@ -238,6 +268,7 @@ public class RecebedorService {
         Recebedor recebedor = recebedorMapper.toEntity(createDTO);
         recebedor.setResidencia(resolveResidencia(createDTO.residenciaId()));
         Recebedor saved = recebedorRepository.save(recebedor);
+        recebimentoCestaService.registrarStatusAtual(saved.getId(), createDTO.statusCesta());
         return recebedorMapper.toResponseDTO(saved);
     }
 
@@ -262,27 +293,20 @@ public class RecebedorService {
         recebedor.setResidencia(resolveResidencia(updateDTO.residenciaId()));
         recebedorMapper.updateEntityFromDTO(updateDTO, recebedor);
         Recebedor saved = recebedorRepository.save(recebedor);
+        recebimentoCestaService.registrarStatusAtual(saved.getId(), updateDTO.statusCesta());
         return recebedorMapper.toResponseDTO(saved);
     }
 
     /**
-     * Exclui o recebedor, recusando a remoção se houver doações ou cestas vinculadas.
+     * Exclui o recebedor e os filhos que pertencem a ele.
      *
      * @param id identificador do recebedor
      * @throws EntityNotFoundException se o recebedor não existir
-     * @throws IllegalStateException    se houver doações ou cestas vinculadas
      */
     @Transactional
     public void delete(UUID id) throws EntityNotFoundException {
         Recebedor recebedor = recebedorRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Recebedor not found: " + id));
-
-        if (doacaoRepository.existsByRecebedor(recebedor)) {
-            throw new IllegalStateException("Não é possível excluir recebedor com doações vinculadas");
-        }
-        if (cestaRepository.existsByRecebedor(recebedor)) {
-            throw new IllegalStateException("Não é possível excluir recebedor com cestas vinculadas");
-        }
 
         recebedorRepository.delete(recebedor);
     }

@@ -6,7 +6,7 @@ import org.mapstruct.*;
 /**
  * Conversor entre {@link Despesa} e seus DTOs.
  *
- * <p>Segue o desenho de {@code CestaMapper}: os DTOs recebem {@code residenciaId}
+ * <p>Os DTOs recebem {@code residenciaId}
  * e a entidade guarda a referência, então os métodos de escrita ignoram
  * {@code residencia} e o {@code DespesaService} resolve o vínculo pelo
  * repositório. O sentido inverso é a ponte {@code source = "residencia.id"}.</p>

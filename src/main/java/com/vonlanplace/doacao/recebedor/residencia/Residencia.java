@@ -24,9 +24,8 @@ import java.util.UUID;
  * <p><strong>Por isso a exclusão aqui não é travada em código.</strong> Sem cascade
  * configurado, remover uma residência com moradores viola a FK e o
  * {@code GlobalExceptionHandler} traduz a violação para 409 com a mensagem genérica
- * "Conflito de Dados", diferente da mensagem específica que
- * {@code RecebedorService} e {@code MarcaProdutoService} produzem. A assimetria é
- * conhecida e não foi corrigida.</p>
+ * "Conflito de Dados", diferente da mensagem específica que o
+ * {@code RecebedorService} produz. A assimetria é conhecida e não foi corrigida.</p>
  *
  * <p>{@code @Data} é proibido nesta classe: o par com {@code Recebedor.recebedores}
  * recursaria no {@code toString}.</p>

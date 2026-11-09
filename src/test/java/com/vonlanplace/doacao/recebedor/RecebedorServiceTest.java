@@ -1,9 +1,5 @@
 package com.vonlanplace.doacao.recebedor;
 
-import com.vonlanplace.doacao.cesta.Cesta;
-import com.vonlanplace.doacao.cesta.CestaRepository;
-import com.vonlanplace.doacao.doacao.Doacao;
-import com.vonlanplace.doacao.doacao.DoacaoRepository;
 import com.vonlanplace.doacao.recebedor.residencia.Residencia;
 import com.vonlanplace.doacao.recebedor.residencia.ResidenciaRepository;
 import com.vonlanplace.doacao.recebedor.residencia.TipoOcupacao;
@@ -32,9 +28,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
  * desconsiderar justamente para a atualização não conflitar consigo mesma, e é esse
  * detalhe — passar o id certo ou {@code null} — que os casos de atualização cobrem.</p>
  *
- * <p><strong>As duas travas de exclusão também são testadas de verdade.</strong> Doação e
- * cesta são inseridas direto pelo repositório, porque o que se quer exercitar é o
- * {@code existsByRecebedor} de cada um, não o serviço que os cria.</p>
+ * <p><strong>A exclusão também é testada de verdade.</strong> O caso remove um recebedor
+ * sem filhos e confere que ele saiu da base.</p>
  */
 @SpringBootTest
 @Transactional
@@ -49,12 +44,6 @@ class RecebedorServiceTest {
 
     @Autowired
     private ResidenciaRepository residenciaRepository;
-
-    @Autowired
-    private DoacaoRepository doacaoRepository;
-
-    @Autowired
-    private CestaRepository cestaRepository;
 
     private static final PageRequest PAGINA = PageRequest.of(0, 20);
 
@@ -98,7 +87,7 @@ class RecebedorServiceTest {
                 "João da Costa", "22222222222", "12345", OrgaoEmissorRG.SSP,
                 LocalDate.of(1990, 3, 10), "81999999999", null,
                 true, "joao@email.com", "joao@pix.com",
-                false, false, false, false, "observação", residencia.getId());
+                false, false, null, false, "observação", residencia.getId());
     }
 
     @Test
@@ -117,7 +106,7 @@ class RecebedorServiceTest {
         RecebedorCreateDTO dto = new RecebedorCreateDTO(
                 "Outro", "99988877766", null, null,
                 LocalDate.of(1990, 1, 1), null, null,
-                true, null, null, false, false, false, false, null, UUID.randomUUID());
+                true, null, null, false, false, null, false, null, UUID.randomUUID());
 
         assertThatThrownBy(() -> recebedorService.create(dto))
                 .isInstanceOf(EntityNotFoundException.class)
@@ -130,7 +119,7 @@ class RecebedorServiceTest {
         RecebedorCreateDTO duplicado = new RecebedorCreateDTO(
                 "Outra Pessoa", "11111111111", null, null,
                 LocalDate.of(1990, 1, 1), null, null,
-                true, null, null, false, false, false, false, null, residencia.getId());
+                true, null, null, false, false, null, false, null, residencia.getId());
 
         assertThatThrownBy(() -> recebedorService.create(duplicado))
                 .isInstanceOf(IllegalStateException.class)
@@ -143,7 +132,7 @@ class RecebedorServiceTest {
         RecebedorCreateDTO duplicado = new RecebedorCreateDTO(
                 "Outra Pessoa", "99988877766", null, null,
                 LocalDate.of(1990, 1, 1), null, null,
-                true, null, "maria@pix.com", false, false, false, false, null, residencia.getId());
+                true, null, "maria@pix.com", false, false, null, false, null, residencia.getId());
 
         assertThatThrownBy(() -> recebedorService.create(duplicado))
                 .isInstanceOf(IllegalStateException.class)
@@ -156,7 +145,7 @@ class RecebedorServiceTest {
         RecebedorResponseDTO criado = recebedorService.create(new RecebedorCreateDTO(
                 "Outra Pessoa", "99988877766", null, null,
                 LocalDate.of(1990, 1, 1), null, null,
-                true, null, "   ", false, false, false, false, null, residencia.getId()));
+                true, null, "   ", false, false, null, false, null, residencia.getId()));
 
         assertThat(criado.pix()).isEqualTo("   ");
     }
@@ -228,7 +217,7 @@ class RecebedorServiceTest {
                 new RecebedorUpdateDTO(
                         "Maria Souza", "11111111111", null, null,
                         LocalDate.of(1980, 5, 20), null, null,
-                        true, null, "nova@pix.com", false, false, false, false, null, residencia.getId()));
+                        true, null, "nova@pix.com", false, false, null, false, null, residencia.getId()));
 
         assertThat(atualizado.nomeCompleto()).isEqualTo("Maria Souza");
         assertThat(atualizado.pix()).isEqualTo("nova@pix.com");
@@ -250,7 +239,7 @@ class RecebedorServiceTest {
                 new RecebedorUpdateDTO(
                         "Maria Souza", "55566677788", null, null,
                         LocalDate.of(1980, 5, 20), null, null,
-                        true, null, null, false, false, false, false, null, residencia.getId())))
+                        true, null, null, false, false, null, false, null, residencia.getId())))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage("CPF já cadastrado para outro recebedor");
     }
@@ -272,7 +261,7 @@ class RecebedorServiceTest {
                 new RecebedorUpdateDTO(
                         "Maria Souza", "11111111111", null, null,
                         LocalDate.of(1980, 5, 20), null, null,
-                        true, null, "joao@pix.com", false, false, false, false, null, residencia.getId())))
+                        true, null, "joao@pix.com", false, false, null, false, null, residencia.getId())))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage("Chave PIX já cadastrada para outro recebedor");
     }
@@ -285,45 +274,17 @@ class RecebedorServiceTest {
                 new RecebedorUpdateDTO(
                         "Fantasma", "00000000000", null, null,
                         LocalDate.of(1980, 1, 1), null, null,
-                        true, null, null, false, false, false, false, null, residencia.getId())))
+                        true, null, null, false, false, null, false, null, residencia.getId())))
                 .isInstanceOf(EntityNotFoundException.class);
     }
 
     @Test
-    @DisplayName("remove recebedor sem doações nem cestas")
+    @DisplayName("remove recebedor")
     void removeRecebedor() {
         UUID id = recebedor.getId();
         recebedorService.delete(id);
 
         assertThat(recebedorRepository.findById(id)).isEmpty();
-    }
-
-    @Test
-    @DisplayName("recusa remover recebedor com doação vinculada")
-    void recusaRemoverRecebedorComDoacao() {
-        Doacao doacao = new Doacao();
-        doacao.setData(LocalDate.of(2024, 1, 10));
-        doacao.setRecebedor(recebedor);
-        doacaoRepository.save(doacao);
-
-        assertThatThrownBy(() -> recebedorService.delete(recebedor.getId()))
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessage("Não é possível excluir recebedor com doações vinculadas");
-        assertThat(recebedorRepository.findById(recebedor.getId())).isPresent();
-    }
-
-    @Test
-    @DisplayName("recusa remover recebedor com cesta vinculada")
-    void recusaRemoverRecebedorComCesta() {
-        Cesta cesta = new Cesta();
-        cesta.setDataEntrega(LocalDate.of(2024, 2, 3));
-        cesta.setRecebedor(recebedor);
-        cestaRepository.save(cesta);
-
-        assertThatThrownBy(() -> recebedorService.delete(recebedor.getId()))
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessage("Não é possível excluir recebedor com cestas vinculadas");
-        assertThat(recebedorRepository.findById(recebedor.getId())).isPresent();
     }
 
     @Test

@@ -13,12 +13,24 @@
 
   <div th:replace="~{fragments/flash :: flash}"></div>
 
+  <form class="form-busca" method="get" th:action="@{/recebedor/consultar}">
+    <input type="text" name="documento" placeholder="CPF ou RG"
+           aria-label="Consultar por CPF ou RG">
+    <button class="botao botao-primario" type="submit">Consultar</button>
+  </form>
+
   <form class="form-busca" method="get" th:action="@{/recebedor/listar}">
     <input type="hidden" name="sort" th:value="${ordenacao}">
     <input type="text" name="busca" th:value="${busca}"
            placeholder="Nome completo" aria-label="Buscar por nome">
     <button class="botao botao-primario" type="submit">Buscar</button>
     <a class="botao" th:if="${!#strings.isEmpty(busca)}" th:href="@{/recebedor/listar}">Limpar</a>
+  </form>
+
+  <form class="form-busca" method="get" th:action="@{/recebedor/exportar.csv}">
+    <input type="month" name="inicio" aria-label="Mês inicial" required>
+    <input type="month" name="fim" aria-label="Mês final" required>
+    <button class="botao" type="submit">Exportar CSV</button>
   </form>
 
   <div class="card">
@@ -33,7 +45,7 @@
           <th>Nome</th>
           <th>CPF</th>
           <th>Residência</th>
-          <th>Cesta</th>
+          <th>Cesta do mês</th>
           <th class="acoes">Ações</th>
         </tr>
         </thead>
@@ -42,8 +54,7 @@
           <td th:text="${r.nomeCompleto}">Ana Souza</td>
           <td th:text="${r.cpf}">00000000000</td>
           <td th:text="${r.residencia?.cidade} ?: '—'">São Paulo</td>
-          <!-- Sim e não no lugar de true e false, que é o que o banco grava. -->
-          <td th:text="${r.recebeuCesta} ? 'Sim' : 'Não'">Não</td>
+          <td th:text="${statusCestas[r.id]?.descricao} ?: 'Não informado'">Não informado</td>
           <td class="acoes">
             <a class="botao botao-primario" th:href="@{/recebedor/detalhe/{id}(id=${r.id})}">Ver</a>
             <a class="botao botao-pequeno" th:href="@{/recebedor/editar/{id}(id=${r.id})}">Editar</a>

@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -24,4 +25,12 @@ public interface AuxilioRepository extends JpaRepository<Auxilio, UUID> {
      * @return página de auxílios
      */
     Page<Auxilio> findByRecebedor_Id(UUID recebedorId, Pageable pageable);
+
+    /**
+     * Lista todos os auxílios de um recebedor, na ordem em que foram cadastrados.
+     *
+     * @param recebedorId identificador do recebedor
+     * @return lista de auxílios
+     */
+    List<Auxilio> findByRecebedor_Id(UUID recebedorId);
 }

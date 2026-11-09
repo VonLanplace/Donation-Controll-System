@@ -5,31 +5,15 @@
   <div class="logo">
     <a th:href="@{/}">Sistema de Doação</a>
   </div>
-  <nav th:if="${session != null and session.entrevistadorLogado != null}">
+  <nav>
     <!--
-      Só entram rotas que existem de fato. As versões anteriores deste fragmento
-      apontavam para /sobre e /contato, que nenhuma controller mapeia: eram dois
-      links que davam 404 em toda página do projeto.
-
-      O nav só aparece com sessão logada. Página pública é só /login (e o
-      cadastro do primeiro entrevistador, liberado pelo interceptor), nenhuma
-      delas usa header. Início fica de fora porque o logo já leva à home.
+      Só entram rotas que existem de fato. O recurso web é o cadastro único de
+      recebedores; residência, dependentes, despesas e auxílios são abas desse
+      formulário. Início fica de fora porque o logo já leva à raiz, que
+      redireciona para a listagem de recebedores.
     -->
     <ul class="nav-links">
       <li><a th:href="@{/recebedor}">Recebedores</a></li>
-      <li><a th:href="@{/residencia}">Residências</a></li>
-      <li><a th:href="@{/dependente}">Dependentes</a></li>
-      <li><a th:href="@{/despesa}">Despesas</a></li>
-      <li><a th:href="@{/auxilio}">Auxílios</a></li>
-      <li><a th:href="@{/doacao}">Doações</a></li>
-      <li><a th:href="@{/cesta}">Cestas</a></li>
-      <li><a th:href="@{/entrevistador}">Entrevistadores</a></li>
-      <li><a th:href="@{/produto}">Produtos</a></li>
-      <li>
-        <form class="nav-sair" method="post" th:action="@{/logout}">
-          <button type="submit">Sair</button>
-        </form>
-      </li>
     </ul>
   </nav>
 </header>

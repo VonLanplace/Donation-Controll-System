@@ -1,7 +1,7 @@
 package com.vonlanplace.doacao.recebedor;
 
-import com.vonlanplace.doacao.doacao.Doacao;
 import com.vonlanplace.doacao.recebedor.auxilio.Auxilio;
+import com.vonlanplace.doacao.recebedor.cesta.RecebimentoCesta;
 import com.vonlanplace.doacao.recebedor.dependente.Dependente;
 import com.vonlanplace.doacao.recebedor.residencia.Residencia;
 import jakarta.persistence.*;
@@ -23,12 +23,11 @@ import java.util.UUID;
  * alternativas usadas pelo serviço para localizar uma pessoa.</p>
  *
  * <p><strong>Senha não existe aqui.</strong> O recebedor é identificado por documento e
- * contato, e não é usuário do sistema; a autenticação pertence a
- * {@code Entrevistador}.</p>
+ * contato, e não é usuário do sistema.</p>
  *
- * <p>As relações com {@link Residencia} e {@link Doacao} formam pares bidirecionais.
- * Por isso {@code @Data} é proibido — o {@code toString} gerado recursaria entre
- * recebedor, residência e doação até estourar a pilha. A classe usa
+ * <p>As relações com {@link Residencia}, {@link Dependente} e {@link Auxilio} formam
+ * pares bidirecionais. Por isso {@code @Data} é proibido — o {@code toString} gerado
+ * recursaria entre recebedor e os filhos até estourar a pilha. A classe usa
  * {@code @ToString} e {@code @EqualsAndHashCode} restritos a campos marcados com
  * {@code Include}.</p>
  */
@@ -104,10 +103,6 @@ public class Recebedor {
     @Column(name = "necessita_psicologo", nullable = false)
     private boolean necessitaPsicologo;
 
-    /** Indica se a pessoa já recebeu a cesta básica. Obrigatório. */
-    @Column(name = "recebeu_cesta", nullable = false)
-    private boolean recebeuCesta;
-
     /** Indica se a entrevista com o entrevistador ocorreu. Obrigatório. */
     @Column(name = "parecer_entrevistador", nullable = false)
     private boolean parecerEntrevistador;
@@ -125,10 +120,6 @@ public class Recebedor {
     )
     private Residencia residencia;
 
-    /** Doações recebidas por esta pessoa. Lado inverso de {@code Doacao.recebedor}. */
-    @OneToMany(mappedBy = "recebedor", fetch = FetchType.LAZY)
-    private List<Doacao> doacoes = new ArrayList<>();
-
     /** Dependentes da pessoa. Lado dono: o dependente morre com o recebedor. */
     @OneToMany(mappedBy = "recebedor", fetch = FetchType.LAZY,
             cascade = CascadeType.ALL, orphanRemoval = true)
@@ -138,4 +129,9 @@ public class Recebedor {
     @OneToMany(mappedBy = "recebedor", fetch = FetchType.LAZY,
             cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Auxilio> auxilios = new ArrayList<>();
+
+    /** Histórico de cestas recebidas ou recusadas. Lado dono: morre com o recebedor. */
+    @OneToMany(mappedBy = "recebedor", fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<RecebimentoCesta> recebimentos = new ArrayList<>();
 }

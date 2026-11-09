@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -99,6 +100,25 @@ public class DespesaService {
             throws EntityNotFoundException {
         return despesaRepository.findByResidencia_Id(resolveResidencia(residenciaId).getId(), pageable)
                 .map(despesaMapper::toResponseDTO);
+    }
+
+    /**
+     * Lista as despesas de uma residência, sem paginação.
+     *
+     * <p>Alimenta a aba econômica do formulário unificado, onde a quantidade de
+     * linhas é pequena e a edição precisa do conjunto inteiro.</p>
+     *
+     * @param residenciaId identificador da residência
+     * @return lista de DTOs das despesas
+     * @throws EntityNotFoundException se a residência não existir
+     */
+    @Transactional(readOnly = true)
+    public List<DespesaResponseDTO> findByResidencia(UUID residenciaId)
+            throws EntityNotFoundException {
+        resolveResidencia(residenciaId);
+        return despesaRepository.findByResidencia_Id(residenciaId).stream()
+                .map(despesaMapper::toResponseDTO)
+                .toList();
     }
 
     /**

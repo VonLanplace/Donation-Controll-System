@@ -14,8 +14,8 @@ import org.mapstruct.*;
  * {@code toResponseDTO → toUpdateDTO} é a ponte simples
  * {@code source = "residencia.id"}.</p>
  *
- * <p>{@code doacoes} é sempre ignorado: a coleção pertence a {@code Doacao}, que é o
- * lado dono da relação.</p>
+ * <p>As coleções {@code dependentes} e {@code auxilios} são sempre ignoradas: elas
+ * pertencem aos filhos, que são o lado dono da relação.</p>
  */
 @Mapper(componentModel = "spring", uses = {ResidenciaMapper.class})
 public interface RecebedorMapper {
@@ -36,20 +36,21 @@ public interface RecebedorMapper {
      * @return DTO de atualização preenchido
      */
     @Mapping(target = "residenciaId", source = "residencia.id")
+    @Mapping(target = "statusCesta", ignore = true)
     RecebedorUpdateDTO toUpdateDTO(Recebedor recebedor);
 
     /**
      * Aplica o DTO sobre a entidade já carregada, sem tocar em {@code id},
-     * {@code residencia}, {@code doacoes}, {@code dependentes} nem {@code auxilios}.
+     * {@code residencia}, {@code dependentes} nem {@code auxilios}.
      *
      * @param dto       DTO de origem
      * @param recebedor entidade de destino
      */
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "residencia", ignore = true)
-    @Mapping(target = "doacoes", ignore = true)
     @Mapping(target = "dependentes", ignore = true)
     @Mapping(target = "auxilios", ignore = true)
+    @Mapping(target = "recebimentos", ignore = true)
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updateEntityFromDTO(RecebedorUpdateDTO dto, @MappingTarget Recebedor recebedor);
 
@@ -61,8 +62,8 @@ public interface RecebedorMapper {
      */
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "residencia", ignore = true)
-    @Mapping(target = "doacoes", ignore = true)
     @Mapping(target = "dependentes", ignore = true)
     @Mapping(target = "auxilios", ignore = true)
+    @Mapping(target = "recebimentos", ignore = true)
     Recebedor toEntity(RecebedorCreateDTO dto);
 }

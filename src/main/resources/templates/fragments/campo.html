@@ -57,7 +57,7 @@
     <span th:if="${obrigatorio}" class="obrigatorio" title="obrigatório">*</span>
   </label>
   <select th:id="|f_${nome}|" th:field="*{__${nome}__}">
-    <option value="">Selecione…</option>
+    <option value="" th:text="${vazio != null ? vazio : 'Selecione…'}">Selecione…</option>
     <option th:each="opcao : ${opcoes}"
             th:value="${opcao.valor}"
             th:text="${opcao.rotulo}">Opção</option>
