@@ -2,6 +2,9 @@ package com.vonlanplace.doacao;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+
+import java.time.Clock;
 
 /**
  * Ponto de entrada do projeto de controle de doações.
@@ -33,5 +36,18 @@ public class DoacaoApplication {
         SpringApplication application = new SpringApplication(DoacaoApplication.class);
         application.setHeadless(false);
         application.run(args);
+    }
+
+    /**
+     * Relógio da aplicação.
+     *
+     * <p>Injetar {@link Clock} em vez de chamar {@code LocalDate.now()} permite
+     * fixar a data nos testes sem alterar o comportamento em produção.</p>
+     *
+     * @return relógio do sistema
+     */
+    @Bean
+    Clock clock() {
+        return Clock.systemDefaultZone();
     }
 }

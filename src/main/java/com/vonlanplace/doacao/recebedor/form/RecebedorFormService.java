@@ -14,6 +14,7 @@ import com.vonlanplace.doacao.recebedor.residencia.despesa.DespesaService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Clock;
 import java.time.YearMonth;
 import java.util.HashSet;
 import java.util.List;
@@ -43,6 +44,7 @@ public class RecebedorFormService {
     private final DespesaService despesaService;
     private final RecebimentoCestaService recebimentoCestaService;
     private final RecebedorFormMapper mapper;
+    private final Clock clock;
 
     /**
      * Construtor com injeção de dependências.
@@ -54,6 +56,7 @@ public class RecebedorFormService {
      * @param despesaService    serviço de despesas
      * @param recebimentoCestaService serviço do histórico de cestas
      * @param mapper            conversor do formulário
+     * @param clock             relógio da aplicação
      */
     public RecebedorFormService(
             RecebedorService recebedorService,
@@ -62,7 +65,8 @@ public class RecebedorFormService {
             AuxilioService auxilioService,
             DespesaService despesaService,
             RecebimentoCestaService recebimentoCestaService,
-            RecebedorFormMapper mapper
+            RecebedorFormMapper mapper,
+            Clock clock
     ) {
         this.recebedorService = recebedorService;
         this.residenciaService = residenciaService;
@@ -71,6 +75,7 @@ public class RecebedorFormService {
         this.despesaService = despesaService;
         this.recebimentoCestaService = recebimentoCestaService;
         this.mapper = mapper;
+        this.clock = clock;
     }
 
     /**
@@ -91,7 +96,7 @@ public class RecebedorFormService {
                 dependentes,
                 auxilios,
                 despesas,
-                recebimentoCestaService.statusAtual(id, YearMonth.now())
+                recebimentoCestaService.statusAtual(id, YearMonth.now(clock))
         );
     }
 

@@ -6,6 +6,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Clock;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.Collection;
@@ -37,6 +38,7 @@ public class RecebimentoCestaService {
     private final RecebedorRepository recebedorRepository;
     private final RecebimentoCestaMapper recebimentoCestaMapper;
     private final RecebedorCestaPdfService recebedorCestaPdfService;
+    private final Clock clock;
 
     /**
      * Construtor com injeção de dependências.
@@ -45,17 +47,20 @@ public class RecebimentoCestaService {
      * @param recebedorRepository        repositório de recebedores
      * @param recebimentoCestaMapper     conversor entidade/DTO
      * @param recebedorCestaPdfService   gerador do recibo em PDF
+     * @param clock                      relógio da aplicação
      */
     public RecebimentoCestaService(
             RecebimentoCestaRepository recebimentoCestaRepository,
             RecebedorRepository recebedorRepository,
             RecebimentoCestaMapper recebimentoCestaMapper,
-            RecebedorCestaPdfService recebedorCestaPdfService
+            RecebedorCestaPdfService recebedorCestaPdfService,
+            Clock clock
     ) {
         this.recebimentoCestaRepository = recebimentoCestaRepository;
         this.recebedorRepository = recebedorRepository;
         this.recebimentoCestaMapper = recebimentoCestaMapper;
         this.recebedorCestaPdfService = recebedorCestaPdfService;
+        this.clock = clock;
     }
 
     /**
@@ -129,7 +134,7 @@ public class RecebimentoCestaService {
                 .orElseThrow(() -> new EntityNotFoundException("Recebedor not found: " + recebedorId));
 
         YearMonth referencia = YearMonth.of(dto.ano(), dto.mes().getNumero());
-        if (referencia.isAfter(YearMonth.now())) {
+        if (referencia.isAfter(YearMonth.now(clock))) {
             throw new CestaNaoPermitidaException("Mês de referência não pode ser futuro");
         }
 
@@ -179,7 +184,7 @@ public class RecebimentoCestaService {
         if (status == null) {
             return;
         }
-        YearMonth agora = YearMonth.now();
+        YearMonth agora = YearMonth.now(clock);
         registrarOuAtualizar(recebedorId, new RecebimentoCestaCreateDTO(
                 agora.getYear(),
                 MesRecebimento.de(agora.getMonthValue()),
@@ -344,8 +349,8 @@ public class RecebimentoCestaService {
         if (dto.dataEntrega() != null) {
             return dto.dataEntrega();
         }
-        if (dto.status() == StatusRecebimento.RECEBEU && referencia.equals(YearMonth.now())) {
-            return LocalDate.now();
+        if (dto.status() == StatusRecebimento.RECEBEU && referencia.equals(YearMonth.now(clock))) {
+            return LocalDate.now(clock);
         }
         return null;
     }

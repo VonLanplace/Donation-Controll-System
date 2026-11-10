@@ -5,6 +5,7 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 import java.math.BigDecimal;
+import java.time.Clock;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -24,6 +25,18 @@ import java.util.List;
 public class RecebedorFormValidator implements Validator {
 
     private static final BigDecimal VALOR_MINIMO = new BigDecimal("0.01");
+
+    /** Relógio usado para comparar a data de nascimento com hoje. */
+    private final Clock clock;
+
+    /**
+     * Construtor com injeção do relógio.
+     *
+     * @param clock relógio da aplicação
+     */
+    public RecebedorFormValidator(Clock clock) {
+        this.clock = clock;
+    }
 
     @Override
     public boolean supports(Class<?> clazz) {
@@ -60,7 +73,7 @@ public class RecebedorFormValidator implements Validator {
                         "A idade não pode ser negativa");
             }
             if (linha.getDataNascimento() != null
-                    && !linha.getDataNascimento().isBefore(LocalDate.now())) {
+                    && !linha.getDataNascimento().isBefore(LocalDate.now(clock))) {
                 errors.rejectValue(prefixo + "dataNascimento", "dependente.dataNascimento.passado",
                         "A data de nascimento deve ser no passado");
             }

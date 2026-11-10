@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.Clock;
 import java.time.YearMonth;
 import java.util.List;
 import java.util.UUID;
@@ -37,19 +38,23 @@ public class RecebimentoCestaAPIController {
 
     private final RecebimentoCestaService recebimentoCestaService;
     private final RecebedorService recebedorService;
+    private final Clock clock;
 
     /**
      * Construtor com injeção de dependências.
      *
      * @param recebimentoCestaService serviço de cestas
      * @param recebedorService        serviço de recebedores, para resolver documento
+     * @param clock                   relógio da aplicação
      */
     public RecebimentoCestaAPIController(
             RecebimentoCestaService recebimentoCestaService,
-            RecebedorService recebedorService
+            RecebedorService recebedorService,
+            Clock clock
     ) {
         this.recebimentoCestaService = recebimentoCestaService;
         this.recebedorService = recebedorService;
+        this.clock = clock;
     }
 
     /**
@@ -126,7 +131,7 @@ public class RecebimentoCestaAPIController {
 
     private YearMonth referencia(Integer ano, Integer mes) {
         if (ano == null || mes == null) {
-            return YearMonth.now();
+            return YearMonth.now(clock);
         }
         return YearMonth.of(ano, mes);
     }

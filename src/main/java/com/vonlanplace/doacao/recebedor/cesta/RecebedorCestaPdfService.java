@@ -14,6 +14,7 @@ import com.lowagie.text.pdf.PdfWriter;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
+import java.time.Clock;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -36,6 +37,18 @@ public class RecebedorCestaPdfService {
 
     /** Formato de data e hora da emissão. */
     private static final DateTimeFormatter EMISSAO = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+
+    /** Relógio usado no carimbo de emissão. */
+    private final Clock clock;
+
+    /**
+     * Construtor com injeção do relógio.
+     *
+     * @param clock relógio da aplicação
+     */
+    public RecebedorCestaPdfService(Clock clock) {
+        this.clock = clock;
+    }
 
     /**
      * Gera o PDF do recibo.
@@ -113,7 +126,7 @@ public class RecebedorCestaPdfService {
             documento.add(new Paragraph(
                     "Documento gerado a partir do snapshot do cadastro no momento do recebimento.",
                     pequena));
-            documento.add(new Paragraph("Emitido em " + EMISSAO.format(LocalDateTime.now()), pequena));
+            documento.add(new Paragraph("Emitido em " + EMISSAO.format(LocalDateTime.now(clock)), pequena));
             documento.add(new Paragraph(" "));
             documento.add(new Paragraph("________________________________________________", normal));
             documento.add(new Paragraph("Assinatura do responsável pela entrega", pequena));

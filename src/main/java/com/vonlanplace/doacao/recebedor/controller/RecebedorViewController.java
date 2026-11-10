@@ -40,6 +40,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.beans.PropertyEditorSupport;
+import java.time.Clock;
 import java.time.YearMonth;
 import java.time.format.DateTimeParseException;
 import java.util.List;
@@ -77,6 +78,7 @@ public class RecebedorViewController {
     private final RecebedorCestaCsvService recebedorCestaCsvService;
     private final RecebedorFormService recebedorFormService;
     private final RecebedorFormValidator recebedorFormValidator;
+    private final Clock clock;
 
     /**
      * Construtor com injeção de dependências.
@@ -89,6 +91,7 @@ public class RecebedorViewController {
      * @param recebedorCestaCsvService  serviço de exportação CSV
      * @param recebedorFormService      serviço do formulário unificado
      * @param recebedorFormValidator    validador das linhas dinâmicas
+     * @param clock                     relógio da aplicação
      */
     public RecebedorViewController(
             RecebedorService recebedorService,
@@ -98,7 +101,8 @@ public class RecebedorViewController {
             RecebimentoCestaService recebimentoCestaService,
             RecebedorCestaCsvService recebedorCestaCsvService,
             RecebedorFormService recebedorFormService,
-            RecebedorFormValidator recebedorFormValidator
+            RecebedorFormValidator recebedorFormValidator,
+            Clock clock
     ) {
         this.recebedorService = recebedorService;
         this.dependenteService = dependenteService;
@@ -108,6 +112,7 @@ public class RecebedorViewController {
         this.recebedorCestaCsvService = recebedorCestaCsvService;
         this.recebedorFormService = recebedorFormService;
         this.recebedorFormValidator = recebedorFormValidator;
+        this.clock = clock;
     }
 
     /**
@@ -147,7 +152,7 @@ public class RecebedorViewController {
 
         Map<UUID, StatusRecebimento> statusCestas = recebimentoCestaService.statusDoMes(
                 pagina.getContent().stream().map(RecebedorResponseDTO::id).toList(),
-                YearMonth.now()
+                YearMonth.now(clock)
         );
 
         model.addAttribute("titulo", "Recebedores");
@@ -155,7 +160,7 @@ public class RecebedorViewController {
         model.addAttribute("ordenacao", PaginaView.sortComoQuery(pageable));
         model.addAttribute("busca", busca == null ? "" : busca);
         model.addAttribute("statusCestas", statusCestas);
-        model.addAttribute("mesAtual", YearMonth.now());
+        model.addAttribute("mesAtual", YearMonth.now(clock));
         return "recebedor/listar";
     }
 
@@ -264,8 +269,8 @@ public class RecebedorViewController {
         model.addAttribute("totalDespesas", despesaService.somaPorResidencia(recebedor.residencia().id()));
         model.addAttribute("totalAuxilios", auxilioService.somaPorRecebedor(id));
         model.addAttribute("historicoCestas", recebimentoCestaService.historico(id));
-        model.addAttribute("statusCestaAtual", recebimentoCestaService.statusAtual(id, YearMonth.now()));
-        model.addAttribute("elegibilidadeCesta", recebimentoCestaService.verificarElegibilidade(id, YearMonth.now()));
+        model.addAttribute("statusCestaAtual", recebimentoCestaService.statusAtual(id, YearMonth.now(clock)));
+        model.addAttribute("elegibilidadeCesta", recebimentoCestaService.verificarElegibilidade(id, YearMonth.now(clock)));
         return "recebedor/detalhe";
     }
 
@@ -328,7 +333,7 @@ public class RecebedorViewController {
         model.addAttribute("recebedorForm", recebedorFormService.carregarFormulario(id));
         model.addAttribute("id", id);
         model.addAttribute("elegibilidadeCesta",
-                recebimentoCestaService.verificarElegibilidade(id, YearMonth.now()));
+                recebimentoCestaService.verificarElegibilidade(id, YearMonth.now(clock)));
         popularOpcoes(model);
         return "recebedor/form";
     }

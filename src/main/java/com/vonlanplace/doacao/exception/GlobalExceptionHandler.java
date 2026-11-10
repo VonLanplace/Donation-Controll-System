@@ -78,6 +78,23 @@ public class GlobalExceptionHandler
     }
 
     /**
+     * Traduz entrada inválida em 400.
+     *
+     * @param exception exceção original
+     * @return detalhe do problema com o status 400
+     */
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ProblemDetail handleIllegalArgumentException(
+            IllegalArgumentException exception
+    ) {
+        return genericProblemDetailFactory.create(
+                HttpStatus.BAD_REQUEST,
+                "Requisição Inválida",
+                exception.getMessage()
+        );
+    }
+
+    /**
      * Traduz conflito de regra de negócio em 409.
      *
      * @param exception exceção original
