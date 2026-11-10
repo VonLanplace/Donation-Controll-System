@@ -14,10 +14,13 @@ import com.vonlanplace.doacao.recebedor.residencia.TipoOcupacao;
 import com.vonlanplace.doacao.recebedor.residencia.TipoResidencia;
 import com.vonlanplace.doacao.recebedor.residencia.despesa.DespesaResponseDTO;
 import com.vonlanplace.doacao.recebedor.residencia.despesa.DespesaService;
+import com.vonlanplace.doacao.support.config.RelogioFixoTestConfig;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
@@ -33,6 +36,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
  */
 @SpringBootTest
 @Transactional
+@Import(RelogioFixoTestConfig.class)
 @DisplayName("RecebedorFormService")
 class RecebedorFormServiceTest {
 
@@ -76,7 +80,7 @@ class RecebedorFormServiceTest {
         assertThat(despesaService.findByResidencia(criado.residencia().id()))
                 .extracting(DespesaResponseDTO::fonte)
                 .containsExactly("Aluguel");
-        assertThat(recebimentoCestaService.statusAtual(criado.id(), YearMonth.now()))
+        assertThat(recebimentoCestaService.statusAtual(criado.id(), YearMonth.of(2026, 1)))
                 .isEqualTo(StatusRecebimento.RECEBEU);
         assertThat(recebedorFormService.carregarFormulario(criado.id()).getStatusCesta())
                 .isEqualTo(StatusRecebimento.RECEBEU);
@@ -124,6 +128,41 @@ class RecebedorFormServiceTest {
     }
 
     @Test
+    @DisplayName("cria recebedor sem filhos quando as listas vêm vazias")
+    void criaSemFilhos() {
+        RecebedorFormDTO form = formularioValido("33344455566", "Sem Filhos");
+        form.getDependentes().clear();
+        form.getAuxilios().clear();
+        form.getDespesas().clear();
+
+        RecebedorResponseDTO criado = recebedorFormService.criar(form);
+
+        assertThat(dependenteService.findByRecebedor(criado.id())).isEmpty();
+        assertThat(auxilioService.findByRecebedor(criado.id())).isEmpty();
+        assertThat(despesaService.findByResidencia(criado.residencia().id())).isEmpty();
+    }
+
+    @Test
+    @DisplayName("remove todos os dependentes ao esvaziar a lista")
+    void removeTodosOsDependentes() {
+        RecebedorResponseDTO criado = recebedorFormService.criar(
+                formularioValido("33344455566", "Sem Filhos"));
+
+        RecebedorFormDTO edicao = recebedorFormService.carregarFormulario(criado.id());
+        edicao.getDependentes().clear();
+        recebedorFormService.atualizar(criado.id(), edicao);
+
+        assertThat(dependenteService.findByRecebedor(criado.id())).isEmpty();
+    }
+
+    @Test
+    @DisplayName("formulário de recebedor inexistente falha")
+    void carregaInexistente() {
+        assertThatThrownBy(() -> recebedorFormService.carregarFormulario(java.util.UUID.randomUUID()))
+                .isInstanceOf(EntityNotFoundException.class);
+    }
+
+    @Test
     @DisplayName("recusa mover dependente de outro recebedor")
     void recusaDependenteDeOutroRecebedor() {
         RecebedorResponseDTO primeiro = recebedorFormService.criar(
@@ -144,6 +183,51 @@ class RecebedorFormServiceTest {
         assertThatThrownBy(() -> recebedorFormService.atualizar(primeiro.id(), edicao))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Dependente não pertence");
+    }
+
+    @Test
+    @DisplayName("recusa mover auxílio de outro recebedor")
+    void recusaAuxilioDeOutroRecebedor() {
+        RecebedorResponseDTO primeiro = recebedorFormService.criar(
+                formularioValido("11122233344", "Ana Souza"));
+        RecebedorResponseDTO segundo = recebedorFormService.criar(
+                formularioValido("55566677788", "Bia Lima"));
+
+        AuxilioResponseDTO auxilioDoSegundo = auxilioService.findByRecebedor(segundo.id()).get(0);
+
+        RecebedorFormDTO edicao = recebedorFormService.carregarFormulario(primeiro.id());
+        AuxilioFormDTO invasor = new AuxilioFormDTO();
+        invasor.setId(auxilioDoSegundo.id());
+        invasor.setValor(new BigDecimal("100.00"));
+        invasor.setFonte("Tentativa");
+        edicao.setAuxilios(List.of(invasor));
+
+        assertThatThrownBy(() -> recebedorFormService.atualizar(primeiro.id(), edicao))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Auxílio não pertence");
+    }
+
+    @Test
+    @DisplayName("recusa mover despesa de outra residência")
+    void recusaDespesaDeOutraResidencia() {
+        RecebedorResponseDTO primeiro = recebedorFormService.criar(
+                formularioValido("11122233344", "Ana Souza"));
+        RecebedorResponseDTO segundo = recebedorFormService.criar(
+                formularioValido("55566677788", "Bia Lima"));
+
+        DespesaResponseDTO despesaDoSegundo =
+                despesaService.findByResidencia(segundo.residencia().id()).get(0);
+
+        RecebedorFormDTO edicao = recebedorFormService.carregarFormulario(primeiro.id());
+        DespesaFormDTO invasor = new DespesaFormDTO();
+        invasor.setId(despesaDoSegundo.id());
+        invasor.setValor(new BigDecimal("100.00"));
+        invasor.setFonte("Tentativa");
+        edicao.setDespesas(List.of(invasor));
+
+        assertThatThrownBy(() -> recebedorFormService.atualizar(primeiro.id(), edicao))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Despesa não pertence");
     }
 
     private RecebedorFormDTO formularioValido(String cpf, String nome) {

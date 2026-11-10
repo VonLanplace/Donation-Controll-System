@@ -7,7 +7,10 @@ import com.google.zxing.Result;
 import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
 import com.google.zxing.common.HybridBinarizer;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -19,14 +22,19 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * Testes do serviço que monta a URL e gera o QR code do cadastro de recebedor.
  */
+@Tag("unit")
 @DisplayName("RecebedorQrCodeService")
 class RecebedorQrCodeServiceTest {
 
-    @Test
-    @DisplayName("usa a URL base configurada e remove a barra final")
-    void usaUrlBaseConfigurada() {
-        RecebedorQrCodeService service =
-                new RecebedorQrCodeService("http://192.168.0.10:8080/", null);
+    @ParameterizedTest(name = "URL base [{0}]")
+    @ValueSource(strings = {
+            "http://192.168.0.10:8080",
+            "http://192.168.0.10:8080/",
+            "http://192.168.0.10:8080///"
+    })
+    @DisplayName("usa a URL base configurada e remove as barras finais")
+    void usaUrlBaseConfigurada(String base) {
+        RecebedorQrCodeService service = new RecebedorQrCodeService(base, null);
 
         assertThat(service.resolverUrlCadastro())
                 .isEqualTo("http://192.168.0.10:8080/recebedor/create");
@@ -58,6 +66,7 @@ class RecebedorQrCodeServiceTest {
 
         assertThat(service.resolverUrlCadastro())
                 .startsWith("http://")
+                .contains(":8080")
                 .endsWith("/recebedor/create");
     }
 }

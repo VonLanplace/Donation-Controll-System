@@ -14,11 +14,15 @@ import com.vonlanplace.doacao.recebedor.residencia.TipoOcupacao;
 import com.vonlanplace.doacao.recebedor.residencia.TipoResidencia;
 import com.vonlanplace.doacao.recebedor.residencia.despesa.Despesa;
 import com.vonlanplace.doacao.recebedor.residencia.despesa.DespesaRepository;
+import com.vonlanplace.doacao.support.config.RelogioFixoTestConfig;
+import com.vonlanplace.doacao.support.fixtures.RecebedorFixtures;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.context.annotation.Import;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,6 +47,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
+@Import(RelogioFixoTestConfig.class)
 @DisplayName("Páginas de recebedor")
 class RecebedorPaginasTest {
 
@@ -162,7 +167,7 @@ class RecebedorPaginasTest {
         assertThat(dependenteRepository.count()).isEqualTo(1);
         assertThat(auxilioRepository.count()).isEqualTo(1);
         assertThat(despesaRepository.count()).isEqualTo(1);
-        assertThat(recebimentoCestaService.statusAtual(recebedor.getId(), YearMonth.now()))
+        assertThat(recebimentoCestaService.statusAtual(recebedor.getId(), YearMonth.of(2026, 1)))
                 .isEqualTo(StatusRecebimento.RECEBEU);
     }
 
@@ -192,6 +197,104 @@ class RecebedorPaginasTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("recebedor/form"))
                 .andExpect(content().string(containsString("O valor é obrigatório")));
+    }
+
+    @Test
+    @DisplayName("a listagem filtra pelo nome")
+    void listagemFiltraPorNome() throws Exception {
+        criarCenario();
+
+        mockMvc.perform(get("/recebedor/listar").param("busca", "Maria da Silva"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Maria da Silva")));
+
+        mockMvc.perform(get("/recebedor/listar").param("busca", "Inexistente"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Nenhum recebedor cadastrado")));
+    }
+
+    @Test
+    @DisplayName("consulta por documento único redireciona para o detalhe")
+    void consultaRedirecionaParaDetalhe() throws Exception {
+        criarCenario();
+
+        mockMvc.perform(get("/recebedor/consultar").param("documento", "11111111111"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrlPattern("/recebedor/detalhe/*"));
+    }
+
+    @Test
+    @DisplayName("consulta sem resultado volta para a listagem com erro")
+    void consultaSemResultado() throws Exception {
+        mockMvc.perform(get("/recebedor/consultar").param("documento", "00000000000"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl("/recebedor/listar"));
+    }
+
+    @Test
+    @DisplayName("consulta com RG repetido abre a seleção")
+    void consultaComRgRepetido() throws Exception {
+        Recebedor primeiro = criarCenario();
+        primeiro.setRgNum("RG123");
+        recebedorRepository.save(primeiro);
+
+        Recebedor segundo = RecebedorFixtures.recebedor(primeiro.getResidencia());
+        segundo.setRgNum("RG123");
+        recebedorRepository.save(segundo);
+
+        mockMvc.perform(get("/recebedor/consultar").param("documento", "RG123"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("recebedor/selecao"))
+                .andExpect(content().string(containsString("Maria da Silva")));
+    }
+
+    @Test
+    @DisplayName("exporta CSV do período")
+    void exportaCsv() throws Exception {
+        mockMvc.perform(get("/recebedor/exportar.csv")
+                        .param("inicio", "2026-01")
+                        .param("fim", "2026-01"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(new MediaType("text", "csv")))
+                .andExpect(content().string(containsString("recebedor_id;nome_completo")))
+                .andExpect(content().string(containsString("2026-01_status")));
+    }
+
+    @Test
+    @DisplayName("CSV com período inválido responde 400")
+    void exportaCsvInvalido() throws Exception {
+        mockMvc.perform(get("/recebedor/exportar.csv")
+                        .param("inicio", "2026-02")
+                        .param("fim", "2026-01"))
+                .andExpect(status().isBadRequest());
+
+        mockMvc.perform(get("/recebedor/exportar.csv").param("inicio", "abc"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("baixa o PDF do recibo de cesta recebida")
+    void baixaPdf() throws Exception {
+        Recebedor recebedor = criarCenario();
+        var recebimento = recebimentoCestaService.registrarOuAtualizar(
+                recebedor.getId(), RecebedorFixtures.createCesta(
+                        YearMonth.of(2026, 1), StatusRecebimento.RECEBEU));
+
+        mockMvc.perform(get("/recebedor/cesta/pdf/{id}", recebimento.id()))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_PDF));
+    }
+
+    @Test
+    @DisplayName("PDF de cesta recusada responde 409")
+    void pdfDeCestaRecusada() throws Exception {
+        Recebedor recebedor = criarCenario();
+        var recebimento = recebimentoCestaService.registrarOuAtualizar(
+                recebedor.getId(), RecebedorFixtures.createCesta(
+                        YearMonth.of(2026, 1), StatusRecebimento.RECUSOU));
+
+        mockMvc.perform(get("/recebedor/cesta/pdf/{id}", recebimento.id()))
+                .andExpect(status().isConflict());
     }
 
     @Test
