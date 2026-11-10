@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('forms.css')}">
+  <title>Recebedores</title>
+</head>
+<body class="default-layout">
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<main class="main-content">
+
+  <h1 class="pagina-titulo">Recebedores</h1>
+
+  <div th:replace="~{fragments/flash :: flash}"></div>
+
+  <form class="form-busca" method="get" th:action="@{/recebedor/consultar}">
+    <input type="text" name="documento" placeholder="CPF ou RG"
+           aria-label="Consultar por CPF ou RG">
+    <button class="botao botao-primario" type="submit">Consultar</button>
+  </form>
+
+  <form class="form-busca" method="get" th:action="@{/recebedor/listar}">
+    <input type="hidden" name="sort" th:value="${ordenacao}">
+    <input type="text" name="busca" th:value="${busca}"
+           placeholder="Nome completo" aria-label="Buscar por nome">
+    <button class="botao botao-primario" type="submit">Buscar</button>
+    <a class="botao" th:if="${!#strings.isEmpty(busca)}" th:href="@{/recebedor/listar}">Limpar</a>
+  </form>
+
+  <form class="form-busca" method="get" th:action="@{/recebedor/exportar.csv}">
+    <input type="month" name="inicio" aria-label="Mês inicial" required>
+    <input type="month" name="fim" aria-label="Mês final" required>
+    <button class="botao" type="submit">Exportar CSV</button>
+  </form>
+
+  <div class="card">
+    <div class="card-header">
+      <span>Recebedores cadastrados</span>
+    </div>
+    <div class="card-body">
+
+      <table class="tabela">
+        <thead>
+        <tr>
+          <th>Nome</th>
+          <th>CPF</th>
+          <th>Residência</th>
+          <th>Cesta do mês</th>
+          <th class="acoes">Ações</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="r : ${page.content}">
+          <td th:text="${r.nomeCompleto}">Ana Souza</td>
+          <td th:text="${r.cpf}">00000000000</td>
+          <td th:text="${r.residencia?.cidade} ?: '—'">São Paulo</td>
+          <td th:text="${statusCestas[r.id]?.descricao} ?: 'Não informado'">Não informado</td>
+          <td class="acoes">
+            <a class="botao botao-primario" th:href="@{/recebedor/detalhe/{id}(id=${r.id})}">Ver</a>
+            <a class="botao botao-pequeno" th:href="@{/recebedor/editar/{id}(id=${r.id})}">Editar</a>
+            <form class="form-linha" method="post"
+                  th:action="@{/recebedor/apagar/{id}(id=${r.id})}">
+              <button class="botao botao-pequeno botao-perigo" type="submit">Apagar</button>
+            </form>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+
+      <p class="vazio" th:if="${page.empty}">Nenhum recebedor cadastrado até o momento.</p>
+
+      <div class="pagina-acoes">
+        <a class="botao botao-primario" th:href="@{/recebedor/create}">Novo recebedor</a>
+      </div>
+
+    </div>
+  </div>
+
+  <div th:replace="~{fragments/pagination :: pagination(@{/recebedor}, ${page}, ${ordenacao})}"></div>
+
+</main>
+
+<div th:replace="~{fragments/trail :: trail}"></div>
+
+</body>
+</html>

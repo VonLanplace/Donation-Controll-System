@@ -1,0 +1,71 @@
+@import url('colors.css');
+
+/* Cartão: a moldura que uma página usa para fechar o conteúdo. */
+.card {
+    background-color: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.card-header {
+    background-color: var(--primary-color);
+    color: var(--surface-color);
+    padding: 1rem 1.5rem;
+    font-size: 1.15rem;
+    font-weight: bold;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+/* Título da página, acima do cartão. */
+.pagina-titulo {
+    margin: 0 0 1.5rem 0;
+    font-size: 1.5rem;
+    color: var(--text-color);
+}
+
+/*
+  Ações do nível da página: cadastro, voltar, filtro. Alinhado à direita para
+  ficar na altura do card-header, que é onde a mão vai depois de ler o título.
+*/
+.pagina-acoes {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 1.25rem;
+}
+
+/*
+  Lista rótulo/valor da página de detalhe.
+
+  Grid de duas colunas e não <table> porque não é dado tabular: é um
+  registro com dez atributos, e a coluna do rótulo não deve se misturar com
+  a largura dos valores.
+*/
+.descricao {
+    display: grid;
+    grid-template-columns: minmax(9rem, auto) 1fr;
+    gap: 0.6rem 1.5rem;
+    margin: 0;
+}
+
+.descricao dt {
+    font-weight: 600;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.descricao dd {
+    margin: 0;
+    color: var(--text-color);
+}

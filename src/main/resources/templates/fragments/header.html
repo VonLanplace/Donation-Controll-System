@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<body>
+<header class="site-header" th:fragment="header">
+  <div class="logo">
+    <a th:href="@{/}">Sistema de Doação</a>
+  </div>
+  <nav>
+    <!--
+      Só entram rotas que existem de fato. O recurso web é o cadastro único de
+      recebedores; residência, dependentes, despesas e auxílios são abas desse
+      formulário. Início fica de fora porque o logo já leva à raiz, que
+      redireciona para a listagem de recebedores.
+    -->
+    <ul class="nav-links">
+      <li><a th:href="@{/recebedor}">Recebedores</a></li>
+    </ul>
+  </nav>
+</header>
+</body>
+</html>

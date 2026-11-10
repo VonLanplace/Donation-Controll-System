@@ -1,0 +1,28 @@
+<head th:fragment="head(css)">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title th:text="${titulo}">Sistema de Doação</title>
+
+  <link rel="stylesheet" href="/css/colors.css">
+  <link rel="stylesheet" href="/css/default.css">
+  <link rel="stylesheet" href="/css/header.css">
+  <link rel="stylesheet" href="/css/trail.css">
+
+  <!--
+    Camada de componente, na base e não como opt-in da página: card.css e
+    table.css desenham o contêiner e a grade de dados que todo layout usa, e
+    components.css traz .pagination, que o fragmento pagination já emite em
+    qualquer página listada.
+
+    Deixá-los atrás do argumento `css` deu página quebrada de duas formas: a
+    paginação de uma listagem renderizava sem estilo porque o template só pedia
+    table.css, e o .card inteiro saía sem fundo, sem borda e sem a faixa teal
+    do .card-header, porque card.css não era carregado por lugar nenhum.
+  -->
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/card.css">
+  <link rel="stylesheet" href="/css/table.css">
+
+  <!-- CSS exclusivo da página, sobreposto à base. forms.css entra aqui nos formulários. -->
+  <link rel="stylesheet" th:if="${css}" th:href="@{/css/{arquivo}(arquivo=${css})}">
+</head>

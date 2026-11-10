@@ -1,0 +1,63 @@
+@import url('colors.css');
+
+/*
+  Estilos de tabela.
+  Ficam separados de qualquer página porque as regras precisam ser de escopo de
+  classe, não de elemento solto: a versão anterior vivia em produto/listar.css e
+  estilizava `body`, `table`, `th` e `td` sem qualifier, o que faria a próxima
+  página que a carregasse ter o layout inteiro distorcido.
+*/
+.tabela {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.tabela th,
+.tabela td {
+    text-align: left;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.tabela thead th {
+    background-color: var(--highlight-color);
+    color: var(--text-color);
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.tabela tbody tr:hover {
+    background-color: var(--highlight-suave);
+}
+
+/* Coluna de ação: não deve quebrar em nome longo. */
+.tabela td.acoes {
+    white-space: nowrap;
+    text-align: right;
+}
+
+/*
+  Botões na coluna de ação ficam lado a lado, e o formulário de apagar é
+  inline: um <form> é block por padrão, então sem display:inline-flex cada
+  botão cai numa linha e a coluna de ação ganha a altura da tabela.
+  Gap dá o espaçamento, que margin não daria entre elementos inline-flex.
+*/
+.tabela td.acoes > * {
+    margin-left: 0.4rem;
+}
+
+.tabela td.acoes > *:first-child {
+    margin-left: 0;
+}
+
+.form-linha {
+    display: inline-flex;
+    margin: 0;
+}
+
+.vazio {
+    text-align: center;
+    color: var(--text-muted);
+    padding: 2rem;
+    font-style: italic;
+}

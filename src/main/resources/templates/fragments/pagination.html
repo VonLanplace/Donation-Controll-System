@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<body>
+<!--
+  Paginação reutilizável.
+
+  Recebe `url`, `page` (a Page) e `sort` (a String "propriedade,direcao" que vai na
+  query string). O `sort` é passado separado de propósito: ${page.sort} é um
+  objeto Sort, e interpolá-lo chamaria toString(), produzindo "codigoBarras: ASC" —
+  que não é um valor válido de query param e a ordenação se perderia ao paginar.
+
+  Só aparece quando há mais de uma página. A URL base vem do controller, e os
+  filtros de busca, quando existirem, precisam ser acrescentados aqui junto com
+  `page` e `size` — sem isso, a busca é perdida ao trocar de página.
+-->
+<nav th:fragment="pagination(url, page, sort)" th:if="${page.totalPages > 1}" class="pagination">
+  <a th:if="${page.hasPrevious()}"
+     th:href="@{${url}(page=${page.number - 1}, size=${page.size}, sort=${sort})}"
+     rel="prev">&laquo; Anterior</a>
+
+  <span class="pagination-info">
+    Página <strong th:text="${page.number + 1}">1</strong>
+    de <strong th:text="${page.totalPages}">1</strong>
+  </span>
+
+  <a th:if="${page.hasNext()}"
+     th:href="@{${url}(page=${page.number + 1}, size=${page.size}, sort=${sort})}"
+     rel="next">Próxima &raquo;</a>
+</nav>
+</body>
+</html>

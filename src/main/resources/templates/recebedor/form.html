@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('forms.css')}">
+  <title th:text="${titulo}">Recebedor</title>
+</head>
+<body class="default-layout">
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<main class="main-content">
+
+  <h1 class="pagina-titulo" th:text="${titulo}">Novo recebedor</h1>
+
+  <form method="post" th:object="${recebedorForm}"
+        th:action="${id != null} ? @{/recebedor/editar/{id}(id=${id})} : @{/recebedor/create}">
+
+    <div class="card">
+      <div class="card-header">
+        <span>Cadastro do recebedor</span>
+      </div>
+      <div class="card-body">
+
+        <div th:replace="~{fragments/erros :: erros}"></div>
+
+        <div class="abas" role="tablist" aria-label="Seções do cadastro">
+          <button type="button" class="aba ativa" data-aba="pessoal" role="tab"
+                  aria-selected="true">Pessoal</button>
+          <button type="button" class="aba" data-aba="residencial" role="tab"
+                  aria-selected="false">Residencial</button>
+          <button type="button" class="aba" data-aba="dependentes" role="tab"
+                  aria-selected="false">Dependentes</button>
+          <button type="button" class="aba" data-aba="economicos" role="tab"
+                  aria-selected="false">Econômicos</button>
+          <button type="button" class="aba" data-aba="outros" role="tab"
+                  aria-selected="false">Outros</button>
+        </div>
+
+        <section class="aba-conteudo ativa" data-aba="pessoal">
+          <div class="form-grade">
+
+            <div th:replace="~{fragments/campo :: texto('nomeCompleto', 'Nome completo', true)}"></div>
+            <div th:replace="~{fragments/campo :: campo('cpf', 'CPF', true, 'text')}"></div>
+            <div th:replace="~{fragments/campo :: texto('rgNum', 'Número do RG', false)}"></div>
+            <div th:replace="~{fragments/campo :: selecao('rgEmissor', 'Órgão emissor do RG', false, ${emissores})}"></div>
+            <div th:replace="~{fragments/campo :: campo('dataNascimento', 'Data de nascimento', true, 'date')}"></div>
+            <div th:replace="~{fragments/campo :: texto('telefonePessoal', 'Telefone pessoal', false)}"></div>
+            <div th:replace="~{fragments/campo :: texto('telefoneRecado', 'Telefone de recado', false)}"></div>
+            <div th:replace="~{fragments/campo :: campo('email', 'E-mail', false, 'email')}"></div>
+            <div th:replace="~{fragments/campo :: texto('pix', 'Chave PIX', false)}"></div>
+
+            <div class="campo-grupo">
+              <div th:replace="~{fragments/campo :: caixa('leEscreve', 'Lê e escreve')}"></div>
+              <div th:replace="~{fragments/campo :: caixa('necessitaJuridico', 'Precisa de acompanhamento jurídico')}"></div>
+              <div th:replace="~{fragments/campo :: caixa('necessitaPsicologo', 'Precisa de acompanhamento psicológico')}"></div>
+            </div>
+
+          </div>
+        </section>
+
+        <section class="aba-conteudo" data-aba="residencial">
+          <div class="form-grade">
+
+            <div th:replace="~{fragments/campo :: texto('residencia.logradouro', 'Logradouro', true)}"></div>
+            <div th:replace="~{fragments/campo :: texto('residencia.numero', 'Número', true)}"></div>
+            <div th:replace="~{fragments/campo :: texto('residencia.cep', 'CEP', true)}"></div>
+            <div th:replace="~{fragments/campo :: texto('residencia.complemento', 'Complemento', false)}"></div>
+            <div th:replace="~{fragments/campo :: texto('residencia.cidade', 'Cidade', true)}"></div>
+            <div th:replace="~{fragments/campo :: texto('residencia.bairro', 'Bairro', true)}"></div>
+            <div th:replace="~{fragments/campo :: campo('residencia.numMoradores', 'Número de moradores', false, 'number')}"></div>
+            <div th:replace="~{fragments/campo :: campo('residencia.numTrabalhadores', 'Número de trabalhadores', false, 'number')}"></div>
+            <div th:replace="~{fragments/campo :: selecao('residencia.tipoOcupacao', 'Tipo de ocupação', true, ${tiposOcupacao})}"></div>
+            <div th:replace="~{fragments/campo :: selecao('residencia.tipoResidencia', 'Tipo de residência', true, ${tiposResidencia})}"></div>
+
+          </div>
+        </section>
+
+        <section class="aba-conteudo" data-aba="dependentes">
+
+          <h2 class="subtitulo-secao">Dependentes</h2>
+
+          <div class="tabela-form-wrapper">
+            <table class="tabela-form">
+              <thead>
+              <tr>
+                <th>Nome</th>
+                <th>Idade</th>
+                <th>Data de nascimento</th>
+                <th class="acoes">Ações</th>
+              </tr>
+              </thead>
+              <tbody id="dependentes-linhas">
+              <tr class="linha-vazia" th:if="${#lists.isEmpty(recebedorForm.dependentes)}">
+                <td colspan="4">Nenhum dependente informado.</td>
+              </tr>
+              <tr class="linha-form" th:each="d, stat : *{dependentes}"
+                  th:with="campoNome=|dependentes[${stat.index}].nome|,
+                           campoIdade=|dependentes[${stat.index}].idade|,
+                           campoData=|dependentes[${stat.index}].dataNascimento|">
+                <td>
+                  <input type="hidden" th:field="*{dependentes[__${stat.index}__].id}">
+                  <input type="text" th:id="|f_dependentes_${stat.index}_nome|"
+                         th:field="*{dependentes[__${stat.index}__].nome}"
+                         placeholder="Nome do dependente"
+                         th:classappend="${#fields.hasErrors(campoNome)} ? 'invalido'">
+                  <span class="erro" th:if="${#fields.hasErrors(campoNome)}"
+                        th:errors="*{dependentes[__${stat.index}__].nome}">erro</span>
+                </td>
+                <td>
+                  <input type="number" min="0" th:id="|f_dependentes_${stat.index}_idade|"
+                         th:field="*{dependentes[__${stat.index}__].idade}"
+                         th:classappend="${#fields.hasErrors(campoIdade)} ? 'invalido'">
+                  <span class="erro" th:if="${#fields.hasErrors(campoIdade)}"
+                        th:errors="*{dependentes[__${stat.index}__].idade}">erro</span>
+                </td>
+                <td>
+                  <input type="date" th:id="|f_dependentes_${stat.index}_data|"
+                         th:field="*{dependentes[__${stat.index}__].dataNascimento}"
+                         th:classappend="${#fields.hasErrors(campoData)} ? 'invalido'">
+                  <span class="erro" th:if="${#fields.hasErrors(campoData)}"
+                        th:errors="*{dependentes[__${stat.index}__].dataNascimento}">erro</span>
+                </td>
+                <td class="acoes">
+                  <button type="button" class="botao botao-pequeno botao-perigo remover-linha">Remover</button>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="pagina-acoes">
+            <button type="button" class="botao botao-pequeno" data-adicionar="dependente">Adicionar dependente</button>
+          </div>
+
+        </section>
+
+        <section class="aba-conteudo" data-aba="economicos">
+
+          <h2 class="subtitulo-secao">Despesas da residência</h2>
+
+          <div class="tabela-form-wrapper">
+            <table class="tabela-form">
+              <thead>
+              <tr>
+                <th>Valor mensal</th>
+                <th>Fonte</th>
+                <th>Descrição</th>
+                <th class="acoes">Ações</th>
+              </tr>
+              </thead>
+              <tbody id="despesas-linhas">
+              <tr class="linha-vazia" th:if="${#lists.isEmpty(recebedorForm.despesas)}">
+                <td colspan="4">Nenhuma despesa informada.</td>
+              </tr>
+              <tr class="linha-form" th:each="d, stat : *{despesas}"
+                  th:with="campoValor=|despesas[${stat.index}].valor|,
+                           campoFonte=|despesas[${stat.index}].fonte|,
+                           campoDescricao=|despesas[${stat.index}].descricao|">
+                <td>
+                  <input type="hidden" th:field="*{despesas[__${stat.index}__].id}">
+                  <input type="number" step="0.01" min="0.01" th:id="|f_despesas_${stat.index}_valor|"
+                         th:field="*{despesas[__${stat.index}__].valor}"
+                         th:classappend="${#fields.hasErrors(campoValor)} ? 'invalido'">
+                  <span class="erro" th:if="${#fields.hasErrors(campoValor)}"
+                        th:errors="*{despesas[__${stat.index}__].valor}">erro</span>
+                </td>
+                <td>
+                  <input type="text" th:id="|f_despesas_${stat.index}_fonte|"
+                         th:field="*{despesas[__${stat.index}__].fonte}"
+                         th:classappend="${#fields.hasErrors(campoFonte)} ? 'invalido'">
+                  <span class="erro" th:if="${#fields.hasErrors(campoFonte)}"
+                        th:errors="*{despesas[__${stat.index}__].fonte}">erro</span>
+                </td>
+                <td>
+                  <input type="text" th:id="|f_despesas_${stat.index}_descricao|"
+                         th:field="*{despesas[__${stat.index}__].descricao}"
+                         th:classappend="${#fields.hasErrors(campoDescricao)} ? 'invalido'">
+                  <span class="erro" th:if="${#fields.hasErrors(campoDescricao)}"
+                        th:errors="*{despesas[__${stat.index}__].descricao}">erro</span>
+                </td>
+                <td class="acoes">
+                  <button type="button" class="botao botao-pequeno botao-perigo remover-linha">Remover</button>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="pagina-acoes">
+            <button type="button" class="botao botao-pequeno" data-adicionar="despesa">Adicionar despesa</button>
+          </div>
+
+          <h2 class="subtitulo-secao">Auxílios recebidos</h2>
+
+          <div class="tabela-form-wrapper">
+            <table class="tabela-form">
+              <thead>
+              <tr>
+                <th>Valor mensal</th>
+                <th>Fonte</th>
+                <th>Descrição</th>
+                <th class="acoes">Ações</th>
+              </tr>
+              </thead>
+              <tbody id="auxilios-linhas">
+              <tr class="linha-vazia" th:if="${#lists.isEmpty(recebedorForm.auxilios)}">
+                <td colspan="4">Nenhum auxílio informado.</td>
+              </tr>
+              <tr class="linha-form" th:each="a, stat : *{auxilios}"
+                  th:with="campoValor=|auxilios[${stat.index}].valor|,
+                           campoFonte=|auxilios[${stat.index}].fonte|,
+                           campoDescricao=|auxilios[${stat.index}].descricao|">
+                <td>
+                  <input type="hidden" th:field="*{auxilios[__${stat.index}__].id}">
+                  <input type="number" step="0.01" min="0.01" th:id="|f_auxilios_${stat.index}_valor|"
+                         th:field="*{auxilios[__${stat.index}__].valor}"
+                         th:classappend="${#fields.hasErrors(campoValor)} ? 'invalido'">
+                  <span class="erro" th:if="${#fields.hasErrors(campoValor)}"
+                        th:errors="*{auxilios[__${stat.index}__].valor}">erro</span>
+                </td>
+                <td>
+                  <input type="text" th:id="|f_auxilios_${stat.index}_fonte|"
+                         th:field="*{auxilios[__${stat.index}__].fonte}"
+                         th:classappend="${#fields.hasErrors(campoFonte)} ? 'invalido'">
+                  <span class="erro" th:if="${#fields.hasErrors(campoFonte)}"
+                        th:errors="*{auxilios[__${stat.index}__].fonte}">erro</span>
+                </td>
+                <td>
+                  <input type="text" th:id="|f_auxilios_${stat.index}_descricao|"
+                         th:field="*{auxilios[__${stat.index}__].descricao}"
+                         th:classappend="${#fields.hasErrors(campoDescricao)} ? 'invalido'">
+                  <span class="erro" th:if="${#fields.hasErrors(campoDescricao)}"
+                        th:errors="*{auxilios[__${stat.index}__].descricao}">erro</span>
+                </td>
+                <td class="acoes">
+                  <button type="button" class="botao botao-pequeno botao-perigo remover-linha">Remover</button>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="pagina-acoes">
+            <button type="button" class="botao botao-pequeno" data-adicionar="auxilio">Adicionar auxílio</button>
+          </div>
+
+        </section>
+
+        <section class="aba-conteudo" data-aba="outros">
+          <div class="form-grade">
+
+            <div th:with="vazio='Não informado'"
+                 th:replace="~{fragments/campo :: selecao('statusCesta', 'Cesta do mês', false, ${statusOpcoes})}"></div>
+
+            <div class="campo-grupo">
+              <div th:replace="~{fragments/campo :: caixa('parecerEntrevistador', 'Parecer do entrevistador')}"></div>
+            </div>
+
+            <div class="aviso" th:if="${elegibilidadeCesta != null and !elegibilidadeCesta.elegivel}">
+              <span th:text="${elegibilidadeCesta.motivo}">Limite de cestas atingido.</span>
+            </div>
+
+            <div th:replace="~{fragments/campo :: area('comentarios', 'Comentários da entrevista', false, true)}"></div>
+
+          </div>
+        </section>
+
+        <div th:replace="~{fragments/campo :: acoes('Salvar', @{/recebedor/listar})}"></div>
+
+      </div>
+    </div>
+
+  </form>
+
+  <template id="template-dependente">
+    <tr class="linha-form">
+      <td>
+        <input type="hidden" data-campo="id" name="dependentes[__index__].id">
+        <input type="text" data-campo="nome" name="dependentes[__index__].nome" placeholder="Nome do dependente">
+      </td>
+      <td>
+        <input type="number" min="0" data-campo="idade" name="dependentes[__index__].idade">
+      </td>
+      <td>
+        <input type="date" data-campo="dataNascimento" name="dependentes[__index__].dataNascimento">
+      </td>
+      <td class="acoes">
+        <button type="button" class="botao botao-pequeno botao-perigo remover-linha">Remover</button>
+      </td>
+    </tr>
+  </template>
+
+  <template id="template-despesa">
+    <tr class="linha-form">
+      <td>
+        <input type="hidden" data-campo="id" name="despesas[__index__].id">
+        <input type="number" step="0.01" min="0.01" data-campo="valor" name="despesas[__index__].valor">
+      </td>
+      <td>
+        <input type="text" data-campo="fonte" name="despesas[__index__].fonte">
+      </td>
+      <td>
+        <input type="text" data-campo="descricao" name="despesas[__index__].descricao">
+      </td>
+      <td class="acoes">
+        <button type="button" class="botao botao-pequeno botao-perigo remover-linha">Remover</button>
+      </td>
+    </tr>
+  </template>
+
+  <template id="template-auxilio">
+    <tr class="linha-form">
+      <td>
+        <input type="hidden" data-campo="id" name="auxilios[__index__].id">
+        <input type="number" step="0.01" min="0.01" data-campo="valor" name="auxilios[__index__].valor">
+      </td>
+      <td>
+        <input type="text" data-campo="fonte" name="auxilios[__index__].fonte">
+      </td>
+      <td>
+        <input type="text" data-campo="descricao" name="auxilios[__index__].descricao">
+      </td>
+      <td class="acoes">
+        <button type="button" class="botao botao-pequeno botao-perigo remover-linha">Remover</button>
+      </td>
+    </tr>
+  </template>
+
+</main>
+
+<div th:replace="~{fragments/trail :: trail}"></div>
+
+<script th:src="@{/js/recebedor-form.js}" defer></script>
+
+</body>
+</html>

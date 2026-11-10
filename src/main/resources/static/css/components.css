@@ -1,0 +1,134 @@
+@import url('colors.css');
+
+/*
+ * Componentes de interface compartilhados.
+ *
+ * Tudo que aparece em mais de um tipo de página mora aqui, não em forms.css.
+ * Isso não é estética: a camada de componente é carregada pela base do
+ * head(css), enquanto forms.css é carregado só por página que tem formulário.
+ * Botão que mora em forms.css é botão que não existe na listagem.
+ */
+
+/* ---------------------------------------------------------------- Botões -- */
+
+/*
+ * .botao neutro é contorno sobre a superfície. Sobre um card branco ele é
+ * discreto de propósito; quem precisa de ação forte pede .botao-primario.
+ */
+.botao {
+    display: inline-block;
+    padding: 0.55rem 1.2rem;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background-color: var(--surface-color);
+    color: var(--text-color);
+    font: inherit;
+    font-size: 0.95rem;
+    line-height: 1.4;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.botao:hover {
+    background-color: var(--background-color);
+}
+
+/* Primário: teal sólido, 4,86:1 de branco sobre ele. */
+.botao-primario {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+    color: var(--surface-color);
+}
+
+.botao-primario:hover {
+    background-color: var(--secondary-color);
+    filter: brightness(0.93);
+}
+
+/* Perigo: laranja sólido, 4,55:1 de branco sobre ele. */
+.botao-perigo {
+    background-color: var(--accent-color);
+    border-color: var(--accent-color);
+    color: var(--surface-color);
+}
+
+.botao-perigo:hover {
+    background-color: var(--accent-color);
+    filter: brightness(0.93);
+}
+
+/* Botão pequeno para a coluna de ação de uma tabela. */
+.botao-pequeno {
+    padding: 0.3rem 0.7rem;
+    font-size: 0.85rem;
+}
+
+/* ------------------------------------------------------------------ Flash -- */
+
+.flash {
+    padding: 0.9rem 1.2rem;
+    border-radius: 6px;
+    border: 1px solid transparent;
+    margin-bottom: 1.5rem;
+}
+
+.flash p {
+    margin: 0;
+}
+
+/*
+ * Cores das faixas: verde indica sucesso, laranja da paleta indica erro, teal da
+ * paleta indica informação. Verde não existe na paleta ColorHunt, então segue
+ * fora dela — sinalizar sucesso com teal seria indistinguível de "informação".
+ */
+.flash-sucesso {
+    background-color: #e7f4ec;
+    border-color: #7cc39a;
+    color: #1d6b45;
+}
+
+.flash-erro {
+    background-color: #fdf0e6;
+    border-color: var(--palette-laranja);
+    color: #a4511a;
+}
+
+.flash-info {
+    background-color: #e4f2f2;
+    border-color: var(--palette-teal-medio);
+    color: #14615f;
+}
+
+/* -------------------------------------------------------------- Paginação -- */
+
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+/*
+  Fundo transparente de propósito. Sobre o fundo da página (#fdf8f0) um botão
+  branco ficava quase do mesmo tom, e a borda neutra (#e8dcc6) sumia no creme.
+  Transparente deixa a página aparecer, e a borda teal marca o alvo sem competir
+  com a ação primária da linha.
+*/
+.pagination a {
+    color: var(--secondary-color);
+    text-decoration: none;
+    padding: 0.4rem 0.8rem;
+    border: 1px solid var(--secondary-color);
+    border-radius: 4px;
+    background-color: transparent;
+}
+
+.pagination a:hover {
+    background-color: var(--highlight-suave);
+}
+
+.pagination-info {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}

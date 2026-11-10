@@ -1,0 +1,283 @@
+@import url('colors.css');
+
+/*
+ * Estilos de formulário.
+ *
+ * Só o que é exclusivo de página com formulário. Botão mora em components.css
+ * porque a listagem também tem ação por linha, e a base do head(css) não
+ * carrega este arquivo.
+ */
+.form-grade {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem 1.5rem;
+}
+
+.campo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.campo label {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--text-color);
+}
+
+.campo input,
+.campo select,
+.campo textarea {
+    padding: 0.55rem 0.7rem;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font: inherit;
+    font-size: 0.95rem;
+    background-color: var(--surface-color);
+    color: var(--text-color);
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.campo input:focus,
+.campo select:focus,
+.campo textarea:focus {
+    outline: none;
+    border-color: var(--secondary-color);
+    box-shadow: 0 0 0 3px var(--focus-ring);
+}
+
+/* Campo ocupa a linha inteira da grade. */
+.campo.largo {
+    grid-column: 1 / -1;
+}
+
+/* Bloco de campos: agrupa vários dentro de uma célula da grade. */
+.campo-grupo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+/* Caixa de marcação do fragmento caixa. Essa especificidade é necessária:
+   .campo label é 0,1,1 e venceria .campo-caixa por causa do elemento label. */
+.campo .campo-caixa {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.6rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--text-color);
+}
+
+.campo .campo-caixa input {
+    width: auto;
+    flex-shrink: 0;
+}
+
+.campo .erro {
+    color: var(--accent-color);
+    font-size: 0.82rem;
+}
+
+/*
+ * Campo que não passou na validação. A classe .invalido entra pelo
+ * th:classappend do fragmento campo, olhando #fields.hasErrors('nome'),
+ * e não pelo th:errors — assim o campo fica marcado mesmo se o texto da
+ * mensagem não renderizar.
+ */
+.campo.invalido input,
+.campo.invalido select,
+.campo.invalido textarea {
+    border-color: var(--accent-color);
+    background-color: #fdf0e6;
+}
+
+/* Marcação dos campos obrigatórios com asterisk. */
+.obrigatorio {
+    color: var(--accent-color);
+}
+
+.form-acoes {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+}
+
+/* Caixa de avisos com a lista de todos os erros do formulário. */
+.erros-formulario {
+    background-color: #fdf0e6;
+    border: 1px solid var(--palette-laranja);
+    border-radius: 6px;
+    padding: 1rem 1.2rem;
+    margin-bottom: 1.5rem;
+    color: #a4511a;
+}
+
+.erros-formulario h2 {
+    font-size: 1rem;
+    margin: 0 0 0.5rem 0;
+}
+
+.erros-formulario ul {
+    margin: 0;
+    padding-left: 1.2rem;
+}
+
+.erros-formulario li {
+    margin-bottom: 0.25rem;
+    font-size: 0.9rem;
+}
+
+/* Caixa de busca acima da tabela. */
+.form-busca {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 1.25rem;
+}
+
+.form-busca input[type="text"] {
+    flex: 1;
+    max-width: 22rem;
+    padding: 0.55rem 0.7rem;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font: inherit;
+    font-size: 0.95rem;
+    background-color: var(--surface-color);
+    color: var(--text-color);
+}
+
+.form-busca input[type="text"]:focus {
+    outline: none;
+    border-color: var(--secondary-color);
+    box-shadow: 0 0 0 3px var(--focus-ring);
+}
+
+/* ---------------------------------------------------------------- Abas -- */
+
+.abas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 1.5rem;
+}
+
+.aba {
+    padding: 0.65rem 1rem;
+    border: 0;
+    border-bottom: 3px solid transparent;
+    background-color: transparent;
+    color: var(--text-muted);
+    font: inherit;
+    font-size: 0.95rem;
+    cursor: pointer;
+}
+
+.aba:hover {
+    color: var(--secondary-color);
+    background-color: var(--highlight-suave);
+}
+
+.aba.ativa {
+    color: var(--secondary-color);
+    border-bottom-color: var(--secondary-color);
+    font-weight: 600;
+}
+
+.aba-conteudo {
+    display: none;
+}
+
+.aba-conteudo.ativa {
+    display: block;
+}
+
+.subtitulo-secao {
+    margin: 1.5rem 0 0.75rem 0;
+    font-size: 1.05rem;
+    color: var(--text-color);
+}
+
+.subtitulo-secao:first-child {
+    margin-top: 0;
+}
+
+/* ------------------------------------------------- Tabelas de formulário -- */
+
+.tabela-form-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.tabela-form {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.tabela-form th,
+.tabela-form td {
+    padding: 0.45rem;
+    border-bottom: 1px solid var(--border-color);
+    text-align: left;
+    vertical-align: top;
+}
+
+.tabela-form th {
+    background-color: var(--highlight-suave);
+    color: var(--text-color);
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.tabela-form td {
+    min-width: 8rem;
+}
+
+.tabela-form td.acoes,
+.tabela-form th.acoes {
+    width: 1%;
+    white-space: nowrap;
+    text-align: right;
+}
+
+.tabela-form input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.45rem 0.55rem;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font: inherit;
+    font-size: 0.9rem;
+    background-color: var(--surface-color);
+    color: var(--text-color);
+}
+
+.tabela-form input:focus {
+    outline: none;
+    border-color: var(--secondary-color);
+    box-shadow: 0 0 0 3px var(--focus-ring);
+}
+
+.tabela-form input.invalido {
+    border-color: var(--accent-color);
+    background-color: #fdf0e6;
+}
+
+.tabela-form .erro {
+    display: block;
+    margin-top: 0.2rem;
+    color: var(--accent-color);
+    font-size: 0.78rem;
+}
+
+.tabela-form .linha-vazia td {
+    padding: 1rem;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
